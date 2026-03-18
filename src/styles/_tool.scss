@@ -1,0 +1,34 @@
+@use 'sass:math' as math;
+
+@function dynamicOnWidth($px, $base: 1920px) {
+    @return math.div($px, $base) * 100vw;
+}
+
+@function dynamicOnHeight($px, $base: 1080px) {
+    @return math.div($px, $base) * 100vh;
+}
+
+@function dynamicOnBoth($px, $base-width: 1920, $base-height: 1080) {
+    $dynamic-on-width: math.div($px, $base-width) * 100vw;
+    $dynamic-on-height: math.div($px, $base-height) * 100vh;
+
+    @return min($dynamic-on-width, $dynamic-on-height);
+}
+
+@mixin mobile {
+    @media (max-width: 767px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: 768px) and (max-width: 1199px) {
+        @content;
+    }
+}
+
+@mixin laptop {
+    @media (min-width: 1200px) {
+        @content;
+    }
+}

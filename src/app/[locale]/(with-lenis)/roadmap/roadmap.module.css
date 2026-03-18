@@ -1,0 +1,643 @@
+.page {
+    font-family:
+        'DM Sans',
+        'SF Pro Display',
+        -apple-system,
+        sans-serif;
+    background: #09090b;
+    color: #e4e4e7;
+    min-height: 100vh;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+}
+
+/* ── Header ─────────────────────────────── */
+
+.header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.headerLabel {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #52525b;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.headerTitle {
+    font-size: 28px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #6ee7b7, #c4b5fd, #f472b6, #fb923c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.headerSub {
+    font-size: 12px;
+    color: #71717a;
+    margin-top: 8px;
+}
+
+.globalProgress {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.progressTrack {
+    width: 200px;
+    height: 4px;
+    background: #27272a;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, #6ee7b7, #c4b5fd, #f472b6);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+}
+
+.progressText {
+    font-size: 11px;
+    color: #71717a;
+}
+
+/* ── Ongoing Banner ─────────────────────── */
+
+.ongoingBanner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.ongoingEmoji {
+    font-size: 16px;
+}
+
+.ongoingContent {
+    flex: 1;
+}
+
+.ongoingName {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.ongoingDesc {
+    font-size: 11px;
+    color: #a1a1aa;
+    margin-top: 2px;
+}
+
+.ongoingBadge {
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* ── Phase Overview ─────────────────────── */
+
+.phaseRow {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.phaseCard {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 12px;
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+}
+
+.phaseName {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.phaseWeeks {
+    font-size: 10px;
+    color: #71717a;
+    margin-top: 2px;
+}
+
+.phaseDesc {
+    font-size: 10px;
+    color: #a1a1aa;
+    margin-top: 4px;
+}
+
+/* ── Tab Switcher ───────────────────────── */
+
+.tabRow {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.tab {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid #27272a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.tabActive {
+    background: #27272a;
+    color: #e4e4e7;
+}
+
+.tabInactive {
+    background: transparent;
+    color: #52525b;
+}
+
+/* ── Panels (KPI / Routine) ─────────────── */
+
+.panel {
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.panelTitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e4e4e7;
+    margin-bottom: 16px;
+}
+
+.kpiRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #1e1e21;
+}
+
+.kpiRow:last-child {
+    border-bottom: none;
+}
+
+.kpiMetric {
+    font-size: 12px;
+    color: #a1a1aa;
+}
+
+.kpiTarget {
+    font-size: 12px;
+    color: #6ee7b7;
+    font-weight: 600;
+}
+
+.routineRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #1e1e21;
+}
+
+.routineRow:last-child {
+    border-bottom: none;
+}
+
+.routineEmoji {
+    font-size: 14px;
+    width: 24px;
+    text-align: center;
+}
+
+.routineTime {
+    font-size: 11px;
+    color: #71717a;
+    font-family: monospace;
+    min-width: 100px;
+}
+
+.routineActivity {
+    font-size: 12px;
+    color: #d4d4d8;
+}
+
+/* ── Week Selector ──────────────────────── */
+
+.weekSelector {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+}
+
+.weekBtn {
+    min-width: 56px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    scroll-snap-align: start;
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
+}
+
+.weekBtnActive {
+    background: #18181b;
+}
+
+.weekBtnInactive {
+    background: #18181b;
+    border: 1px solid #27272a;
+}
+
+.weekMiniBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    transition: width 0.3s ease;
+}
+
+.weekLabel {
+    font-size: 9px;
+    color: #52525b;
+    font-weight: 600;
+}
+
+.weekNumber {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.weekCount {
+    font-size: 8px;
+    color: #52525b;
+    margin-top: 2px;
+}
+
+/* ── Week Detail Card ───────────────────── */
+
+.weekCard {
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.weekHeader {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid #27272a;
+}
+
+.weekHeaderMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.weekPhaseBadge {
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.weekHeaderNum {
+    font-size: 10px;
+    color: #52525b;
+}
+
+.weekTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fafafa;
+    margin: 0;
+}
+
+.weekGoal {
+    font-size: 12px;
+    color: #a1a1aa;
+    margin: 6px 0 0;
+    line-height: 1.5;
+}
+
+.weekProgress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.weekProgressTrack {
+    flex: 1;
+    height: 4px;
+    background: #27272a;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.weekProgressFill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s ease;
+}
+
+.weekProgressText {
+    font-size: 11px;
+    color: #71717a;
+    font-weight: 600;
+}
+
+/* ── Task Items ─────────────────────────── */
+
+.taskList {
+    padding: 4px 0;
+}
+
+.taskBtn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 20px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+    font-family: inherit;
+    border-bottom: 1px solid #1e1e21;
+}
+
+.taskBtn:last-child {
+    border-bottom: none;
+}
+
+.taskBtnDone {
+    composes: taskBtn;
+}
+
+.taskBtnUndone {
+    composes: taskBtn;
+    background: transparent;
+}
+
+.checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.2s;
+}
+
+.checkboxUnchecked {
+    composes: checkbox;
+    border: 2px solid #3f3f46;
+    background: transparent;
+}
+
+.checkboxChecked {
+    composes: checkbox;
+}
+
+.checkMark {
+    color: #0a0a0b;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.taskContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.taskTypeBadge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.taskText {
+    font-size: 12px;
+    line-height: 1.6;
+    margin-top: 4px;
+    transition: color 0.2s;
+}
+
+.taskTextDone {
+    color: #52525b;
+    text-decoration: line-through;
+}
+
+.taskTextUndone {
+    color: #d4d4d8;
+}
+
+/* ── Deliverable & Resources ────────────── */
+
+.deliverableSection {
+    padding: 16px 20px;
+    border-top: 1px solid #27272a;
+    background: #0f0f11;
+}
+
+.deliverableLabel {
+    font-size: 10px;
+    color: #fb923c;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+}
+
+.deliverableText {
+    font-size: 12px;
+    color: #a1a1aa;
+    line-height: 1.5;
+}
+
+.resourcesSection {
+    padding: 16px 20px;
+    border-top: 1px solid #27272a;
+    background: #0d0d0f;
+}
+
+.resourcesLabel {
+    font-size: 10px;
+    color: #52525b;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.resourceItem {
+    font-size: 11px;
+    color: #71717a;
+    padding: 3px 0;
+    line-height: 1.4;
+}
+
+/* ── AI Tools ───────────────────────────── */
+
+.aiToolsCard {
+    composes: panel;
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+.aiToolsLabel {
+    font-size: 10px;
+    color: #c4b5fd;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.aiToolRow {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #1e1e21;
+    align-items: baseline;
+}
+
+.aiToolRow:last-child {
+    border-bottom: none;
+}
+
+.aiToolName {
+    font-size: 11px;
+    color: #e4e4e7;
+    font-weight: 600;
+    min-width: 90px;
+    flex-shrink: 0;
+}
+
+.aiToolUse {
+    font-size: 11px;
+    color: #71717a;
+    line-height: 1.5;
+}
+
+/* ── Grid Cards (Leverage / Warnings) ──── */
+
+.gridTwo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+@media (max-width: 600px) {
+    .gridTwo {
+        grid-template-columns: 1fr;
+    }
+}
+
+.gridCard {
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.gridCardLabel {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.gridCardItem {
+    font-size: 11px;
+    color: #a1a1aa;
+    padding: 4px 0;
+    line-height: 1.5;
+}
+
+/* ── Definition of Done ─────────────────── */
+
+.dodCard {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #6ee7b706, #c4b5fd06, #f472b606, #fb923c06);
+    border: 1px solid #27272a;
+    border-radius: 12px;
+}
+
+.dodLabel {
+    font-size: 10px;
+    color: #71717a;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.dodItem {
+    font-size: 11px;
+    color: #a1a1aa;
+    padding: 4px 0;
+    line-height: 1.5;
+}
+
+/* ── Quote ──────────────────────────────── */
+
+.quoteCard {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #6ee7b708, #c4b5fd08, #f472b608);
+    border: 1px solid #27272a;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.quoteText {
+    font-size: 13px;
+    color: #a1a1aa;
+    line-height: 1.7;
+    font-style: italic;
+}
+
+.quoteRule {
+    font-size: 10px;
+    color: #52525b;
+    margin-top: 8px;
+}

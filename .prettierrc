@@ -1,0 +1,18 @@
+{
+  "semi": true,
+  "trailingComma": "all",
+  "singleQuote": true,
+  "printWidth": 200,
+  "tabWidth": 4,
+  "plugins": [
+    "prettier-plugin-glsl"
+  ],
+  "overrides": [
+    {
+      "files": ["*.glsl", "*.vert", "*.frag"],
+      "options": {
+        "parser": "glsl-parser"
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+@use 'root' as *;
+@use 'reboot' as *;
+@use 'tool' as *;
+@use 'animation' as *;
+
+.fix-split-text {
+    will-change: transform;
+    font-kerning: none;
+    -webkit-text-rendering: optimizeSpeed;
+    text-rendering: optimizeSpeed;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.line,
+.word,
+.char {
+    will-change: transform;
+    font-kerning: none;
+    -webkit-text-rendering: optimizeSpeed;
+    text-rendering: optimizeSpeed;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.line-mask,
+.word-mask,
+.char-mask {
+    display: inline-block;
+    vertical-align: baseline;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+}
+
+html {
+    --container-padding-x: 2rem;
+    --grid-gap: 2rem;
+    --grid-columns: 4;
+
+    @include tablet {
+        --container-padding-x: 2rem;
+        --grid-gap: 2rem;
+        --grid-columns: 8;
+    }
+
+    @include laptop {
+        --container-padding-x: 2rem;
+        --grid-gap: 2rem;
+        --grid-columns: 12;
+    }
+}
