@@ -4,7 +4,14 @@
       "Bash(pnpm build:*)",
       "Bash(pnpm dev:*)",
       "Bash(npx tsc:*)",
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "Bash(find ./src -type f -name *.tsx -o -name *.ts)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(grep -r gsap ./src --include=*.tsx --include=*.ts)",
+      "WebFetch(domain:github.com)",
+      "Bash(find ./src/app -type d -name [locale])",
+      "Bash(ls:*)"
     ]
   }
 }
