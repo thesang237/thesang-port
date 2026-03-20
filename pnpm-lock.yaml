@@ -210,9 +210,6 @@ importers:
       babel-plugin-react-compiler:
         specifier: 1.0.0
         version: 1.0.0
-      baseline-browser-mapping:
-        specifier: ^2.9.11
-        version: 2.9.11
       critters:
         specifier: ^0.0.25
         version: 0.0.25
