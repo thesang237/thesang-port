@@ -48,13 +48,6 @@ const WaveMaterial = shaderMaterial(
 );
 extend({ WaveMaterial });
 
-// Augment JSX for custom shader
-declare module '@react-three/fiber' {
-    type ThreeElements = {
-        waveMaterial: THREE.ShaderMaterial & { uTime: number; uColor: THREE.Color };
-    };
-}
-
 // ─── Atoms ────────────────────────────────────────────────────────────────────
 function FadeIn({ children, delay = 0, className }: { children: React.ReactNode; delay?: number; className?: string }) {
     const ref = useRef<HTMLDivElement>(null);
