@@ -9,7 +9,6 @@ import { BootstrapProvider } from '@/providers/bootstrap';
 import { CursorProvider } from '@/providers/cursor';
 import { FontProvider } from '@/providers/font';
 import { PageProvider } from '@/providers/page';
-import { ThemeProvider } from '@/providers/theme';
 import { WindowSizeProvider } from '@/providers/window-size';
 
 const queryClient = new QueryClient({
@@ -27,23 +26,21 @@ const queryClient = new QueryClient({
 
 const MainProviders: FC<PropsWithChildren> = ({ children }) => {
     return (
-        <ThemeProvider>
-            <BootstrapProvider>
-                <WindowSizeProvider>
-                    <AssetProvider>
-                        <FontProvider>
-                            <PageProvider>
-                                <CursorProvider>
-                                    <QueryClientProvider client={queryClient}>
-                                        <AuthProvider>{children}</AuthProvider>
-                                    </QueryClientProvider>
-                                </CursorProvider>
-                            </PageProvider>
-                        </FontProvider>
-                    </AssetProvider>
-                </WindowSizeProvider>
-            </BootstrapProvider>
-        </ThemeProvider>
+        <BootstrapProvider>
+            <WindowSizeProvider>
+                <AssetProvider>
+                    <FontProvider>
+                        <PageProvider>
+                            <CursorProvider>
+                                <QueryClientProvider client={queryClient}>
+                                    <AuthProvider>{children}</AuthProvider>
+                                </QueryClientProvider>
+                            </CursorProvider>
+                        </PageProvider>
+                    </FontProvider>
+                </AssetProvider>
+            </WindowSizeProvider>
+        </BootstrapProvider>
     );
 };
 

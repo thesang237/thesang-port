@@ -14,6 +14,7 @@ import { routing } from '@/i18n/routing';
 import PageLoader from '@/modules/layouts/PageLoader';
 import PageTransition from '@/modules/layouts/PageTransition';
 import MainProviders from '@/providers/index';
+import { ThemeProvider } from '@/providers/theme';
 import type { PagePropsBase } from '@/types/page';
 import { extractMetadata } from '@/utils/metadata';
 
@@ -76,14 +77,16 @@ export default async function RootLayout({ children, params }: Props) {
 
             <body suppressHydrationWarning>
                 <NextIntlClientProvider messages={messages}>
-                    <MainProviders>
-                        {children}
+                    <ThemeProvider>
+                        <MainProviders>
+                            {children}
 
-                        <PageLoader />
-                        <PageTransition />
+                            <PageLoader />
+                            <PageTransition />
 
-                        <Toaster position="bottom-right" richColors duration={3000} />
-                    </MainProviders>
+                            <Toaster position="bottom-right" richColors duration={3000} />
+                        </MainProviders>
+                    </ThemeProvider>
                 </NextIntlClientProvider>
             </body>
         </html>

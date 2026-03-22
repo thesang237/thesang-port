@@ -4,6 +4,7 @@
   "singleQuote": true,
   "printWidth": 200,
   "tabWidth": 4,
+  "endOfLine": "auto",
   "plugins": [
     "prettier-plugin-glsl"
   ],

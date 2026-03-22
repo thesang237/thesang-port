@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&display=swap');
+
+.root {
+    background-color: #000;
+    color: #fff;
+    font-size: 11px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── spacer ─────────────────────────────────── */
+.spacer {
+    height: 100vh;
+    display: grid;
+    text-align: center;
+    place-items: center;
+    align-content: space-between;
+    padding: 40vh 0 0;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.spacer h1 {
+    font-size: 3rem;
+    letter-spacing: -0.025em;
+    line-height: 0.85;
+    font-weight: 300;
+}
+
+.spacer h1 span {
+    opacity: 0.6;
+    line-height: 1.2;
+}
+
+.spacer a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.spacer a:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+.info {
+    max-width: 20ch;
+    opacity: 0.6;
+    margin-bottom: 4rem;
+    padding-bottom: 1rem;
+    position: relative;
+}
+
+.info::after {
+    content: '';
+    width: 1px;
+    height: 2rem;
+    background: #fff;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+}
+
+/* ── stage ──────────────────────────────────── */
+.stage {
+    height: 500vh;
+    position: relative;
+}
+
+.layers {
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ── texts ──────────────────────────────────── */
+.texts {
+    padding: 3vw;
+}
+
+.txt {
+    position: absolute;
+    width: 100%;
+    color: #fff;
+    text-transform: uppercase;
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(40px);
+    font-family: 'Playfair Display', Georgia, serif;
+}
+
+.txt h1 {
+    margin-top: 10vh;
+    font-size: clamp(4.8rem, 6.8vw, 13.6rem);
+    letter-spacing: -0.025em;
+    line-height: 0.85;
+}
+
+.txt h2 {
+    margin-top: 6vw;
+    font-size: clamp(1.4rem, 1.067vw, 1.8rem);
+    letter-spacing: 0.24em;
+    font-family: system-ui, sans-serif;
+    font-weight: 400;
+}
+
+.txt span {
+    display: block;
+    font-size: clamp(1.1rem, 0.8vw, 1.2rem);
+    width: 20%;
+    margin-top: 30px;
+    line-height: 1.8;
+    letter-spacing: normal;
+    font-family: system-ui, sans-serif;
+    font-weight: 400;
+    text-transform: none;
+}
+
+@media screen and (max-width: 1024px) {
+    .txt span {
+        width: 35%;
+    }
+}
+
+@media screen and (max-width: 599px) {
+    .txt span {
+        width: 50%;
+    }
+}
+
+/* ── progress bar ───────────────────────────── */
+.progressBar {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 4rem;
+    display: flex;
+    gap: 1rem;
+    z-index: 20;
+}
+
+.segment {
+    flex: 1;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background: #fff;
+}
+
+/* ── nav ────────────────────────────────────── */
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 3vw;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        sans-serif;
+    font-size: 1.25rem;
+    pointer-events: none;
+}
+
+.navLinks {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    pointer-events: auto;
+}
+
+.navLinks a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.navLinks a:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+.navCurrent {
+    text-decoration: underline;
+    color: #fff;
+}

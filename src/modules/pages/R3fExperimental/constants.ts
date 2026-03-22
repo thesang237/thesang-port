@@ -1,0 +1,28 @@
+const IMAGE_LIST: string[] = [
+    '/images/r3f-carousel/img1.webp',
+    '/images/r3f-carousel/img2.webp',
+    '/images/r3f-carousel/img3.webp',
+    '/images/r3f-carousel/img4.webp',
+    '/images/r3f-carousel/img5.webp',
+    '/images/r3f-carousel/img6.webp',
+    '/images/r3f-carousel/img7.webp',
+    '/images/r3f-carousel/img8.webp',
+    '/images/r3f-carousel/img9.webp',
+    '/images/r3f-carousel/img10.webp',
+    '/images/r3f-carousel/img11.webp',
+    '/images/r3f-carousel/img12.webp',
+    '/images/r3f-carousel/img13.webp',
+    '/images/r3f-carousel/img14.webp',
+    '/images/r3f-carousel/img15.webp',
+    '/images/r3f-carousel/img16.webp',
+    '/images/r3f-carousel/img17.webp',
+    '/images/r3f-carousel/img18.webp',
+    '/images/r3f-carousel/img19.webp',
+    '/images/r3f-carousel/img20.webp',
+    '/images/r3f-carousel/img21.webp',
+    '/images/r3f-carousel/img22.webp',
+    '/images/r3f-carousel/img23.webp',
+    '/images/r3f-carousel/img24.webp',
+];
+
+export { IMAGE_LIST };
