@@ -9,9 +9,7 @@ import * as THREE from 'three';
 import CustomShaderMaterial from 'three-custom-shader-material';
 import type CSMClass from 'three-custom-shader-material/vanilla';
 
-// @ts-expect-error -- no type declarations for glsl imports
 import fragmentShader from './shaders/fragment.glsl';
-// @ts-expect-error -- no type declarations for glsl imports
 import vertexShader from './shaders/vertex.glsl';
 
 const useDomToCanvas = (domEl: HTMLElement | null) => {
