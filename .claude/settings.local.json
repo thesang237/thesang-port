@@ -11,7 +11,15 @@
       "Bash(grep -r gsap ./src --include=*.tsx --include=*.ts)",
       "WebFetch(domain:github.com)",
       "Bash(find ./src/app -type d -name [locale])",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(node -e \":*)",
+      "Bash(find:*)",
+      "Bash(node:*)",
+      "WebFetch(domain:shiki.style)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm next:*)",
+      "Bash(npx eslint:*)"
     ]
   }
 }

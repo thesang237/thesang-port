@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 
+import { CodeBlock } from '@/components/code-block';
 import { cn } from '@/utils/cn';
 
 // ─── Shared easing ────────────────────────────────────────────────────────────
@@ -54,22 +55,6 @@ function Tag({ children, variant = 'indigo' }: { children: React.ReactNode; vari
         >
             {children}
         </span>
-    );
-}
-
-function CodeBlock({ children, highlight }: { children: string; highlight?: string[] }) {
-    const lines = children.split('\n');
-    return (
-        <pre className="bg-[#0d0d12] border border-zinc-800 rounded-xl p-5 font-mono overflow-x-auto leading-relaxed" style={{ fontSize: '12px' }}>
-            {lines.map((line, i) => {
-                const isHighlighted = highlight?.some((h) => line.includes(h));
-                return (
-                    <div key={i} className={cn('px-1 rounded', isHighlighted && 'bg-indigo-500/10 text-indigo-200')} style={{ color: isHighlighted ? undefined : '#a1a1aa' }}>
-                        {line || '\u00A0'}
-                    </div>
-                );
-            })}
-        </pre>
     );
 }
 

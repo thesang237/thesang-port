@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 
+import { CodeBlock } from '@/components/code-block';
 import { cn } from '@/utils/cn';
 
 // ─── Emil's recommended easing curves ───────────────────────────────────────
@@ -77,14 +78,6 @@ function DemoButton({ children, variant = 'primary', className, onClick }: { chi
         >
             {children}
         </motion.button>
-    );
-}
-
-function CodeBlock({ children }: { children: React.ReactNode }) {
-    return (
-        <pre className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 font-mono text-zinc-300 overflow-x-auto leading-relaxed" style={{ fontSize: '12px' }}>
-            {children}
-        </pre>
     );
 }
 
@@ -577,7 +570,7 @@ function ComponentPolishSection() {
                                 </div>
                             </div>
 
-                            <CodeBlock>{`/* CSS */
+                            <CodeBlock lang="tsx">{`/* CSS */
 .button { transition: transform 160ms ease-out; }
 .button:active { transform: scale(0.97); }
 
@@ -806,7 +799,7 @@ function ChecklistSection() {
                             <p className="text-zinc-400 leading-relaxed mb-4" style={{ fontSize: '14px' }}>
                                 Reduced motion means fewer and gentler animations — not zero. Keep opacity and color transitions. Remove position and movement animations.
                             </p>
-                            <CodeBlock>{`@media (prefers-reduced-motion: reduce) {
+                            <CodeBlock lang="css">{`@media (prefers-reduced-motion: reduce) {
   .element { animation: fade 0.2s ease; }
 }`}</CodeBlock>
                         </div>
@@ -822,7 +815,7 @@ function ChecklistSection() {
                         <p className="text-zinc-400 leading-relaxed mb-4" style={{ fontSize: '14px' }}>
                             Springs simulate real physics — they settle based on parameters, not fixed durations. They maintain velocity when interrupted, making them ideal for gestures.
                         </p>
-                        <CodeBlock>{`// Apple's approach (recommended)
+                        <CodeBlock lang="typescript">{`// Apple's approach (recommended)
 { type: "spring", duration: 0.5, bounce: 0.2 }
 
 // Keep bounce subtle (0.1–0.3)
