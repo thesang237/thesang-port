@@ -9,7 +9,7 @@ const Overlay = () => {
     const pathname = usePathname();
 
     const getExperimentPath = (num: number) => {
-        const base = pathname?.replace(/\/r3f-experimental\/\d+$/, '') || '';
+        const base = pathname?.replace(/\/r3f-experimental(\/\d+)?$/, '') || '';
         return `${base}/r3f-experimental/${num}`;
     };
 

@@ -34,7 +34,10 @@
       "Bash(mkdir -p \"C:\\\\0-Sang\\\\Code\\\\thesang-port\\\\src\\\\modules\\\\pages\\\\R3fBulge\\\\shaders\")",
       "Bash(mkdir -p \"C:\\\\0-Sang\\\\Code\\\\thesang-port\\\\src\\\\app\\\\[locale]\\\\r3f-bulge\")",
       "Bash(git add:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(find /c/0-Sang/Code/3d-cards -type f \\\\\\(-name .* -o -name *.config.* \\\\\\))",
+      "Bash(ls -R /c/0-Sang/Code/thesang-port/src/app/[locale]/\\\\\\(with-lenis\\\\\\)/)",
+      "Bash(head:*)"
     ]
   }
 }
