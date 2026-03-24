@@ -65,8 +65,9 @@ extend({ BentPlaneGeometry, MeshSineMaterial });
 import type { ThreeElement } from '@react-three/fiber';
 
 declare module '@react-three/fiber' {
-    type ThreeElements = {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    interface ThreeElements {
         bentPlaneGeometry: ThreeElement<typeof BentPlaneGeometry>;
         meshSineMaterial: ThreeElement<typeof MeshSineMaterial>;
-    };
+    }
 }
