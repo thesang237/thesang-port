@@ -62,15 +62,11 @@ export class MeshSineMaterial extends THREE.MeshBasicMaterial {
 extend({ BentPlaneGeometry, MeshSineMaterial });
 
 // ─── Type augmentation for R3F JSX ───────────────────────────────────────────
+import type { ThreeElement } from '@react-three/fiber';
+
 declare module '@react-three/fiber' {
     type ThreeElements = {
-        bentPlaneGeometry: {
-            args?: [radius: number, width?: number, height?: number, widthSegments?: number, heightSegments?: number];
-        };
-        meshSineMaterial: THREE.MeshBasicMaterialParameters & {
-            ref?: React.Ref<MeshSineMaterial>;
-            'map-anisotropy'?: number;
-            'map-repeat'?: [number, number];
-        };
+        bentPlaneGeometry: ThreeElement<typeof BentPlaneGeometry>;
+        meshSineMaterial: ThreeElement<typeof MeshSineMaterial>;
     };
 }
