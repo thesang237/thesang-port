@@ -1,0 +1,71 @@
+@font-face {
+    font-family: 'OptimusPrinceps';
+    src: url('/OptimusPrinceps.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'OptimusPrincepsSemiBold';
+    src: url('/OptimusPrincepsSemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.dithering-page {
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.dithering-demo-container {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    mix-blend-mode: difference;
+    pointer-events: none;
+}
+
+.dithering-demo-name {
+    font-family: 'OptimusPrincepsSemiBold', serif;
+    font-size: 46px;
+    color: white;
+    pointer-events: none;
+}
+
+.dithering-demo-author {
+    font-family: 'OptimusPrinceps', serif;
+    font-size: 16px;
+    color: white;
+    margin-top: -5px;
+    letter-spacing: 1.2px;
+}
+
+.dithering-demo-author a {
+    color: white;
+    pointer-events: all;
+}
+
+.dithering-github-link {
+    text-decoration: underline;
+}
+
+.dithering-underlined {
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 768px) {
+    .dithering-demo-name {
+        font-size: 36.8px;
+    }
+
+    .dithering-demo-author {
+        font-size: 12.8px;
+    }
+}

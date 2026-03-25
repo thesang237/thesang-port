@@ -1,0 +1,970 @@
+/* =========================================
+   Floema — Global Styles
+   ========================================= */
+
+/* Fonts */
+@font-face {
+    font-family: 'George X';
+    src:
+        url('/george-x-regular.woff2') format('woff2'),
+        url('/george-x-regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src:
+        url('/suisse-bp-light.woff2') format('woff2'),
+        url('/suisse-bp-light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src:
+        url('/suisse-bp-regular.woff2') format('woff2'),
+        url('/suisse-bp-regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Suisse BP';
+    src:
+        url('/suisse-bp-ultra-light.woff2') format('woff2'),
+        url('/suisse-bp-ultra-light.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+}
+
+/* =========================================
+   CSS Custom Properties
+   ========================================= */
+
+.floema-root,
+.floema-root * {
+    --color-bright-gray: #37384c;
+    --color-cadet-blue: #b2b8c3;
+    --color-contessa: #c97164;
+    --color-quicksand: #bc978c;
+    --color-quarter-spanish-white: #f9f1e7;
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* =========================================
+   Base / Reset (scoped)
+   ========================================= */
+
+.floema-root {
+    font-family: 'Suisse BP', sans-serif;
+    font-weight: 300;
+    overflow: hidden;
+    position: fixed;
+    inset: 0;
+}
+
+.floema-root canvas {
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floema-root img {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.floema-root img.loaded {
+    opacity: 1;
+}
+
+/* =========================================
+   Navigation
+   ========================================= */
+
+.floema-nav {
+    position: fixed;
+    pointer-events: none;
+    z-index: 3;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.floema-nav__link {
+    left: 4rem;
+    top: 4rem;
+    position: absolute;
+    pointer-events: auto;
+    height: 2rem;
+    width: 12.8rem;
+    display: flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+}
+
+.floema-nav__link__icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.floema-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.floema-nav__list__item {
+    position: absolute;
+    right: 4rem;
+    top: 4rem;
+    pointer-events: auto;
+}
+
+.floema-nav__list__link {
+    font-family: 'George X', serif;
+    font-size: 2.4rem;
+    letter-spacing: 0.1rem;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
+.floema-nav__list__link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 0.6s var(--ease-in-out);
+}
+
+.floema-nav__list__link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+}
+
+/* =========================================
+   Preloader
+   ========================================= */
+
+.floema-preloader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #c97164;
+    z-index: 5;
+}
+
+.floema-preloader__text {
+    font-family: 'George X', serif;
+    font-size: 5.3rem;
+    max-width: 67rem;
+    text-align: center;
+    opacity: 0;
+    line-height: 1.2;
+    color: #f9f1e7;
+}
+
+.floema-preloader__text span span {
+    display: inline-block;
+    transform-origin: center center 0.5em;
+}
+
+.floema-preloader__number {
+    position: absolute;
+    bottom: 7.3rem;
+    font-size: 1.4rem;
+    color: #f9f1e7;
+}
+
+/* =========================================
+   Transition Canvas
+   ========================================= */
+
+.floema-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* =========================================
+   Home Page
+   ========================================= */
+
+.floema-home {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+    transition:
+        opacity 0.5s ease,
+        visibility 0.5s ease;
+}
+
+.floema-home.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.floema-home__wrapper {
+    position: absolute;
+    inset: 0;
+}
+
+.floema-home__wrapper::before,
+.floema-home__wrapper::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 35rem;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.floema-home__wrapper::before {
+    top: 0;
+    background: linear-gradient(to bottom, #c97164 0%, transparent 100%);
+}
+
+.floema-home__wrapper::after {
+    bottom: 0;
+    background: linear-gradient(to top, #c97164 0%, transparent 100%);
+}
+
+.floema-home__titles {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+}
+
+.floema-home__titles__label {
+    height: 16rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    position: relative;
+    text-align: center;
+}
+
+.floema-home__titles__label__text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    width: 10rem;
+    display: inline-block;
+}
+
+.floema-home__titles__title {
+    font-family: 'George X', serif;
+    font-size: 20rem;
+    position: relative;
+}
+
+.floema-home__titles__title__text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.floema-home__gallery {
+    display: flex;
+    flex-wrap: wrap;
+    left: 50%;
+    padding: 0 2.5rem;
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    width: 100%;
+    visibility: hidden;
+}
+
+.floema-home__gallery__media {
+    padding: 2.5rem;
+    width: 20%;
+    margin: 0;
+}
+
+.floema-home__gallery__media--2 {
+    transform: translateY(10rem);
+}
+
+.floema-home__gallery__media--3 {
+    transform: translateY(30rem);
+}
+
+.floema-home__gallery__media--4 {
+    transform: translateY(20rem);
+}
+
+.floema-home__gallery__media--5 {
+    transform: translateY(40rem);
+}
+
+.floema-home__gallery__media__image {
+    display: block;
+    width: 100%;
+}
+
+.floema-home__link {
+    font-size: 1.4rem;
+    align-items: center;
+    bottom: 5rem;
+    display: flex;
+    height: 6rem;
+    justify-content: center;
+    left: 50%;
+    letter-spacing: 0.05rem;
+    position: absolute;
+    text-transform: uppercase;
+    transform: translateX(-50%);
+    width: 28.8rem;
+    z-index: 2;
+    color: inherit;
+    text-decoration: none;
+}
+
+.floema-home__link span {
+    display: inline-block;
+    line-height: 1;
+    position: relative;
+    vertical-align: middle;
+}
+
+.floema-home__link__icon {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* =========================================
+   Collections Page
+   ========================================= */
+
+.floema-collections {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 0;
+    transition:
+        opacity 0.5s ease,
+        visibility 0.5s ease;
+}
+
+.floema-collections.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.floema-collections__wrapper {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.floema-collections--open .floema-collections__wrapper {
+    opacity: 0;
+}
+
+.floema-collections__titles {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+}
+
+.floema-collections__titles__label {
+    height: 16rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+    position: relative;
+    text-align: center;
+}
+
+.floema-collections__titles__label__text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    width: 10rem;
+    display: inline-block;
+}
+
+.floema-collections__titles__title {
+    font-family: 'George X', serif;
+    font-size: 20rem;
+    position: relative;
+}
+
+.floema-collections__titles__title__text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.floema-collections__gallery {
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+    z-index: 1;
+}
+
+.floema-collections__gallery__wrapper {
+    align-items: center;
+    display: flex;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-178.8rem, -50%);
+}
+
+.floema-collections__gallery__link {
+    display: block;
+    padding: 0 5.3rem;
+}
+
+.floema-collections__gallery__media {
+    height: 50.48rem;
+    width: 35.76rem;
+    position: relative;
+    visibility: hidden;
+    margin: 0;
+}
+
+.floema-collections__gallery__media__image {
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.floema-collections__content {
+    position: absolute;
+    inset: 0;
+}
+
+.floema-collections__article {
+    position: absolute;
+    bottom: 8rem;
+    left: 8rem;
+}
+
+.floema-collections__article__title {
+    font-family: 'George X', serif;
+    font-size: 6rem;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.floema-collections__article__title__text {
+    display: inline-block;
+    transform: translateY(100%);
+    transition: transform 1s var(--ease-in-out);
+}
+
+.floema-collections__article.active .floema-collections__article__title__text {
+    transform: translateY(0);
+    transition-delay: 1s;
+}
+
+.floema-collections__article__description {
+    font-size: 1.8rem;
+    font-weight: 300;
+    line-height: 1.5;
+    overflow: hidden;
+}
+
+.floema-collections__article__description span {
+    display: inline-block;
+    transform: translateY(100%);
+    transition: transform 1s var(--ease-in-out);
+}
+
+.floema-collections__article.active .floema-collections__article__description span:nth-child(1) {
+    transform: translateY(0);
+    transition-delay: 1.1s;
+}
+
+.floema-collections__article.active .floema-collections__article__description span:nth-child(2) {
+    transform: translateY(0);
+    transition-delay: 1.2s;
+}
+
+.floema-collections__article.active .floema-collections__article__description span:nth-child(3) {
+    transform: translateY(0);
+    transition-delay: 1.3s;
+}
+
+/* =========================================
+   Detail Page
+   ========================================= */
+
+.floema-detail {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(100%);
+    transition:
+        opacity 0.5s 0.5s,
+        transform 0s 0.5s,
+        visibility 0.5s 0.5s;
+}
+
+.floema-detail.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+        opacity 0.5s,
+        transform 0s,
+        visibility 0.5s;
+}
+
+.floema-detail__wrapper {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.floema-detail.active .floema-detail__wrapper {
+    opacity: 1;
+}
+
+.floema-detail__media {
+    height: 78.2rem;
+    width: 55.4rem;
+    position: relative;
+    visibility: hidden;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.floema-detail__media__image {
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.floema-detail__information {
+    padding-left: 8.2rem;
+}
+
+.floema-detail__information__collection {
+    font-size: 1.2rem;
+    margin-bottom: 4rem;
+    text-transform: uppercase;
+    overflow: hidden;
+}
+
+.floema-detail__information__title {
+    font-family: 'George X', serif;
+    font-size: 12rem;
+    line-height: 0.82;
+    max-width: 60rem;
+    margin: 0;
+}
+
+.floema-detail__information__content {
+    padding-left: 18rem;
+}
+
+.floema-detail__information__highlights {
+    margin-top: 6rem;
+}
+
+.floema-detail__information__highlight {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.floema-detail__information__highlight + .floema-detail__information__highlight {
+    margin-top: 4rem;
+}
+
+.floema-detail__information__highlight__icon {
+    border-radius: 50%;
+    height: 4rem;
+    width: 4rem;
+    margin-right: 3.75rem;
+    flex-shrink: 0;
+}
+
+.floema-detail__information__highlight__text {
+    font-size: 1.8rem;
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+.floema-detail__information__list {
+    margin-top: 4rem;
+}
+
+.floema-detail__information__item {
+    display: flex;
+    margin: 0;
+}
+
+.floema-detail__information__item + .floema-detail__information__item {
+    margin-top: 4rem;
+}
+
+.floema-detail__information__item__title {
+    font-size: 1.2rem;
+    width: 15rem;
+    overflow: hidden;
+    padding-right: 2.5rem;
+    font-weight: 400;
+    flex-shrink: 0;
+}
+
+.floema-detail__information__item__description {
+    font-size: 1.8rem;
+    letter-spacing: 0.03rem;
+    max-width: 44rem;
+}
+
+.floema-detail__information__link {
+    font-family: 'George X', serif;
+    font-size: 3rem;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    margin-top: 3rem;
+    width: fit-content;
+    color: inherit;
+    text-decoration: none;
+}
+
+.floema-detail__information__link::before {
+    content: '↗';
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.floema-detail__button {
+    font-size: 1.4rem;
+    position: absolute;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    height: 6rem;
+    width: 12.4rem;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    letter-spacing: 0.05rem;
+}
+
+.floema-detail.active .floema-detail__button {
+    opacity: 1;
+}
+
+.floema-detail__button span {
+    display: inline-block;
+    line-height: 1;
+    position: relative;
+    vertical-align: middle;
+}
+
+.floema-detail__button__icon {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* =========================================
+   About Page
+   ========================================= */
+
+.floema-about {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 2;
+    transition:
+        opacity 0.5s ease,
+        visibility 0.5s ease;
+}
+
+.floema-about.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.floema-about__wrapper {
+    padding-top: 10rem;
+    will-change: transform;
+}
+
+.floema-about__title {
+    font-family: 'George X', serif;
+    font-size: 11rem;
+    line-height: 1.1;
+    margin: 0 auto;
+    max-width: 140rem;
+    text-align: center;
+    white-space: pre-line;
+}
+
+.floema-about__content {
+    display: flex;
+    justify-content: center;
+    margin: 20rem auto;
+    position: relative;
+}
+
+.floema-about__content__wrapper {
+    display: flex;
+}
+
+.floema-about__content--right .floema-about__content__wrapper {
+    flex-direction: row-reverse;
+}
+
+.floema-about__content__box {
+    display: flex;
+}
+
+.floema-about__content__label {
+    font-size: 1.2rem;
+    letter-spacing: 0.032rem;
+    line-height: 2;
+    text-transform: uppercase;
+    width: 18rem;
+}
+
+.floema-about__content__description {
+    width: 36.2rem;
+}
+
+.floema-about__content__description p + p {
+    margin-top: 2.5rem;
+}
+
+.floema-about__content__description p {
+    margin: 0;
+}
+
+.floema-about__content__media {
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.floema-about__content:nth-child(3) .floema-about__content__media {
+    height: 80.8rem;
+    margin-left: 18rem;
+    width: 53.8rem;
+}
+
+.floema-about__content:nth-child(5) .floema-about__content__media {
+    height: 60rem;
+    margin-left: 18rem;
+    width: 96rem;
+}
+
+.floema-about__content:nth-child(8) .floema-about__content__media {
+    height: 52rem;
+    margin-right: 12rem;
+    width: 84.2rem;
+}
+
+.floema-about__content:nth-child(9) .floema-about__content__media {
+    height: 85.8rem;
+    margin-left: 22rem;
+    width: 60.8rem;
+}
+
+.floema-about__content__media__wrapper {
+    position: absolute;
+    inset: 0;
+}
+
+.floema-about__content__media__image {
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.floema-about__gallery {
+    height: 58.6rem;
+    margin: 15rem 0;
+    overflow: hidden;
+    position: relative;
+    visibility: hidden;
+}
+
+.floema-about__gallery__wrapper {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.floema-about__gallery__media {
+    height: 43.7rem;
+    margin: 0 4rem;
+    width: 30.9rem;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.floema-about__gallery__media__image {
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.floema-about__highlight {
+    margin: 20rem 0;
+}
+
+.floema-about__highlight__wrapper {
+    height: 104rem;
+    margin: auto;
+    width: 144rem;
+    position: relative;
+}
+
+.floema-about__highlight__label {
+    font-size: 1.2rem;
+    position: absolute;
+    left: 50%;
+    top: 9rem;
+    transform: translateX(-50%);
+    text-align: center;
+    text-transform: uppercase;
+    width: 9.6rem;
+    letter-spacing: 0.1rem;
+}
+
+.floema-about__highlight__title {
+    font-family: 'George X', serif;
+    font-size: 20rem;
+    padding-bottom: 2rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    white-space: nowrap;
+    margin: 0;
+}
+
+.floema-about__highlight__medias {
+    position: absolute;
+    inset: 0;
+}
+
+.floema-about__highlight__media {
+    height: 76rem;
+    overflow: hidden;
+    position: absolute;
+    width: 54rem;
+    margin: 0;
+}
+
+.floema-about__highlight__media:first-child {
+    left: 0;
+    top: 0;
+}
+
+.floema-about__highlight__media:last-child {
+    bottom: 0;
+    right: 0;
+}
+
+.floema-about__highlight__media__image {
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.floema-about__footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    padding: 4rem;
+    margin-top: 10rem;
+}
+
+.floema-about__footer a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* =========================================
+   Data Animations
+   ========================================= */
+
+[data-animation='button'] {
+    perspective: 100rem;
+    transform-style: preserve-3d;
+}
+
+[data-animation='link'] {
+    perspective: 100rem;
+    transform-style: preserve-3d;
+}
