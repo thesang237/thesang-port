@@ -98,7 +98,7 @@ html {
     }
 
     @include laptop {
-        font-size: dynamicOnWidth(18px, 1920px);
+        font-size: dynamicOnWidth(24px, 1920px);
     }
 }
 
