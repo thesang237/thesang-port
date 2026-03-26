@@ -510,8 +510,12 @@ function ViewportSection() {
                     </FadeIn>
                     <FadeIn delay={0.1}>
                         <p className="text-zinc-400 leading-relaxed">
-                            <Pill>width=device-width</Pill> tells the browser to use the actual screen width.
-                            <Pill>initial-scale=1</Pill> prevents the default zoom-out. This is the <strong className="text-zinc-200">single most impactful</strong> line for responsive design.
+                            <Pill>width=device-width</Pill>
+                            {' tells the browser to use the actual screen width. '}
+                            <Pill>initial-scale=1</Pill>
+                            {' prevents the default zoom-out. This is the '}
+                            <strong className="text-zinc-200">single most impactful</strong>
+                            {' line for responsive design.'}
                         </p>
                     </FadeIn>
                     <FadeIn delay={0.15}>
@@ -625,8 +629,14 @@ function ContainerSection() {
                     </FadeIn>
                     <FadeIn delay={0.1}>
                         <p className="text-zinc-400 leading-relaxed">
-                            <Pill>mx-auto</Pill> centers the container. <Pill>w-full</Pill> lets it shrink on small screens. <Pill>max-w-*</Pill> caps the maximum width. <Pill>px-6</Pill> adds
-                            horizontal padding so content never touches the edge on mobile.
+                            <Pill>mx-auto</Pill>
+                            {' centers the container. '}
+                            <Pill>w-full</Pill>
+                            {' lets it shrink on small screens. '}
+                            <Pill>max-w-*</Pill>
+                            {' caps the maximum width. '}
+                            <Pill>px-6</Pill>
+                            {' adds horizontal padding so content never touches the edge on mobile.'}
                         </p>
                     </FadeIn>
                     <FadeIn delay={0.15}>
@@ -839,8 +849,11 @@ function GridSection() {
                     </FadeIn>
                     <FadeIn delay={0.15}>
                         <Callout variant="perf" title="Grid vs Flex — when to use which">
-                            Use <strong className="text-violet-300">Grid</strong> when you have a defined number of columns and want items to align across rows (feature cards, image galleries). Use{' '}
-                            <strong className="text-violet-300">Flexbox</strong> when content should flow naturally and you don&apos;t need strict row alignment.
+                            {'Use '}
+                            <strong className="text-violet-300">Grid</strong>
+                            {' when you have a defined number of columns and want items to align across rows (feature cards, image galleries). Use '}
+                            <strong className="text-violet-300">Flexbox</strong>
+                            {' when content should flow naturally and you don\u2019t need strict row alignment.'}
                         </Callout>
                     </FadeIn>
                 </div>
@@ -973,19 +986,29 @@ function ShowHideSection() {
                             <p className="text-zinc-300 text-sm font-semibold">Patterns extracted from resend.com:</p>
                             <ul className="space-y-1.5 text-zinc-400 text-sm">
                                 <li>
-                                    • <Pill>md:hidden</Pill> — hides the mobile hamburger menu on desktop
+                                    {'• '}
+                                    <Pill>md:hidden</Pill>
+                                    {' — hides the mobile hamburger menu on desktop'}
                                 </li>
                                 <li>
-                                    • <Pill>md:flex</Pill> — shows the full horizontal nav on desktop
+                                    {'• '}
+                                    <Pill>md:flex</Pill>
+                                    {' — shows the full horizontal nav on desktop'}
                                 </li>
                                 <li>
-                                    • <Pill>md:inline</Pill> — shows extra labels inline on larger screens
+                                    {'• '}
+                                    <Pill>md:inline</Pill>
+                                    {' — shows extra labels inline on larger screens'}
                                 </li>
                                 <li>
-                                    • <Pill>sm:block</Pill> — reveals content that&apos;s hidden below sm breakpoint
+                                    {'• '}
+                                    <Pill>sm:block</Pill>
+                                    {" — reveals content that's hidden below sm breakpoint"}
                                 </li>
                                 <li>
-                                    • <Pill>md:opacity-0</Pill> — fades an overlay only on desktop
+                                    {'• '}
+                                    <Pill>md:opacity-0</Pill>
+                                    {' — fades an overlay only on desktop'}
                                 </li>
                             </ul>
                         </div>
@@ -1050,9 +1073,17 @@ function SpacingSection() {
                     </FadeIn>
                     <FadeIn delay={0.1}>
                         <p className="text-zinc-400 leading-relaxed">
-                            Real patterns from resend.com: <Pill>sm:py-24</Pill> for section padding,
-                            <Pill>md:gap-4</Pill>, <Pill>md:gap-8</Pill>, <Pill>md:gap-12</Pill> for flex/grid gaps, and <Pill>px-6</Pill> mobile padding that stays constant to protect content from
-                            edges.
+                            {'Real patterns from resend.com: '}
+                            <Pill>sm:py-24</Pill>
+                            {' for section padding, '}
+                            <Pill>md:gap-4</Pill>
+                            {', '}
+                            <Pill>md:gap-8</Pill>
+                            {', '}
+                            <Pill>md:gap-12</Pill>
+                            {' for flex/grid gaps, and '}
+                            <Pill>px-6</Pill>
+                            {' mobile padding that stays constant to protect content from edges.'}
                         </p>
                     </FadeIn>
                     <FadeIn delay={0.15}>

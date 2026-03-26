@@ -1,15 +1,16 @@
 'use client';
 
-import { type FC, type MouseEvent, type ReactNode } from 'react';
+import { type AnchorHTMLAttributes, type FC, type MouseEvent, type ReactNode } from 'react';
 import type { LinkProps } from 'next/link';
 
 import { Link, usePathname } from '@/i18n/navigation';
 import { usePage } from '@/providers/page';
 
-type Props = Omit<LinkProps, 'href' | 'prefetch' | 'locale' | 'as'> & {
-    href: string;
-    children: ReactNode;
-};
+type Props = Omit<LinkProps, 'href' | 'prefetch' | 'locale' | 'as'> &
+    Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
+        href: string;
+        children: ReactNode;
+    };
 
 const TransitionLink: FC<Props> = ({ href, children, onClick, ...props }) => {
     const pathname = usePathname();

@@ -518,8 +518,10 @@ function Card({ title, body, image, cta, href }: CardProps) {
                 <FadeIn delay={0.2}>
                     <div className="bg-indigo-500/5 border border-indigo-500/15 rounded-xl px-6 py-5">
                         <p className="text-indigo-300/80 leading-relaxed" style={{ fontSize: '14px' }}>
-                            <strong className="text-indigo-400">Mental model:</strong> Think of an interface like a Figma component&apos;s property panel. Required props = no default value in Figma.
-                            Optional props = has a default in Figma. If the designer set a default, the prop should be optional in code.
+                            <strong className="text-indigo-400">Mental model:</strong>
+                            {
+                                " Think of an interface like a Figma component's property panel. Required props = no default value in Figma. Optional props = has a default in Figma. If the designer set a default, the prop should be optional in code."
+                            }
                         </p>
                     </div>
                 </FadeIn>

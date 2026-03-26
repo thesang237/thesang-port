@@ -67,7 +67,12 @@ function buildMarqueeItems(isMobile: boolean): MarqueeItem[][] {
 }
 
 export default function TruusDoubleMarquee() {
-    const [tracks] = useState<MarqueeItem[][]>(() => buildMarqueeItems(typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches));
+    const [tracks, setTracks] = useState<MarqueeItem[][] | null>(null);
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setTracks(buildMarqueeItems(window.matchMedia('(max-width: 768px)').matches));
+    }, []);
 
     useEffect(() => {
         gsap.set('.truus-root .marquee-left .marquee-svg-item:nth-child(2) path', { strokeDashoffset: 1000 });
@@ -133,7 +138,7 @@ export default function TruusDoubleMarquee() {
                 </div>
             </div>
             <div className="marquee-right">
-                {tracks.map((trackItems, colIndex) => (
+                {(tracks ?? []).map((trackItems, colIndex) => (
                     <div key={colIndex} className="marquee-column">
                         <div className="marquee-track">
                             {trackItems.map((item, i) => (
