@@ -1,0 +1,243 @@
+/* ─── Page ─────────────────────────────────────────────────────────────────── */
+.page {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background: light-dark(#fff, #000);
+    color-scheme: light dark;
+}
+
+.page::before {
+    --size: 45px;
+    --line: color-mix(in hsl, canvasText, transparent 80%);
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background:
+        linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
+    mask: linear-gradient(-20deg, transparent 50%, white);
+    top: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ─── Slider container ─────────────────────────────────────────────────────── */
+.slider {
+    width: 260px;
+    height: 44px;
+    position: relative;
+    opacity: 0;
+    touch-action: none;
+}
+
+/* ─── Range input ──────────────────────────────────────────────────────────── */
+.slider :global([type='range']) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    filter: blur(4px);
+    opacity: 0;
+    accent-color: canvasText;
+    cursor: grab;
+    transition:
+        filter 0.22s ease-out,
+        opacity 0.22s ease-out,
+        translate 0.22s ease-out;
+}
+
+.slider :global([type='range']):active {
+    cursor: grabbing;
+}
+
+/* ─── SVG overlay ──────────────────────────────────────────────────────────── */
+.slider :global(svg) {
+    width: 260px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    pointer-events: none;
+    translate: 0 -50%;
+    overflow: visible !important;
+}
+
+.slider :global(circle) {
+    transform-box: fill-box;
+    transform-origin: center;
+    translate: 0 0;
+}
+
+/* ─── Tracks ────────────────────────────────────────────────────────────────── */
+.slider :global(.track) {
+    stroke: currentColor;
+    stroke-width: 3px;
+    stroke-dasharray: 0 15;
+    stroke-dashoffset: -0.5;
+    stroke-linecap: round;
+}
+
+.slider :global(.track--progress) {
+    stroke-width: 3px;
+    stroke-dasharray: 0 0;
+}
+
+/* ─── Marker ────────────────────────────────────────────────────────────────── */
+.slider :global(.marker__circle) {
+    fill: var(--accent, hsl(10, 100%, 65%));
+    stroke: var(--accent, hsl(10, 100%, 65%));
+}
+
+.slider :global(.marker__balloon) {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+        translate 0.15s ease-out,
+        scale 0.15s ease-out;
+    scale: 0;
+    translate: 0 0;
+}
+
+.slider :global(.marker__symbols) {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+        translate 0.15s ease-out,
+        scale 0.15s ease-out,
+        opacity 0.15s ease-out;
+    scale: 0;
+    opacity: 0;
+}
+
+/* Active / focus: show balloon and symbols via CSS */
+.slider :global([type='range']:is(:active, :focus-visible) + svg .marker__balloon) {
+    scale: 1;
+    translate: 0 -42px;
+}
+
+.slider :global([type='range']:is(:active, :focus-visible) + svg .marker__symbols) {
+    translate: -0.5px -50px;
+    opacity: 1;
+    scale: 1.6;
+}
+
+/* ─── Symbols ───────────────────────────────────────────────────────────────── */
+.slider :global(.marker-symbol) {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: opacity 0.15s ease-out;
+}
+
+.slider :global(.marker-symbol--triangle) {
+    translate: -1px -1px;
+    scale: 0.9;
+}
+
+.slider :global(.marker-symbol--star) {
+    stroke-width: 1.6px;
+    scale: 1.1;
+    translate: 1px 0;
+}
+
+.slider :global(.marker-symbol--square) {
+    scale: 0.9;
+}
+
+.slider :global(.marker-symbol[data-active='true']) {
+    opacity: 1;
+}
+
+/* ─── Explode state ─────────────────────────────────────────────────────────── */
+.page[data-explode='true'] .slider :global([type='range']) {
+    filter: blur(0);
+    opacity: 1;
+    translate: 0 100px;
+}
+
+.page[data-explode='true'] .arrow {
+    opacity: 0.7;
+    filter: blur(0);
+}
+
+/* ─── Arrow annotation ──────────────────────────────────────────────────────── */
+.arrow {
+    opacity: 0;
+    font-size: 0.875rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    rotate: 10deg;
+    filter: blur(4px);
+    transition:
+        opacity 0.22s ease-out,
+        filter 0.22s ease-out;
+    pointer-events: none;
+    line-height: 1.5;
+    translate: 150px 110px;
+    color: canvasText;
+}
+
+.arrow span {
+    white-space: nowrap;
+    display: block;
+}
+
+.arrow :global(svg) {
+    bottom: calc(100% + 10px);
+    position: absolute;
+    rotate: 86deg;
+    translate: -50% 0;
+    scale: -1 -1;
+    left: 0;
+    width: 60px;
+}
+
+/* ─── Bear link ─────────────────────────────────────────────────────────────── */
+.bearLink {
+    color: canvasText;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 48px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    text-decoration: none;
+}
+
+.bearLink:is(:hover, :focus-visible) {
+    opacity: 1;
+}
+
+.bearLink :global(svg) {
+    width: 75%;
+}
+
+/* ─── Explode toggle ────────────────────────────────────────────────────────── */
+.explodeBtn {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.35rem 0.75rem;
+    background: transparent;
+    border: 1px solid color-mix(in hsl, canvasText, transparent 60%);
+    color: canvasText;
+    cursor: pointer;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.explodeBtn:hover {
+    opacity: 1;
+}

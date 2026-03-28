@@ -148,6 +148,25 @@ const GROUPS: Group[] = [
             { route: '/sooner', title: 'Ship it Sooner', desc: 'Performance and best-practice patterns: what to do (and avoid) for faster shipping', tags: ['UI', 'Guide'] },
         ],
     },
+    {
+        label: 'Jhey Demos',
+        color: 'text-fuchsia-400',
+        border: 'border-fuchsia-500/20',
+        bg: 'bg-fuchsia-500/5',
+        entries: [
+            { route: '/jhey/dynamic-toggle', title: 'Dynamic Toggle', desc: 'CSS-only premium tier toggle — sliding pill indicator, nested radio states, no JS animations', tags: ['UI'] },
+            { route: '/jhey/hover-disclosures', title: 'Hover Disclosures', desc: 'Expandable card list — pointer/focus-driven grid-template-columns transition with image reveal', tags: ['UI'] },
+            { route: '/jhey/svg-slider', title: 'SVG Slider', desc: 'Custom range slider with SVG-based track and thumb styling', tags: ['UI'] },
+            {
+                route: '/jhey/sticky-scroll',
+                title: 'Sticky Scroll',
+                desc: 'CSS scroll-driven window effect — subgrid stacking, position:sticky, animation-timeline, 3D explode view',
+                tags: ['UI', 'Scroll'],
+            },
+            { route: '/jhey/context-aware', title: 'Context-Aware Icons', desc: 'App icon cards with pointer-tracking blurred background glow — container queries, SVG/CSS blur toggle', tags: ['UI'] },
+            { route: '/jhey/frosted-border', title: 'Frosted Border', desc: 'Draggable sticky product card with frosted glass backdrop-filter border over a scrollable image grid', tags: ['UI'] },
+        ],
+    },
 ];
 
 const ALL_TAGS: Tag[] = ['3D', 'Art', 'Scroll', 'GSAP', 'UI', 'Guide', 'Portfolio', 'Canvas'];

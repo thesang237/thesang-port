@@ -1,0 +1,267 @@
+/* ─── Page ──────────────────────────────────────────────────────────────────── */
+.page {
+    color-scheme: light dark;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    min-height: 100vh;
+    gap: 2rem;
+    background: light-dark(#fff, #000);
+    font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif, system-ui;
+    position: relative;
+}
+
+.page[data-theme='light'] {
+    color-scheme: light only;
+}
+
+.page[data-theme='dark'] {
+    color-scheme: dark only;
+}
+
+/* ─── Grid background ───────────────────────────────────────────────────────── */
+.page::before {
+    --size: 45px;
+    --line: color-mix(in hsl, canvasText, transparent 80%);
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background:
+        linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
+    mask: linear-gradient(-20deg, transparent 50%, white);
+    top: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ─── Card grid ─────────────────────────────────────────────────────────────── */
+.grid {
+    padding-block: 4rem;
+    width: 800px;
+    max-width: calc(100vw - 2rem);
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* ─── Card ──────────────────────────────────────────────────────────────────── */
+.card {
+    width: 300px;
+    aspect-ratio: 4 / 3;
+    outline: 2px solid light-dark(hsl(0 0% 90%), hsl(0 0% 20%));
+    background: light-dark(hsl(0 0% 98%), hsl(0 0% 10%));
+    position: relative;
+    border-radius: 12px;
+    container-type: size;
+    cursor: pointer;
+    transition-property: translate, scale;
+    transition-duration: 0.12s;
+    transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.card:active {
+    translate: 0 1px;
+    scale: 0.99;
+}
+
+/* ─── Card inner (clip + layout) ────────────────────────────────────────────── */
+.cardInner {
+    clip-path: inset(0 round 12px);
+    overflow: hidden;
+    align-content: center;
+    display: grid;
+    place-items: center;
+    gap: 0.5rem;
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+}
+
+/* ─── Card border (glassmorphism via backdrop-filter + mask) ─────────────────── */
+.card::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
+    border-radius: inherit;
+    border: calc(var(--border-width, 3) * 1px) solid #0000;
+    backdrop-filter: blur(calc(var(--border-blur, 0) * 1px)) saturate(var(--border-saturate, 4.2)) brightness(var(--border-brightness, 2.5)) contrast(var(--border-contrast, 2.5));
+    mask:
+        linear-gradient(#fff 0 100%) border-box,
+        linear-gradient(#fff 0 100%) padding-box;
+    mask-composite: exclude;
+    z-index: 2;
+    clip-path: inset(0 round 12px);
+    transform: translateZ(0);
+}
+
+/* ─── Options button ────────────────────────────────────────────────────────── */
+.optionsBtn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    border-radius: 8px;
+    border: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    width: 32px;
+    aspect-ratio: 1;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.3;
+    color: canvasText;
+}
+
+.optionsBtn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: light-dark(hsl(0 0% 0% / 0.08), hsl(0 0% 100% / 0.1));
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+}
+
+.optionsBtn:is(:hover, :focus-visible) {
+    opacity: 1;
+}
+
+.optionsBtn:is(:hover, :focus-visible)::before {
+    opacity: 1;
+}
+
+.optionsBtn svg {
+    width: 20px;
+}
+
+.optionsBtn svg path {
+    fill: currentColor;
+}
+
+/* ─── App icon (foreground) ─────────────────────────────────────────────────── */
+.card img {
+    width: 100px;
+    user-select: none;
+}
+
+.iconFront {
+    z-index: 2;
+    position: relative;
+}
+
+/* ─── Blurred icon glow (pointer-tracking) ──────────────────────────────────── */
+.iconGlow {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    transform: translateZ(0);
+    filter: url(#blur) saturate(var(--icon-saturate, 5)) brightness(var(--icon-brightness, 1.3));
+    translate: calc(var(--pointer-x, -10) * 50cqi) calc(var(--pointer-y, -10) * 50cqh);
+    scale: var(--icon-scale, 3.4);
+    opacity: var(--icon-opacity, 0.25);
+    will-change: transform, filter;
+}
+
+.iconGlow img {
+    width: 100px;
+}
+
+/* ─── Card title ────────────────────────────────────────────────────────────── */
+.cardTitle {
+    z-index: 4;
+    position: relative;
+    font-size: 1rem;
+    margin: 0;
+    user-select: none;
+}
+
+/* ─── Exclude mode: dim glow, restore on hover ─────────────────────────────── */
+.page[data-exclude='true'] .iconGlow {
+    opacity: calc(var(--icon-opacity, 0.25) * 0.25);
+    transition: opacity 0.26s ease-out;
+}
+
+.page[data-exclude='true'] .card:is(:hover, :focus-within) .iconGlow {
+    opacity: var(--icon-opacity, 0.25);
+}
+
+/* ─── CSS blur mode (no SVG filter) ─────────────────────────────────────────── */
+.page[data-css='true'] .iconGlow {
+    filter: blur(calc(var(--icon-blur, 28) * 1px)) saturate(var(--icon-saturate, 5)) brightness(var(--icon-brightness, 1.3));
+}
+
+/* ─── Bear link ─────────────────────────────────────────────────────────────── */
+.bearLink {
+    color: canvasText;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 48px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    text-decoration: none;
+}
+
+.bearLink:is(:hover, :focus-visible) {
+    opacity: 1;
+}
+
+.bearLink svg {
+    width: 75%;
+}
+
+/* ─── Config bar ────────────────────────────────────────────────────────────── */
+.configBar {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    gap: 0.4rem;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.configBtn {
+    padding: 0.35rem 0.75rem;
+    background: transparent;
+    border: 1px solid color-mix(in hsl, canvasText, transparent 60%);
+    color: canvasText;
+    cursor: pointer;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.configBtn:hover {
+    opacity: 1;
+}
+
+.configBtn[data-active='true'] {
+    opacity: 0.9;
+    border-color: canvasText;
+}
+
+/* ─── Visually hidden ───────────────────────────────────────────────────────── */
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

@@ -1,0 +1,667 @@
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE
+   ───────────────────────────────────────────────────────────────────────────── */
+.page {
+    --font-size-min: 16;
+    --font-size-max: 20;
+    --font-ratio-min: 1.2;
+    --font-ratio-max: 1.33;
+    --font-width-min: 375;
+    --font-width-max: 1500;
+
+    color-scheme: light dark;
+    background: light-dark(#fff, #000);
+    font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif, system-ui;
+
+    /* Full-viewport takeover — prevents outer layout from scrolling */
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+}
+
+.page[data-theme='light'] {
+    color-scheme: light only;
+}
+.page[data-theme='dark'] {
+    color-scheme: dark only;
+}
+
+/* Fluid type scale ---------------------------------------------------------- */
+.fluid {
+    --fluid-min: calc(var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0)));
+    --fluid-max: calc(var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0)));
+    --fluid-preferred: calc((var(--fluid-max) - var(--fluid-min)) / (var(--font-width-max) - var(--font-width-min)));
+    --fluid-type: clamp(
+        (var(--fluid-min) / 16) * 1rem,
+        ((var(--fluid-min) / 16) * 1rem) - (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) + (var(--fluid-preferred) * var(--variable-unit, 100vi)),
+        (var(--fluid-max) / 16) * 1rem
+    );
+    font-size: var(--fluid-type);
+}
+
+/* Bear link ----------------------------------------------------------------- */
+.bearLink {
+    color: canvasText;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 48px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    opacity: 0.8;
+    z-index: 100;
+}
+.bearLink:hover,
+.bearLink:focus-visible {
+    opacity: 1;
+}
+.bearLink svg {
+    width: 75%;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DEMO  (layout + content styling)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* CSS custom props used throughout ------------------------------------------ */
+.page {
+    --height: 60;
+    --margin: calc((100 - var(--height)) * 0.5);
+    --frame: 6vh;
+    --radius: 24;
+}
+
+/* Container: the real scrollable area --------------------------------------- */
+.container {
+    width: 100%;
+    scroll-snap-type: y proximity;
+    scrollbar-color: canvasText #0000;
+}
+
+/* Backdrop + window share a grid cell --------------------------------------- */
+.backdrop,
+.window {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    z-index: -1;
+    position: sticky;
+    top: 0;
+}
+
+.backdrop::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 100vh;
+    background: url(https://assets.codepen.io/605876/geo-backdrop.png?format=auto&quality=100);
+    background-size: cover;
+    background-position: 75% 50%;
+    filter: saturate(0.5);
+}
+
+/* Window frame -------------------------------------------------------------- */
+.window {
+    z-index: 2;
+    background: #0000;
+    pointer-events: none;
+}
+
+.window .frame {
+    position: absolute;
+    inset: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: #0000;
+    outline: 1px solid light-dark(#fff, #000);
+}
+
+.window .frame::before {
+    content: '';
+    inset: calc(var(--frame) * 1.5) var(--frame);
+    position: absolute;
+    border-radius: calc(var(--radius) * 1px);
+    box-shadow: 0 0 calc(var(--radius) * 1px) 0px light-dark(hsl(0 0% 20%), #000) inset;
+}
+
+.window .frame::after {
+    content: '';
+    background: #0000;
+    position: absolute;
+    inset: calc(var(--frame) * 1.5) var(--frame);
+    outline: calc(var(--frame) * 4) solid light-dark(#fff, #000);
+    border-radius: calc(var(--radius) * 1px);
+}
+
+/* Backdrop shadow ----------------------------------------------------------- */
+.backdropShadow {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+.container .backdropShadow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: hsl(0 0% 0%);
+    z-index: 30;
+    height: 100vh;
+    translate: 0 0;
+}
+
+/* Header -------------------------------------------------------------------- */
+.container header {
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+/* Footer section ------------------------------------------------------------ */
+.footer {
+    position: relative;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+.footer .fluid {
+    --font-level: 4;
+    font-weight: 600;
+}
+
+.footer footer {
+    position: absolute;
+    bottom: 0;
+    padding: 1rem;
+    opacity: 0.7;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+/* Main grid ----------------------------------------------------------------- */
+.container main {
+    display: grid;
+    grid-template-columns: 0.65fr 1fr;
+    width: 100%;
+    padding-bottom: calc(var(--margin) * 1vh);
+}
+
+/* Content sections ---------------------------------------------------------- */
+.container main section {
+    scroll-snap-align: center;
+    grid-column: 1 / -1;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: calc(var(--height) * 1vh);
+    grid-template-columns: subgrid;
+    z-index: 1;
+}
+
+.container main section:first-of-type {
+    grid-row: 1;
+    margin-top: calc(var(--margin) * 1vh);
+}
+
+.container main section article {
+    padding: 1.25rem 0 1.25rem 4.5rem;
+    display: grid;
+    gap: 0.5rem;
+}
+
+.container main section p {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    font-weight: 300;
+    text-wrap: balance;
+    margin: 0;
+}
+
+.container main section h2 {
+    --font-level: 2;
+    text-wrap: balance;
+    margin: 0;
+    font-weight: 400;
+}
+
+.container main section div:first-of-type {
+    display: grid;
+    place-items: center;
+}
+
+.container main section div:last-of-type {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.container main section img {
+    max-height: 75cqb;
+    width: 75%;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 4px hsl(0 0% 0% / 0.3));
+}
+
+/* h1 style ------------------------------------------------------------------ */
+.container h1.fluid {
+    --font-level: 6;
+    font-style: italic;
+}
+
+.container h1.fluid span:last-of-type {
+    font-weight: 300;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   EXPLODE  (3-D perspective + CSS scroll-driven animations)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* preserve-3d on everything within the page --------------------------------- */
+.page *,
+.page *::before,
+.page *::after {
+    transform-style: preserve-3d;
+}
+
+/* Scene: the 3-D stage + timeline-scope host -------------------------------- */
+.scene {
+    transform-style: preserve-3d;
+    height: 100vh;
+    width: 100%;
+    background: light-dark(#fff, #000);
+    /* Moved from :root — all timeline users are DOM-children of .scene */
+    timeline-scope: --content, --main;
+}
+
+/* Grid background on scene -------------------------------------------------- */
+.scene::before {
+    --size: 45px;
+    --line: color-mix(in hsl, canvasText, transparent 80%);
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background:
+        linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
+    mask: linear-gradient(-60deg, transparent 70%, white);
+    top: 0;
+    transform-style: flat;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Page wrapper replaces body for perspective -------------------------------- */
+.page {
+    perspective: 1400px;
+}
+
+/* Scroll timelines ---------------------------------------------------------- */
+.container {
+    transform-style: preserve-3d;
+    height: 100%;
+    overflow: auto;
+    scroll-timeline: --content;
+}
+
+.container main {
+    view-timeline: --main;
+}
+
+/* Stickies: fixed layers driven by scroll-driven animations ----------------- */
+.stickies {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+.stickies .frame,
+.stickies .backdrop {
+    animation-name: frame-entry, frame-exit;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    animation-timeline: --main;
+    animation-range: entry, exit;
+}
+
+.stickies .backdrop {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.backdropFrame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0.8;
+    filter: blur(0px);
+    translate: 0 0;
+}
+
+.backdropFrame::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--frame) * 1.5) var(--frame);
+    outline: calc(var(--frame) * 4) solid hsl(0 0% 0%);
+    border-radius: calc(var(--radius) * 1px);
+}
+
+.backdropTrack {
+    --destination: calc(-100% + (var(--height) * 1vh));
+    margin-top: calc(var(--margin) * 1vh);
+    display: grid;
+    place-items: center;
+    animation: scroll both linear;
+    animation-timeline: --main;
+    animation-range: entry 100% contain 100%;
+}
+
+.backdropTrack div {
+    min-height: calc(var(--height) * 1vh);
+    display: grid;
+    place-items: center;
+    width: 100%;
+}
+
+.stickies .backdrop img {
+    max-height: 75cqb;
+    width: 75%;
+    object-fit: contain;
+    filter: grayscale(1) brightness(0) blur(0px);
+    opacity: 0.8;
+}
+
+/* Dummy: fixed shadow that animates with --content scroll-timeline ---------- */
+.dummy {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    pointer-events: none;
+    animation: scroll both linear;
+    animation-timeline: --content;
+}
+
+.dummy p,
+.dummy h2,
+.dummy header,
+.dummy footer {
+    opacity: 0;
+}
+
+/* Keyframes ----------------------------------------------------------------- */
+@keyframes scroll {
+    to {
+        translate: 0 var(--destination, calc(-100% + 100vh));
+    }
+}
+
+@keyframes frame-entry {
+    to {
+        translate: 0 -100%;
+    }
+}
+
+@keyframes frame-exit {
+    to {
+        translate: 0 -200%;
+    }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TRANSITIONS  (explode on / off)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Default (collapsed) positions --------------------------------------------- */
+.dummy {
+    transform: translate3d(0, 0, 0);
+}
+.stickies .frame {
+    transform: translate3d(0, 100%, 0);
+}
+.stickies .backdrop {
+    transform: translate3d(0, 100%, 0);
+}
+
+/* Unexploded transition timings --------------------------------------------- */
+.scene {
+    transition: transform 1s 1s;
+}
+
+.container .window .frame {
+    overflow: hidden;
+}
+
+.container .backdropShadow::before {
+    transition:
+        opacity 1s,
+        translate 1s,
+        filter 1s;
+}
+
+.stickies .frame::before {
+    transition: opacity 1s;
+}
+
+.stickies,
+.dummy,
+.stickies .frame,
+.stickies .backdrop {
+    transition: transform 1s;
+}
+
+.stickies .backdrop img,
+.backdropFrame {
+    transition-property: opacity, filter, translate;
+    transition-duration: 1s;
+}
+
+/* Backdrop shadow hidden when not exploded ---------------------------------- */
+.container .backdropShadow {
+    opacity: 0;
+    transition: opacity 0.1s 1s;
+}
+
+/* ── Exploded state ── */
+.page[data-explode='true'] .scene {
+    transform: rotateX(-20deg) rotateY(45deg) scale(0.4) translate3d(0, 0, -150px);
+}
+
+.page[data-explode='true'] .container .backdropShadow {
+    opacity: 1;
+    transition: opacity 0s 1s;
+}
+
+.page[data-explode='true'] .container .backdropShadow::before {
+    opacity: 0.26;
+    translate: -20% 30%;
+    filter: blur(30px);
+}
+
+.page[data-explode='true'] :is(.dummy, .stickies) {
+    opacity: 1;
+}
+
+.page[data-explode='true'] .stickies .frame::before {
+    opacity: 0;
+}
+
+/* Exploded transition timings (delayed, after 3-D rotate completes) --------- */
+.page[data-explode='true'] .scene {
+    transition: transform 1s;
+}
+
+.page[data-explode='true'] .container .backdropShadow::before {
+    transition:
+        opacity 1s 1s,
+        translate 1s 1s,
+        filter 1s 1s;
+}
+
+.page[data-explode='true'] .stickies,
+.page[data-explode='true'] .dummy,
+.page[data-explode='true'] .stickies .frame,
+.page[data-explode='true'] .stickies .backdrop {
+    transition: transform 1s 1s;
+}
+
+.page[data-explode='true'] .stickies .frame::before {
+    transition: opacity 1s 1s;
+}
+
+.page[data-explode='true'] .backdropFrame {
+    opacity: 0.1;
+    filter: blur(30px);
+    translate: -20% 30%;
+    transition-delay: 1s;
+}
+
+.page[data-explode='true'] .stickies .backdropTrack img {
+    opacity: 0.2;
+    filter: grayscale(1) brightness(0) blur(20px);
+    translate: -25% 50%;
+    transition-delay: 1s;
+}
+
+.page[data-explode='true'] .dummy {
+    transform: translate3d(0, 0, 200px);
+}
+
+.page[data-explode='true'] .stickies .frame {
+    transform: translate3d(0, 100%, 300px);
+}
+
+.page[data-explode='true'] .stickies .backdrop {
+    transform: translate3d(0, 100%, 100px);
+}
+
+/* Collapsed clip ------------------------------------------------------------ */
+.page[data-collapsed='true'] :is(.stickies, .dummy) {
+    clip-path: inset(0 16px 0 0);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   INTEL  (annotation arrows)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.arrow {
+    font-family: 'Gloria Hallelujah', cursive;
+    font-size: 0.875rem;
+    position: absolute;
+    opacity: 0.7;
+    color: canvasText;
+    pointer-events: none;
+}
+
+.arrow span {
+    white-space: nowrap;
+}
+
+.arrow svg {
+    bottom: calc(100% + 10px);
+    position: absolute;
+    rotate: 80deg;
+    translate: -50% 0;
+    scale: -1 -1;
+    left: 0;
+    width: 60px;
+}
+
+/* Detail arrow (outside scene, hidden until explode) ------------------------ */
+.arrowDetail {
+    opacity: 0;
+    transition: opacity 0.5s 0s;
+    bottom: 20%;
+    left: 25%;
+    color: hsl(0 0% 0%);
+    scale: 1.25;
+    z-index: 200;
+}
+
+.arrowDetail svg {
+    left: 90%;
+    scale: -0.8;
+    rotate: 160deg;
+}
+
+.page[data-explode='true'] .arrowDetail {
+    opacity: 0.7;
+    transition: opacity 0.5s 1s;
+}
+
+/* Instruction arrow (inside container header) ------------------------------- */
+.arrowInstruction {
+    bottom: 20%;
+    right: 35%;
+    scale: 1.25;
+}
+
+.arrowInstruction span {
+    display: inline-block;
+    rotate: 15deg;
+}
+
+.arrowInstruction svg {
+    top: 100%;
+    bottom: auto;
+    rotate: -15deg;
+}
+
+/* Footer emoji details ------------------------------------------------------ */
+.arm {
+    display: inline-block;
+}
+.spring {
+    display: inline-block;
+}
+.table {
+    display: inline-block;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CONFIG BAR  (replaces Tweakpane)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.configBar {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    gap: 0.4rem;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 300;
+}
+
+.configBtn {
+    padding: 0.35rem 0.75rem;
+    background: transparent;
+    border: 1px solid color-mix(in hsl, canvasText, transparent 60%);
+    color: canvasText;
+    cursor: pointer;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.configBtn:hover {
+    opacity: 1;
+}
+.configBtn[data-active='true'] {
+    opacity: 0.9;
+    border-color: canvasText;
+}

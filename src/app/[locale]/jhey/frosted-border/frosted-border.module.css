@@ -1,0 +1,229 @@
+/* ─── Page ──────────────────────────────────────────────────────────────────── */
+.page {
+    --control-size: 52px;
+    --padding: 0.5rem;
+    --border-radius: 16px;
+
+    color-scheme: light dark;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    background: light-dark(#fff, #000);
+    font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif, system-ui;
+    position: relative;
+}
+
+.page[data-theme='light'] {
+    color-scheme: light only;
+}
+
+.page[data-theme='dark'] {
+    color-scheme: dark only;
+}
+
+/* ─── Grid background ───────────────────────────────────────────────────────── */
+.page::before {
+    --size: 45px;
+    --line: color-mix(in hsl, canvasText, transparent 80%);
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background:
+        linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
+    mask: linear-gradient(-20deg, transparent 50%, white);
+    top: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ─── Main layout ───────────────────────────────────────────────────────────── */
+.main {
+    display: grid;
+    place-items: center;
+}
+
+/* ─── Product card (frosted aside) ──────────────────────────────────────────── */
+.product {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.025em;
+    margin-block: 20vh;
+    font-size: 0.875rem;
+    position: sticky;
+    z-index: 9;
+    top: 20vh;
+    width: 340px;
+    display: flex;
+    gap: 0.5rem;
+    cursor: grab;
+    user-select: none;
+
+    /* ── Frosted effect ── */
+    box-shadow:
+        0px 0.5px 0.6px hsl(0 0% 0% / 0.06),
+        0px 1.8px 2.3px -0.5px hsl(0 0% 0% / 0.07),
+        0px 4.2px 5.3px -1.1px hsl(0 0% 0% / 0.09),
+        0px 9.7px 12.1px -1.6px hsl(0 0% 0% / 0.1);
+    background: linear-gradient(light-dark(hsl(0 0% 98%), hsl(0 0% 12%)) 0 100%) padding-box;
+    padding: var(--padding);
+    border-radius: var(--border-radius);
+    border: calc(var(--border, 2) * 1px) solid light-dark(hsl(0 0% 0% / 0.1), hsl(0 0% 100% / 0.2));
+    backdrop-filter: blur(calc(var(--blur, 8) * 1px)) saturate(var(--saturate, 2.8)) brightness(var(--brightness, 1.25)) contrast(var(--contrast, 1));
+}
+
+.product:active {
+    cursor: grabbing;
+}
+
+.page[data-disable='true'] .product {
+    backdrop-filter: none;
+}
+
+/* ─── Product image ─────────────────────────────────────────────────────────── */
+.productImg {
+    width: var(--control-size);
+    aspect-ratio: 1;
+    border-radius: calc(var(--border-radius) - var(--padding));
+    pointer-events: none;
+}
+
+/* ─── Product info ──────────────────────────────────────────────────────────── */
+.productInfo {
+    flex: 1;
+    display: grid;
+    align-items: center;
+    align-content: center;
+    gap: 0.125rem;
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.productName {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.strikethrough {
+    opacity: 0.5;
+}
+
+/* ─── Add to cart button ────────────────────────────────────────────────────── */
+.cartBtn {
+    height: var(--control-size);
+    display: flex;
+    padding-inline: 1rem;
+    background: linear-gradient(light-dark(hsl(0 0% 100% / 0.2), hsl(0 0% 6% / 0.1)), #0000), light-dark(#000, #fff);
+    color: light-dark(hsl(0 0% 98%), hsl(0 0% 12%));
+    border: 0;
+    align-items: center;
+    font-size: 0.875rem;
+    border-radius: calc(var(--border-radius) - var(--padding));
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* ─── Arrow annotation ──────────────────────────────────────────────────────── */
+.arrow {
+    font-family: 'Gloria Hallelujah', cursive;
+    font-size: 0.875rem;
+    position: absolute;
+    top: calc(20vh + 160px);
+    left: 50%;
+    translate: -150% -50%;
+    opacity: 0.6;
+    white-space: nowrap;
+}
+
+.arrow svg {
+    position: absolute;
+    width: 60px;
+    bottom: 100%;
+    left: 100%;
+    rotate: -10deg;
+}
+
+/* ─── Heading ───────────────────────────────────────────────────────────────── */
+.heading {
+    --font-level: 4;
+    --fluid-min: calc(16 * pow(1.2, var(--font-level, 0)));
+    --fluid-max: calc(20 * pow(1.33, var(--font-level, 0)));
+    --fluid-preferred: calc((var(--fluid-max) - var(--fluid-min)) / (1500 - 375));
+    font-size: clamp(
+        calc((var(--fluid-min) / 16) * 1rem),
+        calc(((var(--fluid-min) / 16) * 1rem) - (((var(--fluid-preferred) * 375) / 16) * 1rem) + (var(--fluid-preferred) * 100vi)),
+        calc((var(--fluid-max) / 16) * 1rem)
+    );
+}
+
+/* ─── Image list ────────────────────────────────────────────────────────────── */
+.imageList {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: grid;
+    place-items: center;
+}
+
+.imageList img {
+    max-width: calc(100vw - 2rem);
+    filter: saturate(1.2) contrast(1.1);
+}
+
+/* ─── Bear link ─────────────────────────────────────────────────────────────── */
+.bearLink {
+    color: canvasText;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 48px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    text-decoration: none;
+}
+
+.bearLink:is(:hover, :focus-visible) {
+    opacity: 1;
+}
+
+.bearLink svg {
+    width: 75%;
+}
+
+/* ─── Config bar ────────────────────────────────────────────────────────────── */
+.configBar {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    gap: 0.4rem;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 10;
+}
+
+.configBtn {
+    padding: 0.35rem 0.75rem;
+    background: transparent;
+    border: 1px solid color-mix(in hsl, canvasText, transparent 60%);
+    color: canvasText;
+    cursor: pointer;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.configBtn:hover {
+    opacity: 1;
+}
+
+.configBtn[data-active='true'] {
+    opacity: 0.9;
+    border-color: canvasText;
+}

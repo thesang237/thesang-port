@@ -1,0 +1,38 @@
+.wrapper {
+    background-color: #010101;
+    min-height: 100vh;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    text-align: center;
+    color: #fff;
+    padding: 2rem;
+}
+
+.frame {
+    position: relative;
+    width: 80vw;
+    max-width: 600px;
+    aspect-ratio: 16 / 9;
+    margin: 20vh auto;
+    outline: dashed 2px #272d2a;
+    border-radius: 10px;
+}
+
+.frame canvas {
+    position: absolute;
+    inset: 0.5rem;
+    width: calc(100% - 1rem);
+    height: calc(100% - 1rem);
+    display: block;
+    border-radius: 8px;
+}
+
+.spacer {
+    height: 10vh;
+}

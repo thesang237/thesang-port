@@ -1,0 +1,240 @@
+/* ─── Page ───────────────────────────────────────────────────────────────────── */
+.page {
+    color-scheme: light dark;
+    background: light-dark(#fff, #000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    padding-block: 2rem;
+    min-height: 100vh;
+    font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif, system-ui;
+    position: relative;
+}
+
+.page::before {
+    --size: 45px;
+    --line: color-mix(in hsl, canvasText, transparent 70%);
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background:
+        linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size),
+        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size);
+    mask: linear-gradient(-20deg, transparent 50%, white);
+    top: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ─── Heading (fluid) ────────────────────────────────────────────────────────── */
+.h1 {
+    margin: 0;
+    font-size: clamp(2.375rem, calc(2.375rem + (3.9375 - 2.375) * ((100vw - 375px) / (1500 - 375))), 3.9375rem);
+}
+
+/* ─── Intro paragraph ────────────────────────────────────────────────────────── */
+.intro {
+    margin: 0 0 4rem;
+    width: 74ch;
+    max-width: calc(100% - 4rem);
+    text-wrap: balance;
+    font-family: monospace;
+    line-height: 1.5;
+    opacity: 0.8;
+    font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    .intro {
+        text-align: center;
+    }
+}
+
+/* ─── List (accordion grid) ─────────────────────────────────────────────────── */
+.list {
+    --gap: 8px;
+    --base: clamp(2rem, 8cqi, 80px);
+    --easing: linear(
+        0 0%,
+        0.1538 4.09%,
+        0.2926 8.29%,
+        0.4173 12.63%,
+        0.5282 17.12%,
+        0.6255 21.77%,
+        0.7099 26.61%,
+        0.782 31.67%,
+        0.8425 37%,
+        0.8887 42.23%,
+        0.9257 47.79%,
+        0.9543 53.78%,
+        0.9752 60.32%,
+        0.9883 67.11%,
+        0.9961 75%,
+        1 100%
+    );
+    --speed: 0.6s;
+
+    display: grid;
+    container-type: inline-size;
+    gap: var(--gap);
+    list-style-type: none;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    height: clamp(300px, 40dvh, 474px);
+    width: 820px;
+    max-width: calc(100% - 4rem);
+    transition: grid-template-columns var(--speed) var(--easing);
+}
+
+/* ─── List item ──────────────────────────────────────────────────────────────── */
+.listItem {
+    background: light-dark(#fff, #000);
+    position: relative;
+    overflow: hidden;
+    min-width: var(--base);
+    border-radius: 8px;
+    border: 1px solid color-mix(in hsl, canvas, canvasText 50%);
+}
+
+/* ─── Article ────────────────────────────────────────────────────────────────── */
+.article {
+    width: calc(var(--article-width, 80) * 1px);
+    height: 100%;
+    position: absolute;
+    font-family: monospace;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-inline: calc(var(--base) * 0.5 - 9px);
+    padding-bottom: 1rem;
+    overflow: hidden;
+}
+
+.article h3 {
+    white-space: nowrap;
+    margin: 0;
+    position: absolute;
+    top: 1rem;
+    left: calc(var(--base) * 0.5);
+    transform-origin: 0 50%;
+    rotate: 90deg;
+    font-size: 1rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    font-family: monospace;
+    opacity: 0.6;
+    transition: opacity calc(var(--speed) * 1.2) var(--easing);
+}
+
+.article svg {
+    width: 18px;
+    fill: none;
+    opacity: 0.6;
+    transition: opacity calc(var(--speed) * 1.2) var(--easing);
+}
+
+.article p {
+    margin: 0;
+    font-size: 13px;
+    text-wrap: balance;
+    line-height: 1.25;
+    opacity: 0;
+    width: fit-content;
+    --opacity: 0.8;
+    transition: opacity calc(var(--speed) * 1.2) var(--easing);
+}
+
+.article a {
+    position: absolute;
+    bottom: 1rem;
+    height: 18px;
+    line-height: 1;
+    color: inherit;
+    text-decoration: none;
+    opacity: 0;
+    width: fit-content;
+    transition: opacity calc(var(--speed) * 1.2) var(--easing);
+}
+
+.article a:is(:focus-visible, :hover) {
+    outline: none;
+}
+
+.article a:is(:focus-visible, :hover) span {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.article a span {
+    display: inline-block;
+    line-height: 18px;
+    translate: calc(var(--base) * 0.5);
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.article img {
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mask: radial-gradient(100% 100% at 100% 0, #fff, #0000);
+    filter: grayscale(1) brightness(1.5);
+    scale: 1.1;
+    transition:
+        filter calc(var(--speed) * 1.2) var(--easing),
+        scale calc(var(--speed) * 1.2) var(--easing);
+}
+
+/* ─── Active state ───────────────────────────────────────────────────────────── */
+.listItem[data-active='true'] .article h3,
+.listItem[data-active='true'] .article svg {
+    opacity: 1;
+}
+
+.listItem[data-active='true'] .article p {
+    opacity: var(--opacity, 0.8);
+    transition-delay: calc(var(--speed) * 0.25);
+}
+
+.listItem[data-active='true'] .article a {
+    opacity: 1;
+    transition-delay: calc(var(--speed) * 0.25);
+}
+
+.listItem[data-active='true'] .article img {
+    filter: grayscale(0) brightness(1);
+    scale: 1;
+    transition-delay: calc(var(--speed) * 0.25);
+}
+
+/* ─── Bear link ──────────────────────────────────────────────────────────────── */
+.bearLink {
+    color: canvasText;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 48px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    text-decoration: none;
+}
+
+.bearLink:is(:hover, :focus-visible) {
+    opacity: 1;
+}
+.bearLink svg {
+    width: 75%;
+}
