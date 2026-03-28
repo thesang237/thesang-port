@@ -15,7 +15,7 @@ const eslintConfig = tseslint.config([
   ...nextVitals,
   ...nextTs,
 
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'public/draco/**']),
+  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'public/draco/**', 'public/scripts/**']),
 
   {
     plugins: {
