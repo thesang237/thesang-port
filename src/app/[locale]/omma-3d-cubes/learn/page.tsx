@@ -184,8 +184,11 @@ function NoiseVisualizer() {
                 </div>
             </div>
             <p className="text-zinc-500 leading-relaxed" style={{ fontSize: '12px' }}>
-                Each pixel samples <Pill>noise3D(x, y, z)</Pill> where x/y map to the 20×20 grid and z is the slice. Drag the <strong className="text-zinc-300">Z slice</strong> slider to move through
-                the 3D field — notice how neighbouring slices look similar (that&apos;s the continuity property of Perlin noise).
+                {'Each pixel samples '}
+                <Pill>{'noise3D(x, y, z)'}</Pill>
+                {' where x/y map to the 20×20 grid and z is the slice. Drag the '}
+                <strong className="text-zinc-300">{'Z slice'}</strong>
+                {' slider to move through the 3D field — notice how neighbouring slices look similar (that\u2019s the continuity property of Perlin noise).'}
             </p>
         </div>
     );
@@ -704,7 +707,9 @@ export default function OmmaCubesLearnPage() {
                                 {SNIPPET_NOISE}
                             </CodeBlock>
                             <Callout variant="tip">
-                                Keep this file pure TypeScript with no imports — it&apos;s called inside <Pill>useFrame</Pill> 8,000 times per frame. Any extra indirection adds up.
+                                {'Keep this file pure TypeScript with no imports \u2014 it\u2019s called inside '}
+                                <Pill>{'useFrame'}</Pill>
+                                {' 8,000 times per frame. Any extra indirection adds up.'}
                             </Callout>
                         </div>
                     </div>
@@ -718,8 +723,11 @@ export default function OmmaCubesLearnPage() {
                         </p>
                         <NoiseVisualizer />
                         <Callout variant="info">
-                            This renders a 2D horizontal slice of the same <Pill>noise3D</Pill> function used in the demo. Move the <strong className="text-indigo-300">Z slice</strong> slider to walk
-                            through the 3D field depth and notice the continuity between slices — that&apos;s Perlin&apos;s key property.
+                            {'This renders a 2D horizontal slice of the same '}
+                            <Pill>{'noise3D'}</Pill>
+                            {' function used in the demo. Move the '}
+                            <strong className="text-indigo-300">{'Z slice'}</strong>
+                            {' slider to walk through the 3D field depth and notice the continuity between slices \u2014 that\u2019s Perlin\u2019s key property.'}
                         </Callout>
                     </div>
                 </FadeIn>
@@ -786,8 +794,12 @@ export default function OmmaCubesLearnPage() {
                         <div className="flex flex-col gap-4 flex-1 min-w-0">
                             <h2 className="text-xl font-bold text-zinc-100">Drive each cube with noise in useFrame</h2>
                             <p className="text-zinc-400 leading-relaxed" style={{ fontSize: '14px' }}>
-                                <Pill>useFrame</Pill> is R3F&apos;s animation hook — it runs before each render, synchronized with the browser&apos;s <Pill>requestAnimationFrame</Pill>. Inside, we
-                                loop over every active cube, evaluate the noise field at its <Pill>(x, y, z + time)</Pill> coordinate, and write a matrix and color back into the instanced mesh.
+                                <Pill>{'useFrame'}</Pill>
+                                {' is R3F\u2019s animation hook \u2014 it runs before each render, synchronized with the browser\u2019s '}
+                                <Pill>{'requestAnimationFrame'}</Pill>
+                                {'. Inside, we loop over every active cube, evaluate the noise field at its '}
+                                <Pill>{'(x, y, z + time)'}</Pill>
+                                {' coordinate, and write a matrix and color back into the instanced mesh.'}
                             </p>
                             <div className="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-4 grid sm:grid-cols-2 gap-4 text-zinc-400">
                                 {[
@@ -860,9 +872,13 @@ export default function OmmaCubesLearnPage() {
                         <div className="flex flex-col gap-4 flex-1 min-w-0">
                             <h2 className="text-xl font-bold text-zinc-100">Color interpolation and the contrast curve</h2>
                             <p className="text-zinc-400 leading-relaxed" style={{ fontSize: '14px' }}>
-                                Color is not sampled from a texture — it&apos;s computed per cube each frame from the same noise value <Pill>nNorm</Pill> used for scale. A power curve{' '}
-                                <Pill>pow(nNorm, contrast)</Pill> controls how sharply the transition between dark and bright happens, and <Pill>multiplyScalar(colorMix)</Pill> acts as an
-                                exposure/intensity multiplier.
+                                {'Color is not sampled from a texture \u2014 it\u2019s computed per cube each frame from the same noise value '}
+                                <Pill>{'nNorm'}</Pill>
+                                {' used for scale. A power curve '}
+                                <Pill>{'pow(nNorm, contrast)'}</Pill>
+                                {' controls how sharply the transition between dark and bright happens, and '}
+                                <Pill>{'multiplyScalar(colorMix)'}</Pill>
+                                {' acts as an exposure/intensity multiplier.'}
                             </p>
                             <CodeBlock lang="ts" highlight={['contrasted', 'lerp', 'multiplyScalar']}>
                                 {SNIPPET_COLOR}
@@ -915,9 +931,15 @@ export default function OmmaCubesLearnPage() {
                         <div className="flex flex-col gap-4 flex-1 min-w-0">
                             <h2 className="text-xl font-bold text-zinc-100">Camera switching — Perspective ↔ Orthographic</h2>
                             <p className="text-zinc-400 leading-relaxed" style={{ fontSize: '14px' }}>
-                                The two cameras share position on toggle. A tiny <Pill>CamSync</Pill> component inside the Canvas copies the current camera position into a ref every frame. When the
-                                user clicks toggle, the parent reads that ref synchronously and passes the position to the new camera. Keying both the camera component and <Pill>OrbitControls</Pill>{' '}
-                                forces React to unmount and remount them — matching the original code&apos;s <Pill>controls.dispose()</Pill> pattern.
+                                {'The two cameras share position on toggle. A tiny '}
+                                <Pill>{'CamSync'}</Pill>
+                                {
+                                    ' component inside the Canvas copies the current camera position into a ref every frame. When the user clicks toggle, the parent reads that ref synchronously and passes the position to the new camera. Keying both the camera component and '
+                                }
+                                <Pill>{'OrbitControls'}</Pill>
+                                {' forces React to unmount and remount them \u2014 matching the original code\u2019s '}
+                                <Pill>{'controls.dispose()'}</Pill>
+                                {' pattern.'}
                             </p>
                             <CodeBlock lang="tsx" highlight={['CamSync', 'makeDefault', 'key']}>
                                 {SNIPPET_CAMERA}

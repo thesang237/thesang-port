@@ -1043,9 +1043,11 @@ Erode(numDrops, inertia, maxLength, depositRate, erodeRate) {
                     </div>
                     <div className="mt-4">
                         <Callout variant="info">
-                            Cantera runs erosion <em>three</em> times interleaved with the noise layers — 15k, 70k, and 100k drops respectively. The first pass carves macro gullies before the fine
-                            noise layers are added so the detail doesn&apos;t get washed out. The final 100k pass on the upsampled (2× resolution) map creates the crisp cliff edges visible in the
-                            rendered output.
+                            {'Cantera runs erosion '}
+                            <em>{'three'}</em>
+                            {
+                                ' times interleaved with the noise layers — 15k, 70k, and 100k drops respectively. The first pass carves macro gullies before the fine noise layers are added so the detail doesn\u2019t get washed out. The final 100k pass on the upsampled (2\xd7 resolution) map creates the crisp cliff edges visible in the rendered output.'
+                            }
                         </Callout>
                     </div>
                 </FadeIn>

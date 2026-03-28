@@ -83,6 +83,13 @@ const GROUPS: Group[] = [
             },
             { route: '/art-sagebrush', title: 'Eucalyptus & Sagebrush', desc: 'Generative landscape — Perlin noise terrain, hydraulic erosion, physics pen, 6 palettes', tags: ['Art', 'Canvas'] },
             { route: '/art-sagebrush/learn', title: 'Sagebrush — Guide', desc: '10-step guide: seeded RNG, fBm, domain warping, erosion, lighting, pen simulation', tags: ['Art', 'Guide', 'Canvas'] },
+            { route: '/art-solace', title: 'Solace', desc: 'Generative desert dunes — dot-matrix rendering, 8000 dots/frame, seeded Perlin noise, 18 colour palettes', tags: ['Art', 'Canvas'] },
+            {
+                route: '/art-solace/learn',
+                title: 'Solace — Guide',
+                desc: '10-step breakdown: cyrb128+sfc32 PRNG, Box-Muller Gaussian, Perlin noise, diagonal boundary maps, warp transforms, progressive dot rendering',
+                tags: ['Art', 'Guide', 'Canvas'],
+            },
             { route: '/dithering', title: 'Dithering', desc: 'Generative dithering art using Canvas 2D', tags: ['Art', 'Canvas'] },
             { route: '/dithering/learn', title: 'Dithering — Guide', desc: 'Dithering algorithms explained with interactive demos', tags: ['Art', 'Guide', 'Canvas'] },
             {
@@ -96,6 +103,18 @@ const GROUPS: Group[] = [
                 title: 'Grid Hover — Guide',
                 desc: '10-step breakdown: useGSAP+contextSafe, timeline labels, function values, direction detection, stagger, asymmetric scale, kill pattern',
                 tags: ['GSAP', 'Guide'],
+            },
+            {
+                route: '/codrops-page-transition',
+                title: 'Codrops Page Transition',
+                desc: 'Async page transition — clip-path reveal on next page, scale/y exit on current, SplitText char/line enter animations',
+                tags: ['Art', 'GSAP'],
+            },
+            {
+                route: '/codrops-page-transition/alternative-page',
+                title: 'Codrops — Alternative Page',
+                desc: 'Second page of the Codrops page transition demo (WV.663)',
+                tags: ['Art', 'GSAP'],
             },
         ],
     },

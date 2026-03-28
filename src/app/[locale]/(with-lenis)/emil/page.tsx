@@ -135,7 +135,7 @@ function HeroSection() {
                 className="mt-8 text-zinc-500 italic max-w-xl leading-relaxed"
                 style={{ fontSize: '14px' }}
             >
-                &ldquo;All those unseen details combine to produce something that&apos;s just stunning, like a thousand barely audible voices all singing in tune.&rdquo;
+                {'\u201cAll those unseen details combine to produce something that\u2019s just stunning, like a thousand barely audible voices all singing in tune.\u201d'}
                 <br />
                 <cite className="not-italic text-zinc-600" style={{ fontSize: '12px' }}>
                     — Paul Graham
@@ -523,8 +523,10 @@ function ComponentPolishSection() {
                                 Press both buttons.
                             </h3>
                             <p className="text-zinc-400 mb-7 leading-relaxed" style={{ fontSize: '14px' }}>
-                                <code className="text-amber-400 font-mono">scale(0.97)</code> on <code className="font-mono text-zinc-300">:active</code> makes the UI feel like it&apos;s truly
-                                listening.
+                                <code className="text-amber-400 font-mono">{'scale(0.97)'}</code>
+                                {' on '}
+                                <code className="font-mono text-zinc-300">{':active'}</code>
+                                {' makes the UI feel like it\u2019s truly listening.'}
                             </p>
 
                             <div className="flex items-center gap-5 mb-7">
