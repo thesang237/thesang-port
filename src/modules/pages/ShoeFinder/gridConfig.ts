@@ -1,0 +1,87 @@
+export type GridConfig = {
+    gridCols: number;
+    itemSize: number;
+    gap: number;
+    dragSpeed: number;
+    dampFactor: number;
+    tiltFactor: number;
+    clickThreshold: number;
+    dragResistance: number;
+    zoomIn: number;
+    zoomOut: number;
+    zoomDamp: number;
+    focusScale: number;
+    dimScale: number;
+    dimOpacity: number;
+    curvatureStrength: number;
+    rotationStrength: number;
+    cullDistance: number;
+    mapWidth: number;
+    mapDotSize: number;
+    fogNear: number;
+    fogFar: number;
+    enterStartOpacity: number;
+    enterStartZ: number;
+    exitEndZ: number;
+    transitionZDamp: number;
+    enterOpacityDamp: number;
+    exitOpacityDamp: number;
+    enterStaggerDelay: number;
+    exitStaggerDelay: number;
+    cleanupTimeout: number;
+    exitSpreadY: number;
+    enterSpreadY: number;
+    transitionYDamp: number;
+    filterOpacityDamp: number;
+    filterScaleTarget: number;
+    bgColor: string;
+    bgOpacity: number;
+    bgSpeed: number;
+    bgScale: number;
+    bgLineThickness: number;
+};
+
+export const DEFAULT_CONFIG: GridConfig = {
+    gridCols: 8,
+    itemSize: 2.5,
+    gap: 0.4,
+    dragSpeed: 2.2,
+    dampFactor: 0.2,
+    tiltFactor: 0.08,
+    clickThreshold: 5,
+    dragResistance: 0.25,
+    zoomIn: 12,
+    zoomOut: 31,
+    zoomDamp: 0.25,
+    focusScale: 1.5,
+    dimScale: 0.5,
+    dimOpacity: 0.15,
+    curvatureStrength: 0.06,
+    rotationStrength: 0,
+    cullDistance: 14,
+    mapWidth: 120,
+    mapDotSize: 2,
+    fogNear: 19,
+    fogFar: 100,
+    enterStartOpacity: 0.0,
+    enterStartZ: -50,
+    exitEndZ: 20,
+    transitionZDamp: 0.25,
+    enterOpacityDamp: 0.85,
+    exitOpacityDamp: 0.15,
+    enterStaggerDelay: 400,
+    exitStaggerDelay: 300,
+    cleanupTimeout: 700,
+    exitSpreadY: 0.5,
+    enterSpreadY: 1,
+    transitionYDamp: 0.08,
+    filterOpacityDamp: 0.06,
+    filterScaleTarget: 0.5,
+    bgColor: '#e0e0e0',
+    bgOpacity: 0.4,
+    bgSpeed: 0.05,
+    bgScale: 3.0,
+    bgLineThickness: 0.03,
+};
+
+export const CONFIG: GridConfig = { ...DEFAULT_CONFIG };

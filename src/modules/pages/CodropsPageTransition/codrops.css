@@ -1,0 +1,272 @@
+.codrops-root {
+    --text_color: rgb(0, 0, 0);
+    background-color: #000;
+    min-height: 100vh;
+    overflow: hidden;
+    /* override app's global white text */
+    color: var(--text_color);
+}
+
+.codrops-root main {
+    background-color: #fff;
+    width: 100%;
+    color: var(--text_color);
+}
+
+/* ── Navigation ─────────────────────────────────────────────────── */
+
+.codrops-root .nav {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    z-index: 50;
+    justify-content: center;
+    width: fit-content;
+}
+
+@media (max-width: 900px) {
+    .codrops-root .nav {
+        position: fixed;
+        left: auto;
+        right: 0;
+        transform: none;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 13px;
+        padding: 20px 20px;
+        z-index: 50;
+        align-items: end;
+        width: fit-content;
+    }
+}
+
+/* ── Link hover underline ────────────────────────────────────────── */
+
+.codrops-root .links {
+    position: relative;
+    display: block;
+    text-transform: uppercase;
+    color: var(--text_color);
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.codrops-root .line_a {
+    width: 100%;
+    height: 1px;
+    overflow: hidden;
+}
+
+.codrops-root .line_a_inner {
+    width: 100%;
+    height: 100%;
+    background-color: var(--text_color);
+    transform: translateX(-100%) translateZ(0);
+    will-change: transform;
+}
+
+/* ── Page / Hero ─────────────────────────────────────────────────── */
+
+.codrops-root .page_content {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.codrops-root #page_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.codrops-root .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+.codrops-root .hero_content {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    justify-content: space-between;
+    opacity: 0;
+}
+
+/* ── Lists ───────────────────────────────────────────────────────── */
+
+.codrops-root .lists_c {
+    width: 100%;
+    display: flex;
+    margin-top: 80px;
+}
+
+.codrops-root dl {
+    display: flex;
+    width: 100%;
+}
+
+.codrops-root .hero_content li {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    position: relative;
+    padding: 10px 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    list-style: none;
+}
+
+.codrops-root .hero_content ul {
+    width: 100%;
+    padding: 0 20px;
+    margin: 0;
+    list-style: none;
+}
+
+/* ── Divider lines ───────────────────────────────────────────────── */
+
+.codrops-root .lines {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    overflow: hidden;
+}
+
+.codrops-root .inner_lines {
+    background-color: black;
+    width: 100%;
+    height: 100%;
+}
+
+.codrops-root .inner_linesright {
+    transform: translateX(-100%);
+}
+
+.codrops-root .inner_linesleft {
+    transform: translateX(100%);
+}
+
+.codrops-root .inner_linesright,
+.codrops-root .inner_linesleft {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.codrops-root .anim_p {
+    backface-visibility: hidden;
+    margin: 0;
+}
+
+/* ── Links codrops (top left/right) ─────────────────────────────── */
+
+.codrops-root .links_codrops {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    gap: 20px;
+    pointer-events: auto;
+    z-index: 20;
+    justify-content: space-between;
+}
+
+/* ── Title ───────────────────────────────────────────────────────── */
+
+.codrops-root h1 {
+    overflow: hidden;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    line-height: 82%;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    margin: 0;
+}
+
+.codrops-root .home_title {
+    font-size: 26vw;
+}
+
+.codrops-root .about_title {
+    font-size: 26vw;
+}
+
+.codrops-root .overflow {
+    overflow: hidden;
+}
+
+.codrops-root .title {
+    transform: translateY(100%) rotateX(80deg);
+}
+
+.codrops-root [data-transition='container'] {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.codrops-root .char-wrapper {
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transform: translateZ(0);
+}
+
+/* ── Mobile ──────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+    .codrops-root .lists_c {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin-top: 80px;
+    }
+
+    .codrops-root dl {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .codrops-root .desktop {
+        display: none;
+        padding: 0 !important;
+        height: 0;
+    }
+
+    .codrops-root .lists_c ul {
+        width: 100%;
+    }
+
+    .codrops-root .hero_content ul {
+        width: 90%;
+        padding: 0 20px;
+    }
+
+    .codrops-root .links_codrops {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: flex;
+        flex-direction: column;
+        font-size: 13px;
+        gap: 10px;
+        pointer-events: auto;
+        z-index: 20;
+    }
+}

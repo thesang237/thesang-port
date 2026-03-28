@@ -12,7 +12,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { ServerVars } from '@/constants/server-only';
 import { routing } from '@/i18n/routing';
 import PageLoader from '@/modules/layouts/PageLoader';
-import PageTransition from '@/modules/layouts/PageTransition';
 import MainProviders from '@/providers/index';
 import type { PagePropsBase } from '@/types/page';
 import { extractMetadata } from '@/utils/metadata';
@@ -80,7 +79,7 @@ export default async function RootLayout({ children, params }: Props) {
                         {children}
 
                         <PageLoader />
-                        <PageTransition />
+                        {/* <PageTransition /> */}
 
                         <Toaster position="bottom-right" richColors duration={3000} />
                     </MainProviders>

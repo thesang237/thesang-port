@@ -57,6 +57,7 @@ const PageTransition = () => {
             const y = t - Math.sin((x / w) * Math.PI) * amplitude;
             ctx.lineTo(x, y);
         }
+        // ctx.lineTo(w, t);
 
         ctx.fillStyle = WAVE_COLOR;
         ctx.fill();
@@ -114,6 +115,59 @@ const PageTransition = () => {
             }
         },
     });
+
+    // 🔧 DEV ONLY — remove before commit
+    // useEffect(() => {
+    //     gsap.set(canvasRef.current, { visibility: 'visible', pointerEvents: 'none' });
+    //     // Loop the animation so you can watch it repeatedly
+    //     const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.5 });
+    //     tl.fromTo(
+    //         progressRef.current,
+    //         { value: 0 },
+    //         {
+    //             value: 1,
+    //             duration: 1.5,
+    //             ease: 'expo.inOut',
+    //             onUpdate: () => draw(progressRef.current.value),
+    //         },
+    //     );
+    //     tl.set(canvasRef.current, { rotation: 180 });
+    //     tl.fromTo(
+    //         progressRef.current,
+    //         { value: 1 },
+    //         {
+    //             value: 0,
+    //             duration: 1.5,
+    //             ease: 'expo.inOut',
+    //             onUpdate: () => draw(progressRef.current.value),
+    //         },
+    //     );
+    //     tl.set(canvasRef.current, { rotation: 0 });
+    //     return () => {
+    //         tl.kill();
+    //     };
+    // }, []);
+    // 🔧 DEV ONLY — remove before commit
+    useEffect(() => {
+        gsap.set(canvasRef.current, { visibility: 'visible', pointerEvents: 'none' });
+        const slider = document.createElement('input');
+        Object.assign(slider.style, {
+            position: 'fixed',
+            bottom: '20px',
+            left: '20px',
+            width: '300px',
+            zIndex: '999999',
+        });
+        slider.type = 'range';
+        slider.min = '0';
+        slider.max = '100';
+        slider.value = '0';
+        slider.oninput = () => {
+            draw(Number(slider.value) / 100);
+        };
+        document.body.appendChild(slider);
+        return () => slider.remove();
+    }, []);
 
     return (
         <canvas

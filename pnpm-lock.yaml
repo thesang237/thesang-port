@@ -113,6 +113,9 @@ importers:
       lucide-react:
         specifier: ^0.553.0
         version: 0.553.0(react@19.2.0)
+      maath:
+        specifier: ^0.10.8
+        version: 0.10.8(@types/three@0.182.0)(three@0.182.0)
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
@@ -203,6 +206,9 @@ importers:
       three-custom-shader-material:
         specifier: ^6.4.0
         version: 6.4.0(@react-three/fiber@9.5.0(@types/react@19.2.7)(immer@11.1.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.182.0))(react@19.2.0)(three@0.182.0)
+      three-mesh-bvh:
+        specifier: ^0.9.9
+        version: 0.9.9(three@0.182.0)
       zod:
         specifier: ^4.1.12
         version: 4.2.1
@@ -5679,6 +5685,11 @@ packages:
 
   three-mesh-bvh@0.8.3:
     resolution: {integrity: sha512-4G5lBaF+g2auKX3P0yqx+MJC6oVt6sB5k+CchS6Ob0qvH0YIhuUk1eYr7ktsIpY+albCqE80/FVQGV190PmiAg==}
+    peerDependencies:
+      three: '>= 0.159.0'
+
+  three-mesh-bvh@0.9.9:
+    resolution: {integrity: sha512-FJKitcjvbALmeQRK+Sc+nLGorCpkrZBrbgJZFzhdyWboak37DZikn46hvQkNqSbJPm227ahYmS6k3N/GXaAyXw==}
     peerDependencies:
       three: '>= 0.159.0'
 
@@ -12333,6 +12344,10 @@ snapshots:
       react: 19.2.0
 
   three-mesh-bvh@0.8.3(three@0.182.0):
+    dependencies:
+      three: 0.182.0
+
+  three-mesh-bvh@0.9.9(three@0.182.0):
     dependencies:
       three: 0.182.0
 
