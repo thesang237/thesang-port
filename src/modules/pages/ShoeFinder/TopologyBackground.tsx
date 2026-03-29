@@ -25,7 +25,7 @@ const TopographyMaterial = shaderMaterial(
 
 extend({ TopographyMaterial });
 
-type TopographyMaterialType = InstanceType<typeof TopographyMaterial> & {
+export type TopographyMaterialType = InstanceType<typeof TopographyMaterial> & {
     uTime: number;
     uColor: THREE.Color;
     uResolution: THREE.Vector2;
@@ -34,16 +34,6 @@ type TopographyMaterialType = InstanceType<typeof TopographyMaterial> & {
     uScale: number;
     uLineThickness: number;
 };
-
-declare module '@react-three/fiber' {
-    type ThreeElements = {
-        topographyMaterial: {
-            ref?: React.Ref<TopographyMaterialType>;
-            transparent?: boolean;
-            depthWrite?: boolean;
-        };
-    };
-}
 
 type TopologyBackgroundProps = {
     isZoomedIn?: boolean;

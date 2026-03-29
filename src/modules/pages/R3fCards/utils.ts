@@ -60,14 +60,3 @@ export class MeshSineMaterial extends THREE.MeshBasicMaterial {
 
 // Register custom elements so JSX can use <bentPlaneGeometry> and <meshSineMaterial>
 extend({ BentPlaneGeometry, MeshSineMaterial });
-
-// ─── Type augmentation for R3F JSX ───────────────────────────────────────────
-import type { ThreeElement } from '@react-three/fiber';
-
-declare module '@react-three/fiber' {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-    interface ThreeElements {
-        bentPlaneGeometry: ThreeElement<typeof BentPlaneGeometry>;
-        meshSineMaterial: ThreeElement<typeof MeshSineMaterial>;
-    }
-}

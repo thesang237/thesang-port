@@ -142,6 +142,13 @@ const eslintConfig = tseslint.config([
   },
 
   {
+    files: ['**/*.d.ts'],
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
+    },
+  },
+
+  {
     files: ['eslint.config.mjs'],
     languageOptions: {
       parserOptions: {
