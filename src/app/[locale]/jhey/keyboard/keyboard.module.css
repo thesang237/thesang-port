@@ -1,0 +1,392 @@
+/* ─── Page ───────────────────────────────────────────────────────────────────── */
+.page {
+    color-scheme: light dark;
+    min-height: 100vh;
+    background: light-dark(#fff, #000);
+    font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif, system-ui;
+    position: relative;
+    overflow: hidden;
+}
+
+.page[data-theme='light'] {
+    color-scheme: light only;
+}
+
+.page[data-theme='dark'] {
+    color-scheme: dark only;
+}
+
+/* ─── Grid background ────────────────────────────────────────────────────────── */
+.page::before {
+    --size: 45px;
+    --line: color-mix(in hsl, canvasText, transparent 80%);
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background:
+        linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
+    mask: linear-gradient(-20deg, transparent 50%, white);
+    top: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ─── Main layout ────────────────────────────────────────────────────────────── */
+.main {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* ─── Section ────────────────────────────────────────────────────────────────── */
+.section {
+    transition-property: opacity, filter;
+    transition-duration: 0.26s;
+    transition-delay: 0.26s;
+    transition-timing-function: ease-out;
+}
+
+.section,
+.content {
+    width: 50ch;
+    max-width: calc(100vw - 2rem);
+}
+
+.page[data-exploded='true'] .section {
+    opacity: 0;
+    filter: blur(4px);
+    transition-delay: 0s;
+}
+
+.content h1 {
+    letter-spacing: -0.05rem;
+    line-height: 1;
+}
+
+.content p {
+    opacity: 0.7;
+    font-weight: 300;
+}
+
+/* ─── Form ───────────────────────────────────────────────────────────────────── */
+.form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    background: canvas;
+    border: 1px solid color-mix(in oklch, canvasText, #0000 75%);
+    border-radius: 6px;
+    outline-color: red;
+    color: canvasText;
+    font-size: 0.875rem;
+}
+
+.submitBtn {
+    padding-inline: 1.5rem;
+    border-radius: 6px;
+    background: canvas;
+    border: 1px solid color-mix(in oklch, canvasText, #0000 75%);
+    cursor: pointer;
+    color: canvasText;
+    font-size: 0.875rem;
+}
+
+/* ─── Mobile ordering ────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .main .keypad {
+        order: 1;
+    }
+    .main .section {
+        order: 2;
+    }
+}
+
+/* ─── Keypad container ───────────────────────────────────────────────────────── */
+.keypad {
+    position: relative;
+    aspect-ratio: 400 / 310;
+    display: flex;
+    place-items: center;
+    width: clamp(280px, 35vw, 400px);
+    -webkit-tap-highlight-color: #0000;
+    transition-property: translate, transform;
+    transition-duration: 0.26s;
+    transition-timing-function: ease-out;
+    transition-delay: 0.26s, 0.52s;
+    transform-style: preserve-3d;
+}
+
+.page[data-exploded='true'] .keypad {
+    translate: calc(-50% - 1rem) 0;
+    transition-delay: 0s, 0.26s;
+}
+
+@media (max-width: 768px) {
+    .page[data-exploded='true'] .keypad {
+        translate: 0 calc(50% + 1rem);
+    }
+}
+
+/* ─── Shared key + base transition ──────────────────────────────────────────── */
+.keypadBase,
+.key {
+    transition-property: translate;
+    transition-duration: 0.26s;
+    transition-timing-function: ease-out;
+}
+
+.page[data-exploded='true'] .keypadBase,
+.page[data-exploded='true'] .key {
+    transition-delay: 0.52s;
+}
+
+/* ─── Explode depths ─────────────────────────────────────────────────────────── */
+.page[data-exploded='true'] .keypadBase {
+    translate: 0 calc(2.5 * 10vh);
+}
+
+.page[data-exploded='true'] .keypadSingle {
+    translate: 0 calc(-1 * 10vh);
+}
+
+.page[data-exploded='true'] .keypadSingleLeft {
+    translate: 0 calc(-2 * 10vh);
+}
+
+.page[data-exploded='true'] .keypadDouble {
+    translate: 0 0;
+}
+
+/* ─── Key base styles ────────────────────────────────────────────────────────── */
+.key {
+    transform-style: preserve-3d;
+    border: 0;
+    background: #0000;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+}
+
+/* Press down animation */
+.key[data-pressed='true'] .keyContent,
+.key:active .keyContent {
+    translate: 0 calc(var(--travel, 20) * 1%);
+}
+
+/* ─── Key hatch overlay (explode mode) ───────────────────────────────────────── */
+.key::after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    transition-property: opacity;
+    transition-duration: 0.26s;
+    transition-timing-function: ease-out;
+    background: repeating-linear-gradient(-45deg, #0000 0 5px, hsl(220 100% 70%) 5px 6px);
+}
+
+.page[data-exploded='true'] .key::after {
+    opacity: 1;
+    transition-delay: 0.52s;
+}
+
+/* ─── Key mask + content ─────────────────────────────────────────────────────── */
+.keyMask {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+
+.keyContent {
+    width: 100%;
+    display: inline-block;
+    height: 100%;
+    transition: translate 0.12s ease-out;
+    container-type: inline-size;
+}
+
+/* ─── Key text ───────────────────────────────────────────────────────────────── */
+.keyText {
+    height: 46%;
+    width: 86%;
+    position: absolute;
+    font-size: 12cqi;
+    z-index: 21;
+    top: 5%;
+    left: 0;
+    color: hsl(0 0% 94%);
+    translate: 8% 10%;
+    transform: rotateX(36deg) rotateY(45deg) rotateX(-90deg) rotate(0deg);
+    text-align: left;
+    padding: 1ch;
+}
+
+/* ─── Key image filter ───────────────────────────────────────────────────────── */
+.key img {
+    filter: hue-rotate(calc(var(--hue, 0) * 1deg)) saturate(var(--saturate, 1)) brightness(var(--brightness, 1));
+    transition: translate 0.12s ease-out;
+    width: 100%;
+}
+
+/* ─── Keypad base image ──────────────────────────────────────────────────────── */
+.keypadBase {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.keypadBase img {
+    transition: translate 0.12s ease-out;
+    width: 100%;
+}
+
+/* ─── Single key ─────────────────────────────────────────────────────────────── */
+.keypadSingle {
+    position: absolute;
+    width: 40.5%;
+    left: 54%;
+    bottom: 36%;
+    height: 46%;
+    clip-path: polygon(0 0, 54% 0, 89% 24%, 100% 70%, 54% 100%, 46% 100%, 0 69%, 12% 23%, 47% 0%);
+    -webkit-mask: url(https://assets.codepen.io/605876/keypad-single.png?format=auto&quality=86) 50% 50% / 100% 100%;
+    mask: url(https://assets.codepen.io/605876/keypad-single.png?format=auto&quality=86) 50% 50% / 100% 100%;
+}
+
+.keypadSingle .keyText {
+    font-size: 18cqi;
+    width: 52%;
+    height: 62%;
+    translate: 45% -16%;
+}
+
+.keypadSingle img {
+    top: 0;
+    opacity: 1;
+    width: 96%;
+    position: absolute;
+    left: 50%;
+    translate: -50% 1%;
+}
+
+/* ─── Single key (left variant) ──────────────────────────────────────────────── */
+.keypadSingleLeft {
+    left: 29.3%;
+    bottom: 54.2%;
+}
+
+/* ─── Double key ─────────────────────────────────────────────────────────────── */
+.keypadDouble {
+    position: absolute;
+    width: 64%;
+    height: 65%;
+    left: 6%;
+    bottom: 17.85%;
+    clip-path: polygon(34% 0, 93% 44%, 101% 78%, 71% 100%, 66% 100%, 0 52%, 0 44%, 7% 17%, 30% 0);
+    -webkit-mask: url(https://assets.codepen.io/605876/keypad-double.png?format=auto&quality=86) 50% 50% / 100% 100%;
+    mask: url(https://assets.codepen.io/605876/keypad-double.png?format=auto&quality=86) 50% 50% / 100% 100%;
+}
+
+.keypadDouble img {
+    top: 0;
+    opacity: 1;
+    width: 99%;
+    position: absolute;
+    left: 50%;
+    translate: -50% 1%;
+}
+
+/* ─── Bear link ──────────────────────────────────────────────────────────────── */
+.bearLink {
+    color: canvasText;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 48px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    text-decoration: none;
+}
+
+.bearLink:is(:hover, :focus-visible) {
+    opacity: 1;
+}
+
+.bearLink svg {
+    width: 75%;
+}
+
+/* ─── Binding bar ────────────────────────────────────────────────────────────── */
+.bindingBar {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-end;
+}
+
+.bindingItem {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.bindingKey {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: canvasText;
+    opacity: 0.5;
+    font-family: monospace;
+    min-width: 3ch;
+    text-align: right;
+}
+
+.bindingBtn {
+    padding: 0.35rem 0.75rem;
+    background: transparent;
+    border: 1px solid color-mix(in hsl, canvasText, transparent 60%);
+    color: canvasText;
+    cursor: pointer;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.bindingBtn:hover {
+    opacity: 1;
+}
+
+.bindingBtnRecording {
+    opacity: 1;
+    border-color: canvasText;
+    animation: pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}

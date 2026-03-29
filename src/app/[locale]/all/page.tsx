@@ -165,6 +165,18 @@ const GROUPS: Group[] = [
             },
             { route: '/jhey/context-aware', title: 'Context-Aware Icons', desc: 'App icon cards with pointer-tracking blurred background glow — container queries, SVG/CSS blur toggle', tags: ['UI'] },
             { route: '/jhey/frosted-border', title: 'Frosted Border', desc: 'Draggable sticky product card with frosted glass backdrop-filter border over a scrollable image grid', tags: ['UI'] },
+            {
+                route: '/jhey/detail-summary',
+                title: 'Detail Summary',
+                desc: 'Native details/summary disclosure with smooth height transitions, parallax image reveal, and bounce easing',
+                tags: ['UI'],
+            },
+            {
+                route: '/jhey/keyboard',
+                title: 'Keyboard',
+                desc: 'Interactive 3-key keypad with press animation, keyboard bindings, explode-view, and per-key hue/brightness controls via Leva',
+                tags: ['UI'],
+            },
         ],
     },
 ];
