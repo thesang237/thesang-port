@@ -1,0 +1,152 @@
+.topLeftControls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+    width: 240px;
+    padding: 19px;
+    box-sizing: border-box;
+    will-change: opacity, transform;
+}
+
+.topLeftControls.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.glassPanel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.glassPanel::-webkit-scrollbar {
+    display: none;
+}
+
+.controlPanel {
+    width: 100%;
+}
+
+.controlPanel h3 {
+    margin: 0 0 13px 0;
+    color: #fff;
+    font-size: 0.84rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.colorRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 11px;
+}
+
+.colorRow input[type='color'] {
+    -webkit-appearance: none;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    width: 22px;
+    height: 22px;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    border-radius: 11px;
+    overflow: hidden;
+}
+
+.colorRow input[type='color']::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.colorRow input[type='color']::-webkit-color-swatch {
+    border: none;
+    border-radius: 11px;
+}
+
+.colorRow input[type='range'] {
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+}
+
+.colorRow input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+}
+
+.colorRow input[type='range']::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+@media (max-width: 900px) {
+    .topLeftControls {
+        top: 80px;
+        left: 50%;
+        right: auto;
+        width: calc(100% - 40px);
+        max-width: 400px;
+        max-height: calc(50vh - 50px);
+        overflow-y: auto;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .topLeftControls.visible {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(-50%) translateY(-15px);
+    }
+
+    :global(.menuOpen) .topLeftControls.visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@media (max-height: 700px) and (max-width: 900px) {
+    .topLeftControls {
+        top: 70px;
+        gap: 8px;
+        padding: 14px;
+    }
+
+    .controlPanel {
+        padding: 0;
+    }
+
+    .colorRow {
+        margin-bottom: 6px;
+    }
+}

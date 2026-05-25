@@ -1,0 +1,73 @@
+.mobileMenuBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 60;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease,
+        background 0.2s ease;
+    border-radius: 22px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    will-change: opacity, transform;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+}
+
+.mobileMenuBtn.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.mobileMenuBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.hamburgerBar {
+    width: 18px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+.menuOpen .hamburgerBar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.menuOpen .hamburgerBar:nth-child(2) {
+    opacity: 0;
+}
+
+.menuOpen .hamburgerBar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.glassPanel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 900px) {
+    .mobileMenuBtn {
+        display: flex;
+    }
+}

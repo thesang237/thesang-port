@@ -524,13 +524,6 @@ const HoloCardMaterial = shaderMaterial(
 
 extend({ HoloCardMaterial });
 
-// TypeScript declaration for JSX
-declare module '@react-three/fiber' {
-  interface ThreeElements {
-    holoCardMaterial: { uTexture?: THREE.Texture; uOpacity?: number; uActive?: number; transparent?: boolean };
-  }
-}
-
 // Used in ShoeTile.tsx
 <mesh ref={imageRef}>
   <planeGeometry args={[w, h, 16, 16]} />

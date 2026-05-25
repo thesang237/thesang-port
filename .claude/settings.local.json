@@ -58,7 +58,8 @@
             "Bash(pnpm eslint:*)",
             "Bash(pnpm prettier:*)",
             "WebFetch(domain:tympanus.net)",
-            "Bash(git commit:*)"
+            "Bash(git commit:*)",
+            "Bash(npm run *)"
         ]
     }
 }

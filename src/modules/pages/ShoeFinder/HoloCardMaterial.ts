@@ -1,4 +1,3 @@
-import type { Ref } from 'react';
 import { shaderMaterial } from '@react-three/drei';
 import { extend } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -25,19 +24,5 @@ export type HoloCardMaterialType = InstanceType<typeof HoloCardMaterial> & {
     uOpacity: number;
     uActive: number;
 };
-
-declare module '@react-three/fiber' {
-    type ThreeElements = {
-        holoCardMaterial: {
-            ref?: Ref<HoloCardMaterialType>;
-            uTime?: number;
-            uTexture?: THREE.Texture;
-            uOpacity?: number;
-            uActive?: number;
-            transparent?: boolean;
-            depthWrite?: boolean;
-        };
-    };
-}
 
 export default HoloCardMaterial;

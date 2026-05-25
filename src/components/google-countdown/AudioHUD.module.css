@@ -1,0 +1,188 @@
+.audioHud {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 19px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 240px;
+    box-sizing: border-box;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+    z-index: 50;
+    will-change: opacity, transform;
+}
+
+.audioHud.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.audioHud h3 {
+    margin: 0 0 10px 0;
+    color: #fff;
+    font-size: 0.84rem;
+}
+
+.glassPanel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.glassPanel::-webkit-scrollbar {
+    display: none;
+}
+
+.hudDivider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 6px 0;
+    border: none;
+}
+
+.hudRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.hudVal {
+    color: #fff;
+    text-align: right;
+}
+
+.hudVal.highlight {
+    color: #ffcc00;
+}
+
+.barBg {
+    width: 80px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.barFill {
+    height: 100%;
+    background: #fff;
+    width: 0%;
+    transition: width 0.1s ease-out;
+}
+
+.panDot {
+    width: 3px;
+    height: 10px;
+    background: #fff;
+    border-radius: 2px;
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: left 0.1s ease-out;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 11px 14px;
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.btnSmall {
+    padding: 6px 10px;
+    font-size: 0.65rem;
+    margin-top: 0;
+    flex: 1;
+    border-radius: 16px;
+}
+
+.apiKeyInput {
+    width: 100%;
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-size: 0.65rem;
+    box-sizing: border-box;
+    outline: none;
+    font-family: inherit;
+}
+
+.apiKeyInput::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 900px) {
+    .audioHud {
+        top: auto;
+        bottom: 20px;
+        left: 50%;
+        right: auto;
+        width: calc(100% - 40px);
+        max-width: 400px;
+        max-height: calc(50vh - 30px);
+        overflow-y: auto;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .audioHud.visible {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(-50%) translateY(15px);
+    }
+
+    :global(.menuOpen) .audioHud.visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@media (max-height: 700px) and (max-width: 900px) {
+    .audioHud {
+        bottom: 10px;
+        padding: 14px;
+        gap: 4px;
+    }
+
+    .hudDivider {
+        margin: 4px 0;
+    }
+}

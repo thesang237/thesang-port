@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbiont: Biodata Sonification</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        /* Glassmorphism Base */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backface-visibility: hidden;
+            /* Fixes WebKit filter rendering glitches */
+            -webkit-backface-visibility: hidden;
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .glass-panel::-webkit-scrollbar {
+            display: none;
+            /* Chrome, Safari and Opera */
+        }
+
+        /* Intro Modal Overlay */
+        #introModal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease;
+            cursor: pointer;
+        }
+
+        #introModal:hover .initiate-text {
+            color: #fff;
+        }
+
+        .brutalist-block {
+            text-align: center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+            max-width: 600px;
+            padding: 0 20px;
+            text-wrap: balance;
+        }
+
+        .initiate-text {
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.2s ease;
+        }
+
+        .mobile-text {
+            display: none;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .modal-content h1 {
+            color: #fff;
+            margin-top: 0;
+            font-size: 2rem;
+            margin-bottom: 16px;
+            letter-spacing: 4px;
+        }
+
+        .modal-content p {
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Reference List Style Buttons */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 11px 14px;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Condensed Inline Buttons */
+        .btn-small {
+            padding: 6px 10px;
+            font-size: 0.65rem;
+            margin-top: 0;
+            flex: 1;
+            border-radius: 16px;
+        }
+
+        /* Audio HUD */
+        #audioHud {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 19px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 240px;
+            box-sizing: border-box;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            z-index: 50;
+            will-change: opacity, transform;
+        }
+
+        #audioHud.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        #audioHud h3 {
+            margin: 0 0 10px 0;
+            color: #fff;
+            font-size: 0.84rem;
+        }
+
+        .hud-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+            border: none;
+        }
+
+        .hud-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .hud-val {
+            color: #fff;
+            text-align: right;
+        }
+
+        .hud-val.highlight {
+            color: #ffcc00;
+        }
+
+        /* Highlight distinct visually since everything is bold */
+        .bar-bg {
+            width: 80px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: #fff;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        .pan-dot {
+            width: 3px;
+            height: 10px;
+            background: #fff;
+            border-radius: 2px;
+            position: absolute;
+            top: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: left 0.1s ease-out;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Top Left Controls */
+        #topLeftControls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            width: 240px;
+            padding: 19px;
+            box-sizing: border-box;
+            will-change: opacity, transform;
+        }
+
+        #topLeftControls.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .control-panel {
+            width: 100%;
+        }
+
+        .control-panel h3 {
+            margin: 0 0 13px 0;
+            color: #fff;
+            font-size: 0.84rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        /* Color inputs */
+        .color-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 11px;
+        }
+
+        .color-row input[type="color"] {
+            -webkit-appearance: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            width: 22px;
+            height: 22px;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            outline: none;
+            border-radius: 11px;
+            overflow: hidden;
+        }
+
+        .color-row input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-row input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 11px;
+        }
+
+        /* Slider Styling */
+        .color-row input[type="range"] {
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            height: 4px;
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .color-row input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        /* End Sequence Overlay */
+        #fadeOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(16px);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 4s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #fadeOverlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .fade-content {
+            padding: 40px 60px;
+            opacity: 0;
+            transition: opacity 2s ease 3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #fadeOverlay.active .fade-content {
+            opacity: 1;
+        }
+
+        .fade-content h2 {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            text-wrap: balance;
+        }
+
+        /* Mobile Hamburger Button */
+        #mobileMenuBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 60;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease, background 0.2s ease;
+            border-radius: 22px;
+            padding: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            will-change: opacity, transform;
+        }
+
+        #mobileMenuBtn.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        #mobileMenuBtn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .hamburger-bar {
+            width: 18px;
+            height: 2px;
+            background: #fff;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .menu-open #mobileMenuBtn .hamburger-bar:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .menu-open #mobileMenuBtn .hamburger-bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-open #mobileMenuBtn .hamburger-bar:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            #mobileMenuBtn {
+                display: flex;
+            }
+
+            .desktop-text {
+                display: none;
+            }
+
+            .mobile-text {
+                display: inline;
+            }
+
+            #topLeftControls {
+                top: 80px;
+                left: 50%;
+                right: auto;
+                width: calc(100% - 40px);
+                max-width: 400px;
+                max-height: calc(50vh - 50px);
+                overflow-y: auto;
+                transform: translateX(-50%) translateY(0);
+            }
+
+            #audioHud {
+                top: auto;
+                bottom: 20px;
+                left: 50%;
+                right: auto;
+                width: calc(100% - 40px);
+                max-width: 400px;
+                max-height: calc(50vh - 30px);
+                overflow-y: auto;
+                transform: translateX(-50%) translateY(0);
+            }
+
+            #topLeftControls.visible {
+                opacity: 0;
+                pointer-events: none;
+                transform: translateX(-50%) translateY(-15px);
+            }
+
+            #audioHud.visible {
+                opacity: 0;
+                pointer-events: none;
+                transform: translateX(-50%) translateY(15px);
+            }
+
+            body.menu-open #topLeftControls.visible,
+            body.menu-open #audioHud.visible {
+                opacity: 1;
+                pointer-events: auto;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @media (max-height: 700px) and (max-width: 900px) {
+            #topLeftControls {
+                top: 70px;
+                gap: 8px;
+                padding: 14px;
+            }
+
+            #audioHud {
+                bottom: 10px;
+                padding: 14px;
+                gap: 4px;
+            }
+
+            .control-panel {
+                padding: 0;
+            }
+
+            .color-row {
+                margin-bottom: 6px;
+            }
+
+            .hud-divider {
+                margin: 4px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="introModal">
+        <div class="brutalist-block">
+            SYMBIONT<br><br>
+            A BIODATA SONIFICATION AUDIO-VISUAL EXPERIENCE. WATCH AS SYNTHETIC FLORA EVOLVE FROM 10 DOWN TO 1. HOVER OVER SPORES TO INFLUENCE THE SOUND.<br><br>
+            <span class="initiate-text desktop-text">CLICK ANYWHERE TO INITIATE.</span>
+            <span class="initiate-text mobile-text">TAP ANYWHERE TO INITIATE.</span>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button id="mobileMenuBtn" class="glass-panel">
+        <div class="hamburger-bar"></div>
+        <div class="hamburger-bar"></div>
+        <div class="hamburger-bar"></div>
+    </button>
+
+    <div id="topLeftControls" class="glass-panel">
+        <div class="control-panel">
+            <h3>Visual Parameters</h3>
+            <div class="color-row"><span>Ground A</span><input type="color" id="colGrnd1" value="#033f35"></div>
+            <div class="color-row"><span>Ground B</span><input type="color" id="colGrnd2" value="#339eec"></div>
+            <div class="color-row"><span>Edge</span><input type="color" id="colEdge" value="#ff5500"></div>
+            <div class="color-row"><span>Peak</span><input type="color" id="colPeak" value="#ffcc00"></div>
+            <div class="color-row" style="margin-top: 15px;">
+                <span>Zoom (Z)</span>
+                <input type="range" id="camZSlider" min="10" max="100" step="1" value="44"
+                    style="flex:1; min-width: 0; margin: 0 10px;">
+                <span id="camZValue" style="width: 25px; text-align: right;">44</span>
+            </div>
+            <div class="color-row">
+                <span>Turbulence</span>
+                <input type="range" id="turbulenceSlider" min="0" max="3" step="0.1" value="1.0"
+                    style="flex:1; min-width: 0; margin: 0 10px;">
+                <span id="turbulenceValue" style="width: 25px; text-align: right;">1.0</span>
+            </div>
+            <div class="color-row">
+                <span>Spore Height</span>
+                <input type="range" id="heightSlider" min="0.5" max="1.5" step="0.1" value="1.0"
+                    style="flex:1; min-width: 0; margin: 0 10px;">
+                <span id="heightValue" style="width: 25px; text-align: right;">1.0</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="fadeOverlay">
+        <div class="fade-content">
+            <h2>CULTIVATION COMPLETE</h2>
+            <button class="btn" id="finalRestartBtn">RESTART SEQUENCE</button>
+        </div>
+    </div>
+
+    <div id="audioHud" class="glass-panel">
+        <h3>Terminal Data</h3>
+        <div class="hud-row"><span>Organism</span> <span class="hud-val highlight" id="hud-gen">-</span></div>
+        <div class="hud-row"><span>Scale</span> <span class="hud-val" id="hud-scale">-</span></div>
+        <div class="hud-row"><span>Root Freq</span> <span class="hud-val" id="hud-freq">-</span></div>
+        <div class="hud-row"><span>Texture</span> <span class="hud-val" id="hud-wave">-</span></div>
+        <hr class="hud-divider">
+        <div class="hud-row"><span>Bio-Signal</span>
+            <div class="bar-bg">
+                <div class="bar-fill" id="hud-bio"></div>
+            </div>
+        </div>
+        <div class="hud-row"><span>Velocity</span> <span class="hud-val" id="hud-speed">0%</span></div>
+        <div class="hud-row"><span>Resonance</span>
+            <div class="bar-bg">
+                <div class="bar-fill" id="hud-resonance"></div>
+            </div>
+        </div>
+        <div class="hud-row"><span>Cutoff Freq</span> <span class="hud-val" id="hud-cutoff">300 Hz</span></div>
+        <div class="hud-row"><span>Stereo Field</span>
+            <div class="bar-bg">
+                <div class="pan-dot" id="hud-pan"></div>
+            </div>
+        </div>
+        <hr class="hud-divider">
+        <div class="hud-row"><span>Plucks</span> <span class="hud-val" id="hud-plucks"
+                style="color: rgba(255, 255, 255, 0.5);">IDLE</span></div>
+        <div class="hud-row"><span>Active Voices</span> <span class="hud-val highlight" id="hud-voices">0</span></div>
+        <div class="hud-row"><span>Airborne Dust</span> <span class="hud-val" id="hud-dust">0</span></div>
+
+        <div style="margin-top: 10px; display: flex; gap: 6px;">
+            <button class="btn btn-outline btn-small" id="muteBtn">MUTE</button>
+            <button class="btn btn-outline btn-small" id="pauseBtn">PAUSE</button>
+            <button class="btn btn-outline btn-small" id="restartBtn">RESTART</button>
+        </div>
+        
+        <hr class="hud-divider" style="margin-top: 10px;">
+        <div class="hud-row" style="flex-direction: column; align-items: stretch; gap: 6px;">
+            <input type="password" id="apiKeyInput" placeholder="Enter Gemini API Key..." style="width: 100%; padding: 6px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.2); color: #fff; font-size: 0.65rem; box-sizing: border-box; outline: none;">
+            <button class="btn btn-small" id="analyzeBtn" style="margin-top: 0;">ANALYZE BIODATA</button>
+        </div>
+    </div>
+
+    <div id="analysisModal" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 150; display: none; justify-content: center; align-items: center; flex-direction: column; opacity: 0; transition: opacity 0.5s ease;">
+        <div class="glass-panel" style="width: 80%; max-width: 600px; padding: 30px; position: relative;">
+            <button id="closeAnalysisBtn" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            <h2 style="margin-top: 0; color: #ffcc00; letter-spacing: 2px;">SYMBIOTIC ANALYSIS</h2>
+            <div id="analysisContent" style="font-size: 0.9rem; line-height: 1.6; color: rgba(255, 255, 255, 0.9); max-height: 50vh; overflow-y: auto; padding-right: 10px; font-weight: normal; text-transform: none;">
+                Awaiting data from the neural network...
+            </div>
+            <div id="analysisLoading" style="display: none; margin-top: 20px; color: #ff5500; font-size: 0.8rem; letter-spacing: 1px;">
+                PROCESSING BIOSIGNALS...
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let scene, camera, renderer;
+        let stalkMesh, tipMesh;
+
+        const isMobile = window.innerWidth <= 900 || /Mobi|Android/i.test(navigator.userAgent);
+
+        // Configuration
+        const gridCols = isMobile ? 280 : 300; // Increased further for mobile fullness
+        const gridRows = isMobile ? 140 : 150;
+        const stalksPerCell = 4; // Restored to 4 across all devices for maximum density
+        const totalCount = gridCols * gridRows * stalksPerCell;
+        const groundWidth = 180; // Extended physical width
+        const groundHeight = 90; // Extended physical height
+
+        // Shared data arrays for all instances
+        const positions = new Float32Array(totalCount * 3);
+        const baseEulers = new Float32Array(totalCount * 3); // OPTIMIZATION: Store Euler instead of Quaternion
+
+        const startScales = new Float32Array(totalCount);
+        const targetScales = new Float32Array(totalCount);
+
+        const noiseValues = new Float32Array(totalCount); // Pure structural noise for mapping
+        const illumination = new Float32Array(totalCount); // Tracks interactive glowing trails
+        const bends = new Float32Array(totalCount * 2); // Interleaved x, y
+
+        const delays = new Float32Array(totalCount);
+
+        // Shader Uniforms
+        const shaderUniforms = {
+            uTime: { value: 0 },
+            uNow: { value: 0 },
+            uHeightFactor: { value: 1.0 },
+            uTurbulence: { value: 1.0 },
+            uPlantWavePhase: { value: 0 },
+            uGlobalBioActivity: { value: 0 },
+            uColorGrnd1: { value: new THREE.Color(0x033f35) },
+            uColorGrnd2: { value: new THREE.Color(0x339eec) },
+            uColorEdge: { value: new THREE.Color(0xff5500) },
+            uColorPeak: { value: new THREE.Color(0xffcc00) }
+        };
+
+        let currentNumber = 10;
+        let transitionStartTime = 0;
+        let animationStarted = false;
+        let isCountdownPaused = false;
+        let isSequenceComplete = false;
+        let isPreview = false;
+        const DURATION_PER_NUMBER = 6000;
+
+        let userTargetZ = null; // Stores manual camera overrides
+        let targetTurbulence = 1.0;
+        let currentTurbulence = 1.0; // Interpolates smoothly to target
+        let heightFactor = isMobile ? 0.6 : 1.0; // Controls spore height dynamically
+        let plantWavePhase = 0; // Accumulates smoothly over time
+        let lastFrameTime = performance.now();
+        let hasActiveBends = false; // Skip decay loop when nothing is active
+        let hasActiveIllum = false;
+
+        // Responsive camera helpers
+        function getInitialZ() {
+            return 44;
+        }
+
+        function getTargetZ() {
+            return getInitialZ() - 5;
+        }
+
+        // Mouse raycasting
+        const mouse = new THREE.Vector2(-1000, -1000);
+        const mouseWorld = new THREE.Vector3();
+        const lastMouseWorld = new THREE.Vector3(); // Added to track cursor velocity
+        const raycaster = new THREE.Raycaster();
+        const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+        const canvasSize = 512;
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = canvasSize; offCanvas.height = canvasSize;
+        const ctx = offCanvas.getContext('2d', { willReadFrequently: true });
+
+        // Dynamic palettes mapped to each generation (Initialized to Organism 10)
+        const colorGrnd1 = new THREE.Color(0x033f35);
+        const colorGrnd2 = new THREE.Color(0x339eec);
+        const colorEdge = new THREE.Color(0xff5500);
+        const colorPeak = new THREE.Color(0xffcc00);
+
+        // Target colors to allow for smooth, gradual fading
+        const targetColorGrnd1 = new THREE.Color(0x033f35);
+        const targetColorGrnd2 = new THREE.Color(0x339eec);
+        const targetColorEdge = new THREE.Color(0xff5500);
+        const targetColorPeak = new THREE.Color(0xffcc00);
+
+        // Depth Lighting & Particles
+        let mouseLight;
+        let dustParticles;
+        let interactiveDust;
+
+        const maxInteractiveDust = isMobile ? 1000 : 3000;
+        const activeDustPositions = new Float32Array(maxInteractiveDust * 3).fill(9999); // Hide initially
+        const activeDustVelocities = new Float32Array(maxInteractiveDust * 3);
+        const activeDustLifetimes = new Float32Array(maxInteractiveDust);
+        let activeDustIndex = 0;
+
+        // Ambient Audio Engine
+        let audioCtx, masterGain, masterDelay, delayFeedback;
+        let droneOsc, droneOsc2, droneGain, droneFilter; // Removed the sub-oscillator to clean up low end
+        let audioEnabled = false;
+        let currentAudioProfile;
+        let pluckTimer;
+        let activePlucks = 0; // Prevent audio distortion from too many overlapping sounds
+        const maxVoices = isMobile ? 14 : 32; // Strict voice limit to prevent distortion
+        let isMuted = false;
+
+        // Cached HUD elements (avoid per-frame DOM queries)
+        const hudBioEl = document.getElementById('hud-bio');
+        const hudResEl = document.getElementById('hud-resonance');
+        const hudSpeedEl = document.getElementById('hud-speed');
+        const hudCutoffEl = document.getElementById('hud-cutoff');
+        const hudPanEl = document.getElementById('hud-pan');
+        const hudVoicesEl = document.getElementById('hud-voices');
+        const hudDustEl = document.getElementById('hud-dust');
+        const hudGenEl = document.getElementById('hud-gen');
+        const hudScaleEl = document.getElementById('hud-scale');
+        const hudFreqEl = document.getElementById('hud-freq');
+        const hudWaveEl = document.getElementById('hud-wave');
+        const hudPlucksEl = document.getElementById('hud-plucks');
+
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const analysisModal = document.getElementById('analysisModal');
+        const analysisContent = document.getElementById('analysisContent');
+        const closeAnalysisBtn = document.getElementById('closeAnalysisBtn');
+        const analysisLoading = document.getElementById('analysisLoading');
+        
+        // Track cumulative interaction data for analysis
+        let sessionData = {
+            totalInteractions: 0,
+            maxVelocity: 0,
+            avgResonance: 0,
+            resonanceSamples: 0,
+            dominantColors: new Set(),
+            notesPlayed: 0
+        };
+
+        // Sound Profiles & Visual Palettes per number
+        // Customized to ensure ALL scales stay completely diatonic to C Major (or relative minors/majors).
+        // This ensures the incredibly long delay tails never clash when transitioning between numbers.
+        const audioProfiles = {
+            10: { name: 'C Major Pent.', scale: [130.81, 146.83, 164.81, 196.00, 220.00, 261.63, 293.66, 329.63, 392.00, 440.00], drone: 'triangle', pluck: 'sine', colors: { g1: '#033f35', g2: '#339eec', edge: '#ff5500', peak: '#ffcc00' } },
+            9: { name: 'A Minor Pent.', scale: [110.00, 130.81, 146.83, 164.81, 196.00, 220.00, 261.63, 293.66, 329.63, 392.00], drone: 'sine', pluck: 'triangle', colors: { g1: '#1a5b1a', g2: '#0af00a', edge: '#00bfff', peak: '#c800ff' } },
+            8: { name: 'F Major Pent.', scale: [174.61, 196.00, 220.00, 261.63, 293.66, 349.23, 392.00, 440.00, 523.25, 587.33], drone: 'triangle', pluck: 'sine', colors: { g1: '#1a0033', g2: '#a142ff', edge: '#88ff00', peak: '#00ffe1' } },
+            7: { name: 'D Minor Pent.', scale: [146.83, 174.61, 196.00, 220.00, 261.63, 293.66, 349.23, 392.00, 440.00, 523.25], drone: 'square', pluck: 'sine', colors: { g1: '#004242', g2: '#00dbdb', edge: '#ff0033', peak: '#ff8866' } },
+            6: { name: 'G Major Pent.', scale: [196.00, 220.00, 246.94, 293.66, 329.63, 392.00, 440.00, 493.88, 587.33, 659.25], drone: 'sine', pluck: 'triangle', colors: { g1: '#33001a', g2: '#fa007d', edge: '#1100ff', peak: '#00ffb3' } },
+            5: { name: 'E Minor Pent.', scale: [164.81, 196.00, 220.00, 246.94, 293.66, 329.63, 392.00, 440.00, 493.88, 587.33], drone: 'triangle', pluck: 'sine', colors: { g1: '#331100', g2: '#ff5500', edge: '#6600ff', peak: '#00bfff' } },
+            4: { name: 'A Minor Pent. 2', scale: [220.00, 261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99], drone: 'sine', pluck: 'square', colors: { g1: '#1c0033', g2: '#004cff', edge: '#9900ff', peak: '#ffbdf2' } },
+            3: { name: 'C Major Pent. 2', scale: [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00], drone: 'triangle', pluck: 'sine', colors: { g1: '#140033', g2: '#660014', edge: '#ff5900', peak: '#d4ff00' } },
+            2: { name: 'F Major Pent. 2', scale: [349.23, 392.00, 440.00, 523.25, 587.33, 698.46, 783.99, 880.00, 1046.50, 1174.66], drone: 'sine', pluck: 'triangle', colors: { g1: '#330000', g2: '#ff0000', edge: '#00ffbf', peak: '#e5ffff' } },
+            1: { name: 'C Major Pent. 3', scale: [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, 1174.66, 1318.51, 1567.98, 1760.00], drone: 'triangle', pluck: 'sine', colors: { g1: '#050505', g2: '#1100ff', edge: '#fbff00', peak: '#fb00ff' } },
+        };
+
+        function init() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050505, 0.015);
+
+            camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(0, 0, getInitialZ());
+
+            renderer = new THREE.WebGLRenderer({ antialias: !isMobile, powerPreference: "high-performance" });
+            renderer.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 1.5) : window.devicePixelRatio); // Cap pixel ratio
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = isMobile ? THREE.BasicShadowMap : THREE.PCFSoftShadowMap;
+            document.body.appendChild(renderer.domElement);
+
+            // Substantially darkened ambient and global lighting to emphasize the cursor spotlight
+            const ambientLight = new THREE.AmbientLight(0x1a1c12, 0.2);
+            scene.add(ambientLight);
+
+            const hemiLight = new THREE.HemisphereLight(0xffeedd, 0x101505, 0.1);
+            scene.add(hemiLight);
+
+            const dirLight = new THREE.DirectionalLight(0xfff5e6, 0.5);
+            dirLight.position.set(12, 22, 14);
+            dirLight.castShadow = !isMobile; // Disable expensive shadow casting on mobile
+            if (!isMobile) {
+                dirLight.shadow.mapSize.width = 2048;
+                dirLight.shadow.mapSize.height = 2048;
+                dirLight.shadow.bias = -0.0005;
+            }
+            scene.add(dirLight);
+
+            const rimLight = new THREE.DirectionalLight(0xdfff00, 0.2);
+            rimLight.position.set(-15, -10, -5);
+            scene.add(rimLight);
+
+            // Add interactive point light acting as a bright cursor spotlight (color matched dynamically)
+            mouseLight = new THREE.PointLight(colorPeak, 4.0, 90, 2.0);
+            scene.add(mouseLight);
+
+            setupDust();
+            setupGeometry();
+
+            window.addEventListener('resize', onWindowResize, false);
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                raycaster.setFromCamera(mouse, camera);
+                raycaster.ray.intersectPlane(plane, mouseWorld);
+            });
+
+            // Add dedicated touch support for mobile/tablets
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    mouse.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+                    mouse.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+                    raycaster.setFromCamera(mouse, camera);
+                    raycaster.ray.intersectPlane(plane, mouseWorld);
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 0) {
+                    mouse.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+                    mouse.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+                    raycaster.setFromCamera(mouse, camera);
+                    raycaster.ray.intersectPlane(plane, mouseWorld);
+                    // Prevent massive speed spikes on initial touch
+                    lastMouseWorld.copy(mouseWorld);
+                }
+            }, { passive: true });
+
+            document.getElementById('introModal').addEventListener('click', startSequence);
+            document.getElementById('restartBtn').addEventListener('click', restartAnimation);
+            document.getElementById('finalRestartBtn').addEventListener('click', restartAnimation);
+
+            document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+                document.body.classList.toggle('menu-open');
+            });
+
+            analyzeBtn.addEventListener('click', requestAnalysis);
+            closeAnalysisBtn.addEventListener('click', () => {
+                analysisModal.style.opacity = '0';
+                setTimeout(() => analysisModal.style.display = 'none', 500);
+            });
+
+            document.getElementById('pauseBtn').addEventListener('click', (e) => {
+                isCountdownPaused = !isCountdownPaused;
+                e.target.innerText = isCountdownPaused ? "RESUME" : "PAUSE";
+            });
+
+            document.getElementById('muteBtn').addEventListener('click', (e) => {
+                isMuted = !isMuted;
+                e.target.innerText = isMuted ? "UNMUTE" : "MUTE";
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (masterGain) {
+                    masterGain.gain.setTargetAtTime(isMuted ? 0 : 0.6, audioCtx.currentTime, 0.1);
+                }
+            });
+
+            // Bind sliders to TARGET colors so changes fade in smoothly
+            const bindColor = (id, targetColor) => {
+                document.getElementById(id).addEventListener('input', (e) => {
+                    targetColor.set(e.target.value);
+                });
+            };
+            bindColor('colGrnd1', targetColorGrnd1);
+            bindColor('colGrnd2', targetColorGrnd2);
+            bindColor('colEdge', targetColorEdge);
+            bindColor('colPeak', targetColorPeak);
+
+            // Camera Slider setup
+            const camZSlider = document.getElementById('camZSlider');
+            const camZValue = document.getElementById('camZValue');
+            const initialZ = getInitialZ();
+            camZSlider.value = initialZ;
+            camZValue.innerText = initialZ;
+
+            camZSlider.addEventListener('input', (e) => {
+                userTargetZ = parseFloat(e.target.value);
+                camZValue.innerText = userTargetZ;
+                camera.position.z = userTargetZ;
+            });
+
+            // Turbulence Slider setup
+            const turbulenceSlider = document.getElementById('turbulenceSlider');
+            const turbulenceValue = document.getElementById('turbulenceValue');
+            turbulenceSlider.addEventListener('input', (e) => {
+                targetTurbulence = parseFloat(e.target.value);
+                turbulenceValue.innerText = targetTurbulence.toFixed(1);
+            });
+
+            // Spore Height Slider setup
+            const heightSlider = document.getElementById('heightSlider');
+            const heightValue = document.getElementById('heightValue');
+            heightSlider.value = heightFactor;
+            heightValue.innerText = heightFactor.toFixed(1);
+            
+            heightSlider.addEventListener('input', (e) => {
+                heightFactor = parseFloat(e.target.value);
+                heightValue.innerText = heightFactor.toFixed(1);
+            });
+
+            startPreviewSequence();
+        }
+
+        function setupDust() {
+            // Generate soft circular texture for glowing spores
+            const canvas = document.createElement('canvas');
+            canvas.width = 64; canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.arc(32, 32, 30, 0, Math.PI * 2);
+            ctx.fillStyle = '#fff';
+            ctx.fill();
+            const particleTex = new THREE.CanvasTexture(canvas);
+
+            const geom = new THREE.BufferGeometry();
+            const count = isMobile ? 2500 : 8000; // Reduced atmospheric dust particles
+            const pos = new Float32Array(count * 3);
+            for (let i = 0; i < count * 3; i += 3) {
+                pos[i] = (Math.random() - 0.5) * 180; // Spread across full new width
+                pos[i + 1] = (Math.random() - 0.5) * 100; // Spread across full height
+                pos[i + 2] = (Math.random() - 0.5) * 35 + 2; // Float above the organism
+            }
+            geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({
+                color: 0xffeebb, size: 0.12, transparent: true, opacity: 0.15,
+                map: particleTex, blending: THREE.AdditiveBlending, depthWrite: false
+            });
+            dustParticles = new THREE.Points(geom, mat);
+            scene.add(dustParticles);
+
+            // Setup interactive dust spores (color matched dynamically)
+            const interactiveGeom = new THREE.BufferGeometry();
+            interactiveGeom.setAttribute('position', new THREE.BufferAttribute(activeDustPositions, 3));
+            const interactiveMat = new THREE.PointsMaterial({
+                color: colorPeak, size: 0.75, transparent: true, opacity: 1.0,
+                map: particleTex, blending: THREE.AdditiveBlending, depthWrite: false
+            });
+            interactiveDust = new THREE.Points(interactiveGeom, interactiveMat);
+            scene.add(interactiveDust);
+        }
+
+        function startPreviewSequence() {
+            // Force the initial colors to B&W
+            colorGrnd1.set('#0a0a0a');
+            colorGrnd2.set('#2a2a2a');
+            colorEdge.set('#888888');
+            colorPeak.set('#ffffff');
+
+            targetColorGrnd1.set('#0a0a0a');
+            targetColorGrnd2.set('#2a2a2a');
+            targetColorEdge.set('#888888');
+            targetColorPeak.set('#ffffff');
+
+            const baseDelayMax = 1500;
+
+            for (let i = 0; i < totalCount; i++) {
+                startScales[i] = 0;
+
+                // Create a rippling B&W field
+                let targetHeight = 0.4 + noiseValues[i] * 0.6;
+
+                // Sprinkle in some tall spores randomly
+                if (Math.random() > 0.98) {
+                    targetHeight += 1.5 + Math.random() * 2.0;
+                }
+
+                targetScales[i] = targetHeight;
+                delays[i] = Math.random() * baseDelayMax;
+            }
+
+            if (stalkMesh && tipMesh) {
+                stalkMesh.geometry.attributes.aStartScale.needsUpdate = true;
+                stalkMesh.geometry.attributes.aTargetScale.needsUpdate = true;
+                stalkMesh.geometry.attributes.aDelay.needsUpdate = true;
+            }
+
+            transitionStartTime = performance.now();
+            animationStarted = true;
+            isPreview = true;
+        }
+
+        function startSequence() {
+            document.getElementById('introModal').style.opacity = '0';
+            setTimeout(() => document.getElementById('introModal').style.display = 'none', 1000);
+            document.getElementById('audioHud').classList.add('visible');
+            document.getElementById('topLeftControls').classList.add('visible');
+            document.getElementById('mobileMenuBtn').classList.add('visible');
+
+            initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            isPreview = false;
+            startTransition(currentNumber);
+            animationStarted = true;
+        }
+
+        function setupGeometry() {
+            const stalkRadiusTop = isMobile ? 0.03 : 0.02;
+            const stalkRadiusBot = isMobile ? 0.05 : 0.035;
+            const stalkRadial = isMobile ? 3 : 5;
+            const stalkGeom = new THREE.CylinderGeometry(stalkRadiusTop, stalkRadiusBot, 1, stalkRadial);
+            stalkGeom.rotateX(Math.PI / 2);
+            stalkGeom.translate(0, 0, 0.5);
+
+            const tipRadial = isMobile ? 3 : 5;
+            const tipHeight = isMobile ? 2 : 4;
+            const tipRadius = isMobile ? 0.1 : 0.08;
+            const tipGeom = new THREE.SphereGeometry(tipRadius, tipRadial, tipHeight);
+
+            const materialOpts = { roughness: 0.85, metalness: 0.05, vertexColors: true };
+
+            const onBeforeCompile = (shader, isTip) => {
+                shader.uniforms.uTime = shaderUniforms.uTime;
+                shader.uniforms.uNow = shaderUniforms.uNow;
+                shader.uniforms.uHeightFactor = shaderUniforms.uHeightFactor;
+                shader.uniforms.uTurbulence = shaderUniforms.uTurbulence;
+                shader.uniforms.uPlantWavePhase = shaderUniforms.uPlantWavePhase;
+                shader.uniforms.uGlobalBioActivity = shaderUniforms.uGlobalBioActivity;
+                shader.uniforms.uColorGrnd1 = shaderUniforms.uColorGrnd1;
+                shader.uniforms.uColorGrnd2 = shaderUniforms.uColorGrnd2;
+                shader.uniforms.uColorEdge = shaderUniforms.uColorEdge;
+                shader.uniforms.uColorPeak = shaderUniforms.uColorPeak;
+
+                shader.vertexShader = `
+                    #define IS_TIP ${isTip ? 1 : 0}
+
+                    uniform float uTime;
+                    uniform float uNow;
+                    uniform float uHeightFactor;
+                    uniform float uTurbulence;
+                    uniform float uPlantWavePhase;
+                    uniform float uGlobalBioActivity;
+                    uniform vec3 uColorGrnd1;
+                    uniform vec3 uColorGrnd2;
+                    uniform vec3 uColorEdge;
+                    uniform vec3 uColorPeak;
+
+                    attribute vec3 aBasePosition;
+                    attribute vec3 aBaseEuler;
+                    attribute float aStartScale;
+                    attribute float aTargetScale;
+                    attribute float aDelay;
+                    attribute float aNoise;
+                    attribute vec2 aBend;
+                    attribute float aIllumination;
+
+                    varying float vDisplayHeight;
+                    varying float vNoise;
+                    varying float vIllum;
+
+                    // Shared between defaultnormal_vertex and begin_vertex
+                    mat3 gpuRotation;
+                    float gpuDisplayHeight;
+
+                    mat3 rotX(float a) {
+                        float c = cos(a), s = sin(a);
+                        return mat3(1.0, 0.0, 0.0, 0.0, c, s, 0.0, -s, c);
+                    }
+                    mat3 rotY(float a) {
+                        float c = cos(a), s = sin(a);
+                        return mat3(c, 0.0, -s, 0.0, 1.0, 0.0, s, 0.0, c);
+                    }
+                    mat3 rotZ(float a) {
+                        float c = cos(a), s = sin(a);
+                        return mat3(c, s, 0.0, -s, c, 0.0, 0.0, 0.0, 1.0);
+                    }
+
+                    ${shader.vertexShader}
+                `;
+
+                // Step 1: Compute rotation & height in defaultnormal_vertex (runs before begin_vertex)
+                // This applies our rotation to normals so Three.js lighting works correctly
+                shader.vertexShader = shader.vertexShader.replace(
+                    '#include <defaultnormal_vertex>',
+                    `
+                    // --- GPU Animation: compute shared rotation and height ---
+                    float progress = clamp((uTime - aDelay) / 2000.0, 0.0, 1.0);
+                    float easeFactor = 1.0 - pow(1.0 - progress, 3.0);
+                    gpuDisplayHeight = (aStartScale + (aTargetScale - aStartScale) * easeFactor) * uHeightFactor;
+
+                    float turbulenceX = sin(aBasePosition.x * 0.2 + uPlantWavePhase * 3.0) * 0.06 * gpuDisplayHeight * (0.3 + uGlobalBioActivity * 0.7) * uTurbulence;
+                    float turbulenceY = cos(aBasePosition.y * 0.2 + uPlantWavePhase * 3.5) * 0.06 * gpuDisplayHeight * (0.3 + uGlobalBioActivity * 0.7) * uTurbulence;
+
+                    float wriggleX = 0.0;
+                    float wriggleY = 0.0;
+                    if (aTargetScale > aStartScale && aTargetScale * uHeightFactor > 3.0) {
+                        float p = clamp((uTime - aDelay) / 2000.0, 0.0, 1.0);
+                        // Smoothly fade wriggle in and out during growth to prevent instant rotation snaps
+                        float wriggleAmt = sin(p * 3.14159) * 0.25;
+                        wriggleX = sin(uNow * 0.006 + aBasePosition.x) * wriggleAmt;
+                        wriggleY = cos(uNow * 0.005 + aBasePosition.y) * wriggleAmt;
+                    }
+
+                    vec3 euler = aBaseEuler + vec3(aBend.x + turbulenceX + wriggleX, aBend.y + turbulenceY + wriggleY, 0.0);
+                    gpuRotation = rotZ(euler.z) * rotY(euler.y) * rotX(euler.x);
+
+                    // Apply rotation to normals for correct lighting
+                    vec3 transformedNormal = normalMatrix * (gpuRotation * objectNormal);
+                    #ifdef FLIP_SIDED
+                        transformedNormal = - transformedNormal;
+                    #endif
+                    #ifdef USE_TANGENT
+                        vec3 transformedTangent = normalMatrix * (gpuRotation * objectTangent);
+                        #ifdef FLIP_SIDED
+                            transformedTangent = - transformedTangent;
+                        #endif
+                    #endif
+                    `
+                );
+
+                // Step 2: Apply precomputed rotation to vertex positions
+                shader.vertexShader = shader.vertexShader.replace(
+                    '#include <begin_vertex>',
+                    `
+                    vec3 transformed = vec3( position );
+
+                    vDisplayHeight = gpuDisplayHeight;
+                    vNoise = aNoise;
+                    vIllum = aIllumination;
+
+                    #if IS_TIP == 1
+                        float tipScale = min(1.0, gpuDisplayHeight * 3.0);
+                        transformed *= tipScale;
+                        transformed += vec3(0.0, 0.0, gpuDisplayHeight);
+                    #else
+                        transformed *= vec3(1.0, 1.0, gpuDisplayHeight);
+                    #endif
+
+                    transformed = gpuRotation * transformed;
+                    transformed += aBasePosition;
+
+                    // --- Color mapping (must be here, AFTER gpuDisplayHeight is computed) ---
+                    vec3 baseColor = mix(uColorGrnd1, uColorGrnd2, vNoise);
+                    vec3 finalColor = baseColor;
+
+                    float h = gpuDisplayHeight;
+                    if (h < 1.5) {
+                        float shadow = (h < 0.8) ? (0.6 + h * 0.5) : 1.0;
+                        finalColor *= shadow;
+                    } else if (h < 3.5) {
+                        float t = (h - 1.5) / 2.0;
+                        float smoothT = t * t * (3.0 - 2.0 * t);
+                        finalColor = mix(baseColor, uColorEdge, smoothT);
+                    } else {
+                        float t = min(1.0, (h - 3.5) / 1.5);
+                        finalColor = mix(uColorEdge, uColorPeak, t);
+                        if (h > 5.0) {
+                            float w = min(1.0, (h - 5.0) * 0.15);
+                            finalColor = mix(finalColor, vec3(1.0), w);
+                        }
+                    }
+
+                    vec3 tipColorBase;
+                    if (h < 1.5) {
+                        tipColorBase = min(vec3(1.0), finalColor * 1.1 + vec3(0.15));
+                    } else {
+                        tipColorBase = min(vec3(1.0), finalColor * 1.2);
+                    }
+
+                    #if IS_TIP == 1
+                        finalColor = tipColorBase;
+                    #endif
+
+                    if (vIllum > 0.0) {
+                        float illum = vIllum;
+                        #if IS_TIP == 0
+                            finalColor = mix(finalColor, uColorPeak, illum * 0.6);
+                        #else
+                            finalColor = mix(finalColor, vec3(1.0), illum);
+                        #endif
+                    }
+
+                    vColor = finalColor;
+                    `
+                );
+            };
+
+            const stalkMat = new THREE.MeshStandardMaterial(materialOpts);
+            stalkMat.onBeforeCompile = (shader) => onBeforeCompile(shader, false);
+
+            const tipMat = new THREE.MeshStandardMaterial(materialOpts);
+            tipMat.onBeforeCompile = (shader) => onBeforeCompile(shader, true);
+
+            stalkMesh = new THREE.InstancedMesh(stalkGeom, stalkMat, totalCount);
+            tipMesh = new THREE.InstancedMesh(tipGeom, tipMat, totalCount);
+
+            stalkMesh.castShadow = true; stalkMesh.receiveShadow = true;
+            tipMesh.castShadow = true; tipMesh.receiveShadow = true;
+
+            // Important: Disable bounding sphere frustum culling since GPU modifies vertices directly
+            stalkMesh.frustumCulled = false;
+            tipMesh.frustumCulled = false;
+
+            // Initialize all instance matrices to identity so project_vertex doesn't zero everything out.
+            // Our shader handles all positioning via aBasePosition; instanceMatrix is just a pass-through.
+            const stalkMatArr = stalkMesh.instanceMatrix.array;
+            const tipMatArr = tipMesh.instanceMatrix.array;
+            for (let i = 0; i < totalCount; i++) {
+                const o = i * 16;
+                stalkMatArr[o] = 1; stalkMatArr[o + 5] = 1; stalkMatArr[o + 10] = 1; stalkMatArr[o + 15] = 1;
+                tipMatArr[o] = 1; tipMatArr[o + 5] = 1; tipMatArr[o + 10] = 1; tipMatArr[o + 15] = 1;
+            }
+            stalkMesh.instanceMatrix.needsUpdate = true;
+            tipMesh.instanceMatrix.needsUpdate = true;
+
+            let idx = 0;
+
+            for (let r = 0; r < gridRows; r++) {
+                for (let c = 0; c < gridCols; c++) {
+                    const worldX = (c / gridCols - 0.5) * groundWidth;
+                    const worldY = -(r / gridRows - 0.5) * groundHeight;
+                    const noise = Math.sin(worldX * 0.4) + Math.cos(worldY * 0.4) + Math.sin((worldX + worldY) * 0.25) + Math.random() * 0.6;
+
+                    for (let s = 0; s < stalksPerCell; s++) {
+                        if (idx >= totalCount) break;
+
+                        positions[idx * 3] = worldX + (Math.random() - 0.5) * 0.1;
+                        positions[idx * 3 + 1] = worldY + (Math.random() - 0.5) * 0.1;
+                        positions[idx * 3 + 2] = (Math.random() - 0.5) * 0.4;
+
+                        const angle = Math.random() * Math.PI * 2;
+                        const tilt = Math.random() * 0.55;
+
+                        baseEulers[idx * 3] = Math.sin(angle) * tilt;
+                        baseEulers[idx * 3 + 1] = Math.cos(angle) * tilt;
+                        baseEulers[idx * 3 + 2] = Math.random() * Math.PI;
+
+                        startScales[idx] = 0;
+                        targetScales[idx] = 0;
+                        noiseValues[idx] = Math.max(0, Math.min(1, noise * 0.5 + 0.25));
+
+                        idx++;
+                    }
+                }
+            }
+
+            const positionAttr = new THREE.InstancedBufferAttribute(positions, 3);
+            const eulerAttr = new THREE.InstancedBufferAttribute(baseEulers, 3);
+            const startScaleAttr = new THREE.InstancedBufferAttribute(startScales, 1);
+            const targetScaleAttr = new THREE.InstancedBufferAttribute(targetScales, 1);
+            const delayAttr = new THREE.InstancedBufferAttribute(delays, 1);
+            const noiseAttr = new THREE.InstancedBufferAttribute(noiseValues, 1);
+            const bendAttr = new THREE.InstancedBufferAttribute(bends, 2);
+            const illumAttr = new THREE.InstancedBufferAttribute(illumination, 1);
+
+            stalkMesh.geometry.setAttribute('aBasePosition', positionAttr);
+            stalkMesh.geometry.setAttribute('aBaseEuler', eulerAttr);
+            stalkMesh.geometry.setAttribute('aStartScale', startScaleAttr);
+            stalkMesh.geometry.setAttribute('aTargetScale', targetScaleAttr);
+            stalkMesh.geometry.setAttribute('aDelay', delayAttr);
+            stalkMesh.geometry.setAttribute('aNoise', noiseAttr);
+            stalkMesh.geometry.setAttribute('aBend', bendAttr);
+            stalkMesh.geometry.setAttribute('aIllumination', illumAttr);
+
+            tipMesh.geometry.setAttribute('aBasePosition', positionAttr);
+            tipMesh.geometry.setAttribute('aBaseEuler', eulerAttr);
+            tipMesh.geometry.setAttribute('aStartScale', startScaleAttr);
+            tipMesh.geometry.setAttribute('aTargetScale', targetScaleAttr);
+            tipMesh.geometry.setAttribute('aDelay', delayAttr);
+            tipMesh.geometry.setAttribute('aNoise', noiseAttr);
+            tipMesh.geometry.setAttribute('aBend', bendAttr);
+            tipMesh.geometry.setAttribute('aIllumination', illumAttr);
+
+            scene.add(stalkMesh);
+            scene.add(tipMesh);
+        }
+
+        function restartAnimation() {
+            currentNumber = 10;
+            camera.position.set(0, 0, getInitialZ());
+            document.getElementById('finalRestartBtn').addEventListener('click', restartAnimation);
+
+            sessionData = {
+                totalInteractions: 0,
+                maxVelocity: 0,
+                avgResonance: 0,
+                resonanceSamples: 0,
+                dominantColors: new Set(),
+                notesPlayed: 0
+            };
+
+            // Restore audio volume smoothly
+            if (masterGain && audioCtx) {
+                masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+                masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+                masterGain.gain.linearRampToValueAtTime(isMuted ? 0 : 0.6, audioCtx.currentTime + 2.0);
+            }
+
+            for (let i = 0; i < totalCount; i++) {
+                startScales[i] = 0;
+                targetScales[i] = 0;
+                bends[i * 2] = 0;
+                bends[i * 2 + 1] = 0;
+                illumination[i] = 0;
+            }
+
+            if (stalkMesh && tipMesh) {
+                stalkMesh.geometry.attributes.aStartScale.needsUpdate = true;
+                stalkMesh.geometry.attributes.aTargetScale.needsUpdate = true;
+                stalkMesh.geometry.attributes.aBend.needsUpdate = true;
+                stalkMesh.geometry.attributes.aIllumination.needsUpdate = true;
+            }
+
+            startTransition(currentNumber);
+        }
+
+        function startTransition(num) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+            const fontSize = num === 10 ? 280 : 380;
+            ctx.filter = 'blur(16px)';
+            ctx.fillStyle = '#0000ff';
+            ctx.font = `bold ${fontSize}px 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            ctx.fillText(num.toString(), canvasSize / 2, canvasSize / 2 + 20);
+            ctx.fillText(num.toString(), canvasSize / 2, canvasSize / 2 + 20);
+
+            ctx.filter = 'none';
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 14;
+            ctx.strokeText(num.toString(), canvasSize / 2, canvasSize / 2 + 20);
+
+            const imgData = ctx.getImageData(0, 0, canvasSize, canvasSize).data;
+
+            currentAudioProfile = audioProfiles[num];
+            if (droneOsc) droneOsc.type = 'sine'; // Warmer base tone for Plantwave
+
+            // Map new visual palette for this generation to target colors
+            if (currentAudioProfile.colors) {
+                targetColorGrnd1.set(currentAudioProfile.colors.g1);
+                targetColorGrnd2.set(currentAudioProfile.colors.g2);
+                targetColorEdge.set(currentAudioProfile.colors.edge);
+                targetColorPeak.set(currentAudioProfile.colors.peak);
+                
+                sessionData.dominantColors.add(currentAudioProfile.colors.peak);
+
+                // Update GUI sliders to match the generation's specific colors
+                document.getElementById('colGrnd1').value = currentAudioProfile.colors.g1;
+                document.getElementById('colGrnd2').value = currentAudioProfile.colors.g2;
+                document.getElementById('colEdge').value = currentAudioProfile.colors.edge;
+                document.getElementById('colPeak').value = currentAudioProfile.colors.peak;
+            }
+
+            // Update HUD text using cached elements
+            if (hudGenEl) hudGenEl.innerText = num;
+            if (hudScaleEl) hudScaleEl.innerText = currentAudioProfile.name;
+            if (hudFreqEl) hudFreqEl.innerText = `${currentAudioProfile.scale[0].toFixed(1)} Hz`;
+            if (hudWaveEl) hudWaveEl.innerText = `${currentAudioProfile.drone} / ${currentAudioProfile.pluck}`;
+
+            let idx = 0;
+
+            const aspect = window.innerWidth / window.innerHeight;
+            let textRegionSize = 65; // Default mapping size for desktop
+            if (aspect < 0.6) textRegionSize = 25; // Scaled down further to prevent cropping while zoomed in
+            else if (aspect < 0.9) textRegionSize = 40; // Tablet/Landscape mobile
+
+            // Capture elapsed time from the PREVIOUS transition for smooth handoff
+            const prevElapsed = performance.now() - transitionStartTime;
+
+            for (let r = 0; r < gridRows; r++) {
+                for (let c = 0; c < gridCols; c++) {
+                    const worldX = (c / gridCols - 0.5) * groundWidth;
+                    const worldY = -(r / gridRows - 0.5) * groundHeight;
+
+                    const canvasX = ((worldX / textRegionSize) + 0.5) * canvasSize;
+                    const canvasY = ((-worldY / textRegionSize) + 0.5) * canvasSize;
+
+                    let isVein = false;
+                    let haloIntensity = 0;
+
+                    // Only map height/veins if within the central text area boundaries
+                    if (canvasX >= 0 && canvasX < canvasSize && canvasY >= 0 && canvasY < canvasSize) {
+                        const pixelIndex = (Math.floor(canvasY) * canvasSize + Math.floor(canvasX)) * 4;
+                        const rVal = imgData[pixelIndex];
+                        const bVal = imgData[pixelIndex + 2];
+
+                        isVein = rVal > 100;
+                        haloIntensity = bVal / 255;
+                    }
+
+                    const dx = worldX;
+                    const dy = worldY;
+                    const distFromCenter = Math.sqrt(dx * dx + dy * dy);
+                    const baseDelay = distFromCenter * 4.0;
+
+                    for (let s = 0; s < stalksPerCell; s++) {
+                        if (idx >= totalCount) break;
+
+                        // Compute current interpolated height (matches GPU shader's cubic ease-out)
+                        const progress = Math.min(1, Math.max(0, (prevElapsed - delays[idx]) / 2000));
+                        const easeFactor = 1 - Math.pow(1 - progress, 3);
+                        const currentHeight = startScales[idx] + (targetScales[idx] - startScales[idx]) * easeFactor;
+                        startScales[idx] = currentHeight;
+
+                        let targetHeight = 0;
+
+                        if (isVein) {
+                            targetHeight = 4.8 + Math.random() * 1.5;
+                        } else if (haloIntensity > 0.02) {
+                            const t = Math.pow(haloIntensity, 0.4);
+                            targetHeight = 0.5 + t * 4.0 + Math.random() * 0.8;
+
+                            if (haloIntensity < 0.08 && Math.random() > 0.3) {
+                                targetHeight *= 0.35;
+                            }
+                        } else {
+                            // Lush, dense background
+                            targetHeight = 0.6 + Math.random() * 0.6;
+                            if (currentHeight > 1.0) {
+                                targetHeight = 0.8 + Math.random() * 0.6; // Old numbers recede but remain taller
+                            }
+                        }
+
+                        targetScales[idx] = targetHeight;
+                        delays[idx] = baseDelay + Math.random() * 500;
+                        idx++;
+                    }
+                }
+            }
+
+            if (stalkMesh && tipMesh) {
+                stalkMesh.geometry.attributes.aStartScale.needsUpdate = true;
+                stalkMesh.geometry.attributes.aTargetScale.needsUpdate = true;
+                stalkMesh.geometry.attributes.aDelay.needsUpdate = true;
+            }
+
+            transitionStartTime = performance.now();
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Helper function for calculating distance between colors safely
+        const colorDistSq = (c1, c2) => {
+            const dr = c1.r - c2.r;
+            const dg = c1.g - c2.g;
+            const db = c1.b - c2.b;
+            return dr * dr + dg * dg + db * db;
+        };
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const now = performance.now();
+            const delta = now - lastFrameTime;
+            lastFrameTime = now;
+
+            if (animationStarted) {
+                const elapsed = now - transitionStartTime;
+
+                // Smoothly glide turbulence to its target value
+                currentTurbulence += (targetTurbulence - currentTurbulence) * 0.05;
+
+                // --- COLOR FADE LOGIC ---
+                let colorFading = false;
+                const lerpSpeed = 0.015; // Controls how slowly the colors blend into each other
+
+                if (colorDistSq(colorGrnd1, targetColorGrnd1) > 0.0001) { colorGrnd1.lerp(targetColorGrnd1, lerpSpeed); colorFading = true; }
+                if (colorDistSq(colorGrnd2, targetColorGrnd2) > 0.0001) { colorGrnd2.lerp(targetColorGrnd2, lerpSpeed); colorFading = true; }
+                if (colorDistSq(colorEdge, targetColorEdge) > 0.0001) { colorEdge.lerp(targetColorEdge, lerpSpeed); colorFading = true; }
+                if (colorDistSq(colorPeak, targetColorPeak) > 0.0001) { colorPeak.lerp(targetColorPeak, lerpSpeed); colorFading = true; }
+
+                if (colorFading) {
+                    // Continuously update dynamic lights and dust to match fading peak color
+                    if (mouseLight) mouseLight.color.copy(colorPeak);
+                    if (interactiveDust) interactiveDust.material.color.copy(colorPeak);
+                }
+
+                // --- BIOLOGICAL PLANTWAVE ENGINE ---
+                // Accumulate phase smoothly using delta time to prevent jumping when slider changes
+                const speedMultiplier = 1.0 + (currentTurbulence - 1.0) * 0.8;
+                plantWavePhase += delta * 0.0004 * speedMultiplier;
+                const globalBioActivity = (Math.sin(plantWavePhase) * 0.5 + 0.5); // Oscillates 0.0 to 1.0
+
+                // Sync Uniforms (uTime is synced later, after the transition check)
+                shaderUniforms.uNow.value = now;
+                shaderUniforms.uHeightFactor.value = heightFactor;
+                shaderUniforms.uTurbulence.value = currentTurbulence;
+                shaderUniforms.uPlantWavePhase.value = plantWavePhase;
+                shaderUniforms.uGlobalBioActivity.value = globalBioActivity;
+                shaderUniforms.uColorGrnd1.value.copy(colorGrnd1);
+                shaderUniforms.uColorGrnd2.value.copy(colorGrnd2);
+                shaderUniforms.uColorEdge.value.copy(colorEdge);
+                shaderUniforms.uColorPeak.value.copy(colorPeak);
+
+                let totalForce = 0;
+                let weightedAvgX = 0;
+                let weightedAvgY = 0;
+                let totalWeight = 0;
+
+                if (userTargetZ === null) {
+                    const currentTargetZ = getTargetZ();
+                    if (camera.position.z > currentTargetZ) {
+                        camera.position.z -= 0.005;
+                    } else if (camera.position.z < currentTargetZ - 1) {
+                        camera.position.z += 0.05; // Adjust outward fluidly if window is resized narrower
+                    }
+                }
+
+                // Subtly follow cursor with the camera for a dynamic parallax effect
+                const targetCamX = (mouse.x === -1000 ? 0 : mouse.x) * 4;
+                const targetCamY = (mouse.y === -1000 ? 0 : mouse.y) * 4;
+                camera.position.x += (targetCamX - camera.position.x) * 0.02;
+                camera.position.y += (targetCamY - camera.position.y) * 0.02;
+                camera.lookAt(0, 0, 0);
+
+                const mouseSpeed = mouseWorld.distanceTo(lastMouseWorld);
+                if (mouseSpeed > sessionData.maxVelocity && isFinite(mouseSpeed)) {
+                    sessionData.maxVelocity = mouseSpeed;
+                }
+
+                scene.rotation.x = Math.sin(now * 0.0003) * 0.05;
+                scene.rotation.y = Math.cos(now * 0.0002) * 0.05;
+
+                // Update Dust & Depth Lighting
+                if (mouseLight) {
+                    mouseLight.position.x += (mouseWorld.x - mouseLight.position.x) * 0.15;
+                    mouseLight.position.y += (mouseWorld.y - mouseLight.position.y) * 0.15;
+                    mouseLight.position.z = 15; // Raised higher to beautifully feather the spotlight edges
+
+                    // Dynamically increase light brightness based on interaction force
+                    const targetIntensity = 3.5 + (Math.min(1.0, totalForce / 400.0) * 8.0);
+                    mouseLight.intensity += (targetIntensity - mouseLight.intensity) * 0.1;
+                }
+                if (dustParticles) {
+                    dustParticles.rotation.y += 0.0005;
+                    dustParticles.rotation.x += 0.0002;
+
+                    // Add deep parallax shift based on mouse position to create massive scale
+                    // Reduced parallax multiplier from -15 to -3 for a subtler effect
+                    const targetParallaxX = mouse.x === -1000 ? 0 : mouse.x * -3;
+                    const targetParallaxY = mouse.y === -1000 ? 0 : mouse.y * -3;
+                    dustParticles.position.x += (targetParallaxX - dustParticles.position.x) * 0.02;
+                    dustParticles.position.y += (targetParallaxY - dustParticles.position.y) * 0.02;
+
+                    const pos = dustParticles.geometry.attributes.position.array;
+                    for (let i = 1; i < pos.length; i += 3) {
+                        pos[i] += 0.02; // Slow upward atmospheric drift
+                        if (pos[i] > 35) pos[i] = -35;
+                    }
+                    dustParticles.geometry.attributes.position.needsUpdate = true;
+                }
+
+                // Animate interactive dust spores
+                let currentActiveDust = 0;
+                let avgDustSpeed = 0;
+                if (interactiveDust) {
+                    const pos = interactiveDust.geometry.attributes.position.array;
+                    let needsDustUpdate = false;
+                    for (let i = 0; i < maxInteractiveDust; i++) {
+                        if (activeDustLifetimes[i] > 0) {
+                            pos[i * 3] += activeDustVelocities[i * 3];
+                            pos[i * 3 + 1] += activeDustVelocities[i * 3 + 1];
+                            pos[i * 3 + 2] += activeDustVelocities[i * 3 + 2];
+                            activeDustLifetimes[i] -= delta * 0.001;
+
+                            currentActiveDust++;
+                            avgDustSpeed += Math.abs(activeDustVelocities[i * 3]) + Math.abs(activeDustVelocities[i * 3 + 1]) + Math.abs(activeDustVelocities[i * 3 + 2]);
+
+                            // Air drag
+                            activeDustVelocities[i * 3] *= 0.95;
+                            activeDustVelocities[i * 3 + 1] *= 0.95;
+                            activeDustVelocities[i * 3 + 2] *= 0.98; // Float upwards with less drag
+
+                            if (activeDustLifetimes[i] <= 0) {
+                                pos[i * 3] = 9999; // Move out of view
+                            }
+                            needsDustUpdate = true;
+                        }
+                    }
+                    if (currentActiveDust > 0) avgDustSpeed /= currentActiveDust;
+                    if (needsDustUpdate) interactiveDust.geometry.attributes.position.needsUpdate = true;
+                }
+
+                const interactionRadius = 8.5;
+                const interactionRadSq = interactionRadius * interactionRadius;
+
+                let needsBendUpdate = false;
+                let needsIllumUpdate = false;
+
+                // --- Phase 1: Decay bends and illumination (skipped entirely when idle) ---
+                if (hasActiveBends || hasActiveIllum) {
+                    let anyBendActive = false;
+                    let anyIllumActive = false;
+                    for (let i = 0; i < totalCount; i++) {
+                        if (hasActiveBends) {
+                            const bx = bends[i * 2];
+                            const by = bends[i * 2 + 1];
+                            if (bx !== 0 || by !== 0) {
+                                bends[i * 2] = Math.abs(bx) < 0.001 ? 0 : bx * 0.85;
+                                bends[i * 2 + 1] = Math.abs(by) < 0.001 ? 0 : by * 0.85;
+                                needsBendUpdate = true;
+                                anyBendActive = true;
+                            }
+                        }
+                        if (hasActiveIllum) {
+                            if (illumination[i] > 0) {
+                                illumination[i] -= 0.015;
+                                if (illumination[i] <= 0) illumination[i] = 0;
+                                needsIllumUpdate = true;
+                                anyIllumActive = true;
+                            }
+                        }
+                    }
+                    hasActiveBends = anyBendActive;
+                    hasActiveIllum = anyIllumActive;
+                }
+
+                // --- Phase 2: Grid-based mouse interaction (only nearby cells) ---
+                // Reverse-map mouse world position to grid cell coordinates
+                const cellWidth = groundWidth / gridCols;
+                const cellHeight = groundHeight / gridRows;
+                const mouseCellC = (mouseWorld.x / groundWidth + 0.5) * gridCols;
+                const mouseCellR = (-mouseWorld.y / groundHeight + 0.5) * gridRows;
+
+                const cellRadiusC = Math.ceil(interactionRadius / cellWidth) + 1;
+                const cellRadiusR = Math.ceil(interactionRadius / cellHeight) + 1;
+
+                const minR = Math.max(0, Math.floor(mouseCellR - cellRadiusR));
+                const maxR = Math.min(gridRows - 1, Math.ceil(mouseCellR + cellRadiusR));
+                const minC = Math.max(0, Math.floor(mouseCellC - cellRadiusC));
+                const maxC = Math.min(gridCols - 1, Math.ceil(mouseCellC + cellRadiusC));
+
+                for (let r = minR; r <= maxR; r++) {
+                    for (let c = minC; c <= maxC; c++) {
+                        const cellBaseIdx = (r * gridCols + c) * stalksPerCell;
+                        for (let s = 0; s < stalksPerCell; s++) {
+                            const i = cellBaseIdx + s;
+                            if (i >= totalCount) break;
+
+                            const px = positions[i * 3];
+                            const py = positions[i * 3 + 1];
+
+                            const dx = px - mouseWorld.x;
+                            const dy = py - mouseWorld.y;
+                            const distSq = dx * dx + dy * dy;
+                            if (distSq >= interactionRadSq) continue;
+
+                            const dist = Math.sqrt(distSq);
+                            const force = Math.pow((interactionRadius - dist) / interactionRadius, 2);
+                            const targetBendX = (dy / dist) * force * 1.2;
+                            const targetBendY = -(dx / dist) * force * 1.2;
+                            
+                            if (force > 0.1) sessionData.totalInteractions++;
+
+                            // Add back the interaction component (phase 1 already decayed)
+                            bends[i * 2] += targetBendX * 0.15;
+                            bends[i * 2 + 1] += targetBendY * 0.15;
+                            needsBendUpdate = true;
+                            hasActiveBends = true;
+
+                            // Fix 4: Use actual interpolated height instead of just targetScales
+                            const progress = Math.min(1, Math.max(0, (elapsed - delays[i]) / 2000));
+                            const easeFactor = 1 - Math.pow(1 - progress, 3);
+                            const displayHeight = (startScales[i] + (targetScales[i] - startScales[i]) * easeFactor) * heightFactor;
+
+                            if (displayHeight > 0.1) {
+                                const heightWeight = Math.pow(displayHeight, 2.5);
+                                const weightedForce = force * heightWeight;
+
+                                totalForce += weightedForce;
+                                weightedAvgX += px * weightedForce;
+                                weightedAvgY += py * weightedForce;
+                                totalWeight += weightedForce;
+
+                                if (displayHeight > 0.5) {
+                                    illumination[i] = Math.min(1.0, illumination[i] + force * 1.5);
+                                    needsIllumUpdate = true;
+                                    hasActiveIllum = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (needsBendUpdate && stalkMesh) stalkMesh.geometry.attributes.aBend.needsUpdate = true;
+                if (needsIllumUpdate && stalkMesh) stalkMesh.geometry.attributes.aIllumination.needsUpdate = true;
+
+                if (elapsed > DURATION_PER_NUMBER && !isCountdownPaused && !isPreview) {
+                    if (currentNumber > 1) {
+                        currentNumber--;
+                        startTransition(currentNumber);
+                    } else if (currentNumber === 1 && !isSequenceComplete) {
+                        triggerEndSequence();
+                    }
+                }
+
+                // Sync uTime AFTER the transition check so that if startTransition()
+                // just reset transitionStartTime, the GPU sees elapsed ≈ 0 (not 6001ms)
+                shaderUniforms.uTime.value = now - transitionStartTime;
+
+                // --- AUDIO RESOLUTION & HUD ---
+                if (audioEnabled) {
+                    // Update HUD Visualizers using cached elements
+                    if (hudBioEl) hudBioEl.style.width = `${globalBioActivity * 100}%`;
+
+                    const normalizedTotalForce = Math.min(1.0, totalForce / 350.0);
+                    
+                    if (normalizedTotalForce > 0) {
+                        sessionData.avgResonance += normalizedTotalForce;
+                        sessionData.resonanceSamples++;
+                    }
+
+                    if (hudResEl) {
+                        hudResEl.style.width = `${Math.min(100, normalizedTotalForce * 100)}%`;
+                        hudSpeedEl.innerText = `${Math.min(100, Math.floor(mouseSpeed * 200))}%`;
+                        hudCutoffEl.innerText = `${Math.floor(300 + normalizedTotalForce * 5000)} Hz`;
+                        hudPanEl.style.left = `${(((mouse.x === -1000 ? 0 : mouse.x) + 1) / 2) * 100}%`;
+                        hudVoicesEl.innerText = activePlucks;
+                        hudDustEl.innerText = currentActiveDust;
+                    }
+
+                    // Drone responds to both direct resonance and ambient biological activity
+                    const combinedForce = Math.min(1.0, normalizedTotalForce + (globalBioActivity * 0.2 * Math.max(1, currentTurbulence)));
+                    const targetDroneGain = isMobile ? 0 : (combinedForce * 0.3); // Mute background frequency drone on mobile
+                    droneGain.gain.setTargetAtTime(targetDroneGain, audioCtx.currentTime, 0.15);
+
+                    if (currentAudioProfile) {
+                        const scale = currentAudioProfile.scale;
+
+                        // Set drone frequencies globally based on the scale's root note for a PlantWave foundation
+                        if (!isMobile) {
+                            const rootFreq = scale[0] / 2;
+                            droneOsc.frequency.setTargetAtTime(rootFreq, audioCtx.currentTime, 0.5);
+                            if (droneOsc2) droneOsc2.frequency.setTargetAtTime(rootFreq, audioCtx.currentTime, 0.5);
+
+                            // Filter opens up based on movement
+                            droneFilter.frequency.setTargetAtTime(200 + combinedForce * 6000, audioCtx.currentTime, 0.15);
+                        }
+
+                        // --- PLANTWAVE GENERATIVE ENGINE ---
+                        // Triggers spontaneous notes based on the bio-activity wave (even without mouse movement)
+                        const autoNoteChance = Math.pow(globalBioActivity, 3) * 0.08 * (0.2 + currentTurbulence * 0.8);
+
+                        if (Math.random() < autoNoteChance && activePlucks < 25) {
+                            // Bias towards lower notes during low activity, and higher notes during high activity
+                            let noteIdxOffset = Math.floor(globalBioActivity * scale.length * 0.4);
+                            let noteIndex = Math.min(scale.length - 1, noteIdxOffset + Math.floor(Math.random() * (scale.length * 0.6)));
+
+                            const freq = scale[noteIndex];
+                            const brightness = 300 + globalBioActivity * 1500 + Math.random() * 500;
+                            const pan = (Math.random() * 2) - 1;
+                            const duration = 2.5 + Math.random() * 2.5; // Long, sustained marimba/bell
+
+                            sessionData.notesPlayed++;
+                            playPluck(freq, brightness, 'sine', pan, duration);
+
+                            // Release a tiny glowing dust spore to visualize the spontaneous note
+                            if (interactiveDust) {
+                                let dIdx = activeDustIndex % maxInteractiveDust;
+                                activeDustPositions[dIdx * 3] = pan * 25 + (Math.random() - 0.5) * 10;
+                                activeDustPositions[dIdx * 3 + 1] = (Math.random() - 0.5) * 20;
+                                activeDustPositions[dIdx * 3 + 2] = 8 + Math.random() * 5;
+
+                                activeDustVelocities[dIdx * 3] = (Math.random() - 0.5) * 0.1;
+                                activeDustVelocities[dIdx * 3 + 1] = (Math.random() - 0.5) * 0.1;
+                                activeDustVelocities[dIdx * 3 + 2] = Math.random() * 0.1 + 0.1;
+
+                                activeDustLifetimes[dIdx] = 1.0 + Math.random() * 1.5;
+                                activeDustIndex++;
+                                interactiveDust.geometry.attributes.position.needsUpdate = true;
+                            }
+                        }
+
+                        // --- Mouse Brushing Interaction ---
+                        if (totalWeight > 0) {
+                            const avgX = weightedAvgX / totalWeight;
+                            const avgY = weightedAvgY / totalWeight;
+
+                            const xNorm = Math.max(0, Math.min(1, (avgX + 25) / 50));
+                            const noteIndex = Math.floor(xNorm * (scale.length - 1));
+
+                            // Cap the brush intensity to prevent massive spikes on mobile swipes
+                            let brushIntensity = Math.min(mouseSpeed * normalizedTotalForce * 400, isMobile ? 8 : 15);
+
+                            if (brushIntensity > 0.05) {
+                                // Determine how many individual spores we "plucked" this frame
+                                let hits = Math.floor(brushIntensity * 0.25); // Increased notes per sweep
+                                if (Math.random() < (brushIntensity % 1)) hits++;
+                                hits = Math.min(hits, isMobile ? 3 : 6); // STRICT CAP: max simultaneous triggers per frame
+
+                                for (let h = 0; h < hits; h++) {
+                                    // Jitter the index slightly around the central interaction point for a "chord" effect
+                                    const pluckIndex = Math.max(0, Math.min(currentAudioProfile.scale.length - 1, noteIndex + Math.floor((Math.random() - 0.5) * 5)));
+
+                                    // Base brightness on height (Y-axis), force, and directly inject mouse velocity for bright strikes
+                                    const brightness = 800 + (Math.max(0, avgY + 25) / 50) * 4000 + (Math.random() * 2000) + (mouseSpeed * 12000);
+                                    const panValue = (xNorm * 2) - 1;
+
+                                    sessionData.notesPlayed++;
+
+                                    // Faster mouse movements create shorter, sharper, more percussive impacts
+                                    // Cap speed influence so it doesn't get piercingly bright
+                                    const cappedSpeed = Math.min(mouseSpeed, 0.5);
+                                    const duration = Math.max(0.1, 0.8 - (cappedSpeed * 0.3));
+
+                                    playPluck(currentAudioProfile.scale[pluckIndex], brightness, currentAudioProfile.pluck, panValue, duration);
+                                }
+
+                                // Spawn massive bursts of interactive dust spores
+                                let dustToSpawn = Math.min(60, Math.floor(brushIntensity * 2.5));
+                                if (dustToSpawn > 0) {
+                                    for (let d = 0; d < dustToSpawn; d++) {
+                                        let idx = activeDustIndex % maxInteractiveDust;
+                                        activeDustPositions[idx * 3] = (avgX) + (Math.random() - 0.5) * 4.0;
+                                        activeDustPositions[idx * 3 + 1] = (avgY) + (Math.random() - 0.5) * 4.0;
+                                        activeDustPositions[idx * 3 + 2] = 5 + Math.random() * 4;
+
+                                        // Stronger explosive velocity + upward drift
+                                        activeDustVelocities[idx * 3] = (mouseWorld.x - lastMouseWorld.x) * 1.5 + (Math.random() - 0.5) * 2.5;
+                                        activeDustVelocities[idx * 3 + 1] = (mouseWorld.y - lastMouseWorld.y) * 1.5 + (Math.random() - 0.5) * 2.5;
+                                        activeDustVelocities[idx * 3 + 2] = Math.random() * 0.8 + 0.4;
+
+                                        activeDustLifetimes[idx] = 1.0 + Math.random() * 1.2;
+                                        activeDustIndex++;
+                                    }
+                                    interactiveDust.geometry.attributes.position.needsUpdate = true;
+                                }
+
+                                const panValue = (xNorm * 2) - 1;
+                                if (Math.random() < 0.5) playDustSound(brushIntensity * 0.5, mouseSpeed, panValue); // Immediate strike sound
+                            }
+                        } else if (!isMobile) {
+                            droneGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.4);
+                        }
+
+                        // --- Continuous Dust Spore Sound ---
+                        // Floating dust produces continuous ambient shimmering
+                        if (currentActiveDust > 0) {
+                            // The more dust and the faster it moves, the more likely a sound plays
+                            let dustSoundChance = (currentActiveDust / maxInteractiveDust) * 0.9 + (avgDustSpeed * 0.5);
+                            if (Math.random() < dustSoundChance) {
+                                const panValue = (Math.random() * 2) - 1;
+                                playDustSound(currentActiveDust * 0.05, avgDustSpeed * 1.5, panValue);
+                            }
+                        }
+                    } // End if (currentAudioProfile)
+                } // End if (audioEnabled)
+
+                // End of frame update for mouse delta tracking
+                lastMouseWorld.copy(mouseWorld);
+            } // End if (animationStarted)
+
+            renderer.render(scene, camera);
+        } // End animate()
+
+        async function requestAnalysis() {
+            const apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                alert("Please enter a Gemini API Key to run the analysis.");
+                return;
+            }
+
+            analysisModal.style.display = 'flex';
+            // Trigger reflow for transition
+            void analysisModal.offsetWidth;
+            analysisModal.style.opacity = '1';
+            
+            analysisContent.style.display = 'none';
+            analysisLoading.style.display = 'block';
+            analyzeBtn.disabled = true;
+
+            const avgRes = sessionData.resonanceSamples > 0 
+                ? (sessionData.avgResonance / sessionData.resonanceSamples).toFixed(3) 
+                : 0;
+            
+            const prompt = `
+                Act as a Xenobiologist analyzing a newly discovered, sound-reactive synthetic lifeform called a "Symbiont". 
+                I have just completed an interaction session with a field of these organisms.
+                
+                Here is the telemetry data from my interaction session:
+                - Current Generation/Organism Phase: ${currentNumber} (started at 10, counts down to 1)
+                - Current Audio Scale: ${currentAudioProfile ? currentAudioProfile.name : 'Unknown'}
+                - Total Micro-Interactions (Spores Disturbed): ${sessionData.totalInteractions}
+                - Maximum Interaction Velocity (User Speed): ${sessionData.maxVelocity.toFixed(2)}
+                - Average Ecosystem Resonance: ${avgRes}
+                - Total Sonic Events Triggered: ${sessionData.notesPlayed}
+                - Observed Dominant Peak Colors: ${Array.from(sessionData.dominantColors).join(', ')}
+                
+                Based on this specific data, provide a 2-paragraph scientific field report. 
+                Paragraph 1: Describe the nature of the interaction. Was it chaotic, gentle, highly musical, or sparse? Base this on the velocity, interactions, and notes played.
+                Paragraph 2: Speculate on the emotional or biological state of the Symbiont ecosystem based on the colors, resonance, and audio scale. 
+                Keep the tone analytical, slightly awe-struck, and firmly grounded in a sci-fi xenobiology aesthetic. Do not use markdown formatting.
+            `;
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: {
+                    parts: [{ text: "You are a field researcher documenting an alien, musical ecosystem." }]
+                }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error.message || "API Error");
+                }
+
+                const candidate = result.candidates?.[0];
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    analysisContent.innerText = candidate.content.parts[0].text;
+                } else {
+                    analysisContent.innerText = "Inconclusive data received from the neural link. The organism's patterns remain a mystery.";
+                }
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                analysisContent.innerText = `Error connecting to neural network: ${error.message}. Please check your API key and connection.`;
+            } finally {
+                analysisLoading.style.display = 'none';
+                analysisContent.style.display = 'block';
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        function triggerEndSequence() {
+            isSequenceComplete = true;
+
+            // Fade out audio gracefully over 5 seconds
+            if (masterGain && audioCtx) {
+                masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+                masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
+                masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 5.0);
+            }
+
+            // Show pitch black overlay, hide all terminal HUDs
+            document.getElementById('fadeOverlay').classList.add('active');
+            document.getElementById('audioHud').classList.remove('visible');
+            document.getElementById('topLeftControls').classList.remove('visible');
+            document.getElementById('mobileMenuBtn').classList.remove('visible');
+            document.body.classList.remove('menu-open');
+        }
+
+        // --- WEB AUDIO SETUP ---
+        function initAudio() {
+            if (audioCtx) {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                return;
+            }
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            // Add a Master Compressor to prevent any hard clipping/distortion
+            const compressor = audioCtx.createDynamicsCompressor();
+            compressor.threshold.value = -12; // Catch peaks earlier (was -6)
+            compressor.knee.value = 12;
+            compressor.ratio.value = 12; // Harder limiting (was 8)
+            compressor.attack.value = 0.005; // Faster attack to stop transients (was 0.01)
+            compressor.release.value = 0.25;
+            compressor.connect(audioCtx.destination);
+
+            // Add a High-pass filter to aggressively cut any remaining sub-bass (< 100Hz)
+            const masterHighpass = audioCtx.createBiquadFilter();
+            masterHighpass.type = 'highpass';
+            masterHighpass.frequency.value = isMobile ? 180 : 120; // Raise cutoff for mobile speakers
+            masterHighpass.Q.value = 0.7; // Standard smooth resonance
+            masterHighpass.connect(compressor);
+
+            masterGain = audioCtx.createGain();
+            masterGain.gain.value = isMobile ? 0.4 : 0.5; // Lower overall headroom to prevent clipping
+            masterGain.connect(masterHighpass); // Connect to highpass instead of compressor
+
+            // Create a much lusher, ambient, cavernous delay
+            masterDelay = audioCtx.createDelay();
+            masterDelay.delayTime.value = 0.85; // Slower, wider delay
+            delayFeedback = audioCtx.createGain();
+            delayFeedback.gain.value = 0.75; // Longer, sustaining feedback
+            const delayFilter = audioCtx.createBiquadFilter();
+            delayFilter.type = 'lowpass';
+            delayFilter.frequency.value = 800; // Warmer, darker echoes
+
+            masterDelay.connect(delayFeedback);
+            delayFeedback.connect(delayFilter);
+            delayFilter.connect(masterDelay);
+            masterDelay.connect(masterGain);
+
+            // Dual oscillator pad for a thick, chorused, breathing drone
+            droneOsc = audioCtx.createOscillator();
+            droneOsc.type = 'sine';
+            const oscGain1 = audioCtx.createGain(); oscGain1.gain.value = 0.5;
+
+            droneOsc2 = audioCtx.createOscillator();
+            droneOsc2.type = 'triangle';
+            droneOsc2.detune.value = 15; // Lush detune amount
+            const oscGain2 = audioCtx.createGain(); oscGain2.gain.value = 0.15;
+
+            droneGain = audioCtx.createGain();
+            droneGain.gain.value = 0;
+            droneFilter = audioCtx.createBiquadFilter();
+            droneFilter.type = 'lowpass';
+            droneFilter.frequency.value = 250;
+
+            droneOsc.connect(oscGain1); oscGain1.connect(droneFilter);
+            droneOsc2.connect(oscGain2); oscGain2.connect(droneFilter);
+            droneFilter.connect(droneGain);
+            droneGain.connect(masterGain);
+            droneGain.connect(masterDelay);
+
+            droneOsc.start();
+            droneOsc2.start();
+
+            audioEnabled = true;
+        }
+
+        function playPluck(frequency, brightness, waveformType, panValue = 0, duration = 2.5) {
+            // Strict voice limit
+            if (!audioEnabled || activePlucks >= maxVoices || isMuted) return;
+
+            activePlucks++;
+
+            // Trigger visual feedback on HUD (using cached element)
+            if (hudPlucksEl) {
+                hudPlucksEl.innerText = 'ACTIVE';
+                hudPlucksEl.style.color = '#fff';
+                clearTimeout(pluckTimer);
+                pluckTimer = setTimeout(() => {
+                    hudPlucksEl.innerText = 'IDLE';
+                    hudPlucksEl.style.color = '#555';
+                }, 150);
+            }
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+
+            let panner;
+            if (audioCtx.createStereoPanner) {
+                panner = audioCtx.createStereoPanner();
+                panner.pan.value = panValue;
+            } else {
+                panner = audioCtx.createGain();
+            }
+
+            // Always use a pure, warm sine wave for that classic PlantWave marimba/glass feel
+            osc.type = 'sine';
+
+            // Random chance for "sparkle" octaves when hitting spores hard/fast
+            if (duration < 0.4 && Math.random() > 0.6) {
+                frequency *= 2;
+            }
+            osc.frequency.value = frequency;
+
+            // Use an envelope on the filter to simulate a physical, wooden mallet strike
+            filter.type = 'lowpass';
+            // Clamp brightness heavily on mobile to prevent piercing highs that distort small speakers
+            const clampedBrightness = Math.min(brightness, isMobile ? 6000 : 12000);
+            filter.frequency.setValueAtTime(clampedBrightness * 0.8, audioCtx.currentTime);
+            filter.frequency.exponentialRampToValueAtTime(Math.max(100, clampedBrightness * 0.1), audioCtx.currentTime + duration * 1.5);
+            filter.Q.value = 1.5; // Rounder, woodier resonance
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(panner);
+            panner.connect(masterDelay);
+            panner.connect(masterGain);
+
+            osc.start();
+
+            // Dynamic, percussive, natural envelope
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+
+            // Allow slightly louder peak volume for dynamic strikes, but strict upper bound
+            const peakGain = Math.min(0.035, 0.02 + (brightness / 40000));
+            gain.gain.linearRampToValueAtTime(peakGain, audioCtx.currentTime + 0.05); // Very soft 50ms attack removes harsh digital clicks
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration * 1.5); // Longer, sustained ringing
+
+            osc.stop(audioCtx.currentTime + duration * 1.5);
+
+            // Free up the voice when done
+            osc.onended = () => {
+                activePlucks--;
+                osc.disconnect(); filter.disconnect(); gain.disconnect(); panner.disconnect();
+            };
+        }
+
+        function playDustSound(intensity, speed, panValue) {
+            if (!audioEnabled || activePlucks >= maxVoices || isMuted) return; // Strict voice limit
+            if (Math.random() > 0.45) return; // Prevent triggering too frequently
+
+            activePlucks++;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+
+            let panner;
+            if (audioCtx.createStereoPanner) {
+                panner = audioCtx.createStereoPanner();
+                panner.pan.value = panValue;
+            } else {
+                panner = audioCtx.createGain();
+            }
+
+            // High frequency, ethereal sine chime
+            osc.type = 'sine';
+
+            // Strictly snap dust sounds to the harmonious pentatonic scale instead of chaotic noise
+            const scale = currentAudioProfile ? currentAudioProfile.scale : [261.63, 293.66, 329.63, 392.00, 440.00];
+            const overtoneFreq = scale[Math.floor(Math.random() * scale.length)];
+            osc.frequency.value = overtoneFreq * 2;
+
+            filter.type = 'bandpass';
+            filter.frequency.value = overtoneFreq * 2;
+            filter.Q.value = 4;
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(panner);
+            panner.connect(masterDelay);
+            panner.connect(masterGain);
+
+            osc.start();
+
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+
+            // Soft, glowing attack and very long sustained decay
+            const peakGain = Math.min(0.02, intensity * 0.006 + 0.002);
+            gain.gain.linearRampToValueAtTime(peakGain, audioCtx.currentTime + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.5 + Math.random() * 1.5);
+
+            osc.stop(audioCtx.currentTime + 3.0);
+
+            osc.onended = () => {
+                activePlucks--;
+                osc.disconnect(); filter.disconnect(); gain.disconnect(); panner.disconnect();
+            };
+        }
+
+
+        // Gracefully silence audio on page close to prevent fizz/pop
+        window.addEventListener('beforeunload', () => {
+            if (masterGain && audioCtx) {
+                masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+            }
+            if (audioCtx) {
+                audioCtx.close();
+            }
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+
+</html>

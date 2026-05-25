@@ -35,15 +35,7 @@ type TopographyMaterialType = InstanceType<typeof TopographyMaterial> & {
     uLineThickness: number;
 };
 
-declare module '@react-three/fiber' {
-    type ThreeElements = {
-        topographyMaterial: {
-            ref?: React.Ref<TopographyMaterialType>;
-            transparent?: boolean;
-            depthWrite?: boolean;
-        };
-    };
-}
+export type { TopographyMaterialType };
 
 type TopologyBackgroundProps = {
     isZoomedIn?: boolean;
