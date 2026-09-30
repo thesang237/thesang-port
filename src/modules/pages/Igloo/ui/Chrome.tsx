@@ -40,7 +40,7 @@ function Caption({ tag, body }: { tag: string; body: string }) {
     return (
         <div
             ref={root}
-            className="ig-caption absolute bottom-[calc(var(--ig-gutter)+44px)] right-[var(--ig-gutter)] w-[min(78vw,30ch)] text-right text-[11px] leading-[1.35] md:bottom-[var(--ig-gutter)] md:text-xs"
+            className="ig-caption absolute bottom-[calc(var(--ig-gutter)+44px)] right-[var(--ig-gutter)] w-[min(78vw,30ch)] text-right text-[11px] leading-[1.35] sm:bottom-[var(--ig-gutter)] sm:text-xs"
         >
             <p className="ig-caption-tag mb-2 opacity-60" />
             <span className="ig-caption-rule mb-3 ml-auto block h-px w-12 origin-right bg-current" />
@@ -97,7 +97,7 @@ export default function Chrome() {
             <a
                 href="#"
                 onClick={(e) => (e.preventDefault(), jump(0))}
-                className="pointer-events-auto absolute left-[var(--ig-gutter)] top-[var(--ig-gutter)] block w-[104px] md:w-[124px]"
+                className="pointer-events-auto absolute left-[var(--ig-gutter)] top-[var(--ig-gutter)] block w-[104px] sm:w-[124px]"
                 aria-label="Igloo — back to top"
             >
                 <Logo className="h-auto w-full drop-shadow-[0_0_14px_rgba(255,255,255,0.35)]" />
@@ -106,7 +106,7 @@ export default function Chrome() {
             <button
                 type="button"
                 onClick={toggleSound}
-                className="ig-chrome-fade pointer-events-auto invisible absolute bottom-[var(--ig-gutter)] left-[var(--ig-gutter)] flex items-center gap-2 text-[11px] md:text-xs"
+                className="ig-chrome-fade pointer-events-auto invisible absolute bottom-[var(--ig-gutter)] left-[var(--ig-gutter)] flex items-center gap-2 text-[11px] sm:text-xs"
             >
                 <svg width="14" height="12" viewBox="0 0 14 12" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden>
                     <path d="M1 4h2.5L7 1v10L3.5 8H1z" fill="currentColor" />
@@ -121,7 +121,7 @@ export default function Chrome() {
             {CAPTIONS[section] && <Caption key={section} {...CAPTIONS[section]!} />}
 
             {/* scroll rail */}
-            <nav className="ig-chrome-fade invisible absolute right-[var(--ig-gutter)] top-1/2 hidden -translate-y-1/2 flex-col items-end gap-5 md:flex" aria-label="Sections">
+            <nav className="ig-chrome-fade invisible absolute right-[var(--ig-gutter)] top-1/2 hidden -translate-y-1/2 flex-col items-end gap-5 sm:flex" aria-label="Sections">
                 {SECTIONS.map((s, i) => (
                     <button key={s.id} type="button" onClick={() => jump(s.at)} className={`ig-rail-item pointer-events-auto flex items-center gap-3 text-[10px] ${section === i ? 'is-active' : ''}`}>
                         <span className="ig-rail-label">{s.label}</span>

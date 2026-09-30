@@ -38,7 +38,7 @@ export default function Hero() {
 
     return (
         <div ref={root} className="ig-hero pointer-events-none fixed inset-0 z-10 select-none">
-            <div className="absolute left-[var(--ig-gutter)] top-[calc(var(--ig-gutter)+56px)] space-y-4 text-[11px] leading-[1.35] md:text-xs">
+            <div className="absolute left-[var(--ig-gutter)] top-[calc(var(--ig-gutter)+56px)] space-y-4 text-[11px] leading-[1.35] sm:text-xs">
                 <p data-scramble data-text="// Copyright © 2026" className="opacity-0" />
                 <p className="flex flex-col">
                     <span data-scramble data-text="Igloo, Inc." className="opacity-0" />
@@ -46,14 +46,14 @@ export default function Hero() {
                 </p>
             </div>
 
-            <div className="absolute right-[var(--ig-gutter)] top-[var(--ig-gutter)] w-[15ch] text-right text-[11px] leading-[1.25] md:w-[17ch] md:text-xs">
+            <div className="absolute right-[var(--ig-gutter)] top-[calc(var(--ig-gutter)+52px)] w-[15ch] text-right text-[11px] leading-[1.25] sm:w-[17ch] sm:text-xs">
                 <p data-scramble data-text="////// Manifesto" className="mb-4 opacity-0" />
                 <p className="ig-manifesto" style={{ visibility: introDone ? 'visible' : 'hidden' }}>
                     {MANIFESTO}
                 </p>
             </div>
 
-            <div className="absolute bottom-[calc(var(--ig-gutter)+30px)] left-[var(--ig-gutter)] text-[11px] leading-[1.25] md:text-xs">
+            <div className="absolute bottom-[calc(var(--ig-gutter)+30px)] left-[var(--ig-gutter)] text-[11px] leading-[1.25] sm:text-xs">
                 <p data-scramble data-text="Scroll down to" className="opacity-0" />
                 <p data-scramble data-text="discover." className="opacity-0" />
                 <span className="ig-hint-bar mt-2 block h-px w-16 origin-left bg-current" />

@@ -27,6 +27,7 @@ export const motion = {
     pointer: { x: 0, y: 0 },
     pointerSmooth: { x: 0, y: 0 },
     hasPointer: false, // no hover effects until the pointer actually moves
+    overUI: false, // pointer is over a panel — scene ignores it
     velocity: 0,
     hoverCrystal: -1,
 };

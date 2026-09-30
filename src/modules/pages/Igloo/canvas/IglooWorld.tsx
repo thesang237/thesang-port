@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 
 import { motion, worldWeight } from '../store';
+import { iglooParams } from '../tweaks';
 import { clamp, damp, easeInOutCubic, easeOutCubic, fbm2, fitFov, lerp, ridged2, rng, smoothstep } from '../utils/math';
 
 import Snow from './Snow';
@@ -203,7 +204,7 @@ export default function IglooWorld({ env }: { env: THREE.Texture }) {
     const terrain = useMemo(() => buildTerrain(), []);
     const network = useMemo(() => buildNetwork(), []);
     const brickGeo = useMemo(() => new RoundedBoxGeometry(1, 1, 1, 3, 0.09), []);
-    const brickMat = useMemo(() => createSnowMaterial({ color: '#a9b1bd', roughness: 0.9, metalness: 0, bumpScale: 1.6, bumpStrength: 0.05, instanced: true }), []);
+    const brickMat = useMemo(() => createSnowMaterial({ color: iglooParams.brickColor, roughness: iglooParams.roughness, metalness: 0, bumpScale: 1.6, bumpStrength: 0.05, instanced: true }), []);
     const groundMat = useMemo(() => createSnowMaterial({ vertexColors: true, roughness: 1, metalness: 0, bumpScale: 0.45, bumpStrength: 0.09 }), []);
 
     const meshRef = useRef<THREE.InstancedMesh>(null);
@@ -214,6 +215,10 @@ export default function IglooWorld({ env }: { env: THREE.Texture }) {
     const nodeMat = useRef<THREE.PointsMaterial>(null);
     const wireMat = useRef<THREE.MeshBasicMaterial>(null);
     const lightRef = useRef<THREE.DirectionalLight>(null);
+    const hemiRef = useRef<THREE.HemisphereLight>(null);
+    const innerRef = useRef<THREE.PointLight>(null);
+    const coreRef = useRef<THREE.Mesh>(null);
+    const tunnelMatRef = useRef<THREE.MeshBasicMaterial>(null);
 
     const tmp = useMemo(
         () => ({
@@ -228,11 +233,13 @@ export default function IglooWorld({ env }: { env: THREE.Texture }) {
             hit: new THREE.Vector3(),
             target: new THREE.Vector3(),
             hover: new Float32Array(bricks.length),
+            axis: new THREE.Vector3(),
+            side: new THREE.Vector3(),
             hoverAmt: 0,
         }),
         [bricks.length],
     );
-    const live = useRef({ tmp, fog });
+    const live = useRef({ tmp, fog, brickMat });
 
     useEffect(() => {
         const mesh = meshRef.current;
@@ -252,7 +259,8 @@ export default function IglooWorld({ env }: { env: THREE.Texture }) {
         if (weight <= 0 && motion.intro >= 1) return;
         const mesh = meshRef.current;
         if (!mesh) return;
-        const { tmp, fog } = live.current;
+        const { tmp, fog, brickMat } = live.current;
+        const P = iglooParams;
         const { camera } = worldRef.current;
         const time = state.clock.elapsedTime;
         const intro = motion.intro;
@@ -280,9 +288,11 @@ export default function IglooWorld({ env }: { env: THREE.Texture }) {
         const b = o.dot(d);
         const c = o.lengthSq() - R * R;
         const disc = b * b - c;
-        const hasHit = motion.hasPointer && disc > 0 && intro > 0.95 && explode < 0.05;
+        const hasHit = motion.hasPointer && !motion.overUI && disc > 0 && intro > 0.95 && explode < 0.05;
         if (hasHit) tmp.hit.copy(o).addScaledVector(d, -b - Math.sqrt(disc));
         tmp.hoverAmt = damp(tmp.hoverAmt, hasHit ? 1 : 0, 5, delta);
+        brickMat.color.set(P.brickColor);
+        brickMat.roughness = P.roughness;
 
         // ── bricks ───────────────────────────────────────────────────────
         for (let i = 0; i < bricks.length; i++) {
@@ -294,10 +304,20 @@ export default function IglooWorld({ env }: { env: THREE.Texture }) {
             tmp.p.copy(br.start).lerp(br.pos, pin);
             tmp.q.copy(br.startQuat).slerp(br.quat, pin);
 
-            // hover: lift bricks near the cursor
-            const hw = hasHit ? smoothstep(0.95, 0.0, br.pos.distanceTo(tmp.hit)) : 0;
-            tmp.hover[i] = damp(tmp.hover[i], hw, 8, delta);
-            tmp.p.addScaledVector(br.normal, tmp.hover[i] * 0.16);
+            // hover: bricks near the cursor lift away, tilt open and drift
+            // sideways, exposing their lit inner faces and the light behind them
+            const hw = hasHit ? smoothstep(P.reach, 0.0, br.pos.distanceTo(tmp.hit)) : 0;
+            tmp.hover[i] = damp(tmp.hover[i], hw, P.response, delta);
+            const h = tmp.hover[i];
+            if (h > 0.001) {
+                tmp.axis.set(1, 0, 0).applyQuaternion(br.quat);
+                tmp.side.set(0, 1, 0).applyQuaternion(br.quat);
+                tmp.p.addScaledVector(br.normal, h * P.lift * (0.75 + br.rand * 0.5));
+                tmp.p.addScaledVector(tmp.axis, h * P.lift * 0.22 * (br.rand - 0.5));
+                tmp.p.addScaledVector(tmp.side, h * P.lift * 0.12 * Math.sin(time * 1.3 + br.rand * 6.28));
+                tmp.q2.setFromAxisAngle(tmp.axis, h * P.tilt * (0.6 + br.rand * 0.8));
+                tmp.q.premultiply(tmp.q2);
+            }
 
             // scroll: explode top → bottom
             const delayOut = (1 - br.h01) * 0.42 + br.rand * 0.12;
@@ -312,22 +332,45 @@ export default function IglooWorld({ env }: { env: THREE.Texture }) {
             tmp.s.copy(br.scale).multiplyScalar(pin < 0.02 ? 0.0001 : lerp(0.6, 1, pin));
             tmp.m.compose(tmp.p, tmp.q, tmp.s);
             mesh.setMatrixAt(i, tmp.m);
-            const glow = 1 + tmp.hover[i] * 1.4;
+            const glow = 1 + tmp.hover[i] * 0.35;
             tmp.c.setRGB(glow, glow, glow * 1.02);
             mesh.setColorAt(i, tmp.c);
         }
         mesh.instanceMatrix.needsUpdate = true;
         if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
 
-        // inner glow swells as the shell opens
-        const glowScale = lerp(0.2, 1, easeOutCubic(clamp((intro - 0.35) / 0.4))) * (1 + explode * 0.25);
-        // once the shell is gone the glow becomes a core that lifts off the ground
+        // ── light: a real point light inside does the work; the visible source stays small
+        const on = easeOutCubic(clamp((intro - 0.35) / 0.4));
         const lift = easeInOutCubic(clamp((explode - 0.25) / 0.75));
-        glowRef.current?.scale.setScalar(glowScale * lerp(1, 0.32, lift));
-        glowRef.current?.position.set(0, lift * 1.1, 0);
+        const coreY = P.lightHeight + lift * 1.1;
+        const flicker = 1 + (Math.sin(time * 11.3) * 0.5 + Math.sin(time * 6.7 + 1.3) * 0.5) * P.flicker;
+        const inner = innerRef.current;
+        if (inner) {
+            inner.position.set(0, coreY, 0);
+            inner.intensity = P.lightIntensity * on * flicker * (1 + explode * 0.5 + tmp.hoverAmt * 0.35);
+            inner.distance = P.lightDistance * (1 + explode * 0.6);
+            inner.color.set(P.lightColor);
+            if (inner.castShadow !== P.shadows) inner.castShadow = P.shadows;
+        }
+        const core = coreRef.current;
+        if (core) {
+            core.position.set(0, coreY, 0);
+            core.scale.setScalar(Math.max(P.coreSize * on * (1 + lift * 0.8), 0.0001));
+            (core.material as THREE.MeshBasicMaterial).color.set(P.lightColor).multiplyScalar(P.coreGlow * (1 + explode * 1.5));
+        }
+        // seam backing: a dim shell right behind the bricks so the seams read as light;
+        // it melts away the moment the shell breaks open
+        const shell = glowRef.current;
+        if (shell) {
+            const k = on * (1 - smoothstep(0.0, 0.25, explode));
+            shell.visible = k > 0.001 && P.seamBacking > 0;
+            shell.scale.setScalar(Math.max(k, 0.0001));
+            (shell.material as THREE.MeshBasicMaterial).color.set(P.lightColor).multiplyScalar(P.seamBacking * flicker);
+        }
         tunnelGlowRef.current?.scale.setScalar((clamp((intro - 0.5) / 0.3) + 0.0001) * (1 - smoothstep(0, 0.35, explode)) + 0.0001);
-        const gm = glowRef.current?.material as THREE.MeshBasicMaterial | undefined;
-        if (gm) gm.color.setScalar(3.2 + explode * 5 + tmp.hoverAmt * 0.8);
+        tunnelMatRef.current?.color.set(P.lightColor).multiplyScalar(P.entranceGlow * flicker);
+        if (lightRef.current) lightRef.current.intensity = P.sun;
+        if (hemiRef.current) hemiRef.current.intensity = P.sky;
 
         // intro network fades out
         const net = 1 - smoothstep(0.25, 0.75, intro);
@@ -343,11 +386,11 @@ export default function IglooWorld({ env }: { env: THREE.Texture }) {
 
     return createPortal(
         <>
-            <hemisphereLight args={['#dfe6ef', '#5d6574', 0.9]} />
+            <hemisphereLight ref={hemiRef} args={['#dfe6ef', '#5d6574', iglooParams.sky]} />
             <directionalLight
                 ref={lightRef}
                 position={[-7, 9, 5]}
-                intensity={2.3}
+                intensity={iglooParams.sun}
                 color="#fbfcff"
                 castShadow
                 shadow-mapSize={[1024, 1024]}
@@ -365,15 +408,32 @@ export default function IglooWorld({ env }: { env: THREE.Texture }) {
 
             <instancedMesh ref={meshRef} args={[brickGeo, brickMat, bricks.length]} castShadow receiveShadow frustumCulled={false} />
 
-            {/* light leaking through the brick seams */}
+            {/* the real light source: lights brick inner faces and leaks through gaps */}
+            <pointLight
+                ref={innerRef}
+                position={[0, iglooParams.lightHeight, 0]}
+                intensity={0}
+                decay={2}
+                castShadow
+                shadow-mapSize={[1024, 1024]}
+                shadow-bias={-0.002}
+                shadow-normalBias={0.07}
+                shadow-camera-near={0.05}
+            />
+            {/* its visible core — tiny on purpose */}
+            <mesh ref={coreRef}>
+                <sphereGeometry args={[1, 24, 16]} />
+                <meshBasicMaterial color={[2, 2, 2]} toneMapped={false} />
+            </mesh>
+            {/* dim backing so the seams read as light */}
             <mesh ref={glowRef} position={[0, 0, 0]}>
                 <sphereGeometry args={[R - TH * 0.62, 48, 32]} />
-                <meshBasicMaterial color={[2.4, 2.4, 2.5]} toneMapped={false} />
+                <meshBasicMaterial color={[1, 1, 1]} toneMapped={false} />
             </mesh>
             <group rotation={[0, ENTRANCE, 0]}>
                 <mesh ref={tunnelGlowRef} position={[0, 0.26, R + 0.28]} rotation={[Math.PI / 2, 0, 0]}>
                     <cylinderGeometry args={[0.66 - TH * 0.55, 0.66 - TH * 0.55, 1.26, 24, 1]} />
-                    <meshBasicMaterial color={[2.6, 2.6, 2.7]} toneMapped={false} />
+                    <meshBasicMaterial ref={tunnelMatRef} color={[2.6, 2.6, 2.7]} toneMapped={false} />
                 </mesh>
             </group>
 

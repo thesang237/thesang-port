@@ -78,6 +78,31 @@ class Ambience {
         this.windFilter.Q.setTargetAtTime(0.7 + Math.min(v, 1) * 2.5, this.ctx.currentTime, 0.2);
     }
 
+    /** Filtered-noise sweep for shape changes. */
+    whoosh() {
+        if (!this.on || !this.ctx || !this.master) return;
+        const ctx = this.ctx;
+        const len = ctx.sampleRate * 1.4;
+        const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.Q.value = 2.2;
+        const t = ctx.currentTime;
+        bp.frequency.setValueAtTime(300, t);
+        bp.frequency.exponentialRampToValueAtTime(2600, t + 0.35);
+        bp.frequency.exponentialRampToValueAtTime(500, t + 1.3);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.22, t + 0.12);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 1.35);
+        src.connect(bp).connect(g).connect(this.master);
+        src.start(t);
+    }
+
     tick(freq = 1800) {
         if (!this.on || !this.ctx || !this.master) return;
         const o = this.ctx.createOscillator();

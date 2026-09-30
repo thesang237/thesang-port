@@ -23,3 +23,9 @@ export function scrambleOut(el: Element | null, duration = 0.35) {
     if (!el) return null;
     return gsap.to(el, { opacity: 0, duration, ease: 'power2.in', scrambleText: { text: ' ', chars: GLYPHS, speed: 1 } });
 }
+
+/** Quick re-decode of an element's current text — for hover states. */
+export function hoverScramble(el: Element | null, text?: string) {
+    if (!el || gsap.isTweening(el)) return;
+    gsap.to(el, { duration: 0.42, ease: 'none', scrambleText: { text: text ?? el.textContent ?? '', chars: GLYPHS, speed: 1.2, revealDelay: 0.05 } });
+}

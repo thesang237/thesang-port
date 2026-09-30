@@ -102,7 +102,7 @@ export default function DetailOverlay() {
                 Close
             </button>
 
-            <article className="mx-auto w-[min(88vw,44ch)] pb-[20vh] pt-[16vh] text-[11px] leading-[1.45] md:text-xs">
+            <article className="mx-auto w-[min(88vw,44ch)] pb-[20vh] pt-[16vh] text-[11px] leading-[1.45] sm:text-xs">
                 <p data-scramble data-text="////// Summary" className="mb-5 opacity-50" />
                 <p data-scramble data-text={`${item.code} — ${item.name}`} className="mb-5 font-bold" />
                 {item.summary.map((para, i) => (

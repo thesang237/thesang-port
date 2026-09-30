@@ -18,6 +18,7 @@ import DetailOverlay from './ui/DetailOverlay';
 import Hero from './ui/Hero';
 import Loader from './ui/Loader';
 import SocialCarousel from './ui/SocialCarousel';
+import TweakPanel from './ui/TweakPanel';
 import { damp } from './utils/math';
 import { ambience } from './utils/sound';
 import { TIMELINE } from './data';
@@ -119,7 +120,7 @@ function Inputs() {
         };
         const onClick = (e: MouseEvent) => {
             const ui = useIglooUI.getState();
-            if ((e.target as HTMLElement).closest('button, a')) return;
+            if ((e.target as HTMLElement).closest('button, a, [data-ig-ui]')) return;
             if (motion.hoverCrystal >= 0 && ui.detail < 0) {
                 ambience.tick(1100);
                 ui.set({ detail: motion.hoverCrystal });
@@ -173,6 +174,7 @@ export default function IglooPage() {
                 <CrystalHud onOpen={(i) => useIglooUI.getState().set({ detail: i })} />
                 <SocialCarousel />
                 <Chrome />
+                <TweakPanel />
                 <DetailOverlay />
                 <Loader onIntroEnd={() => lenisRef.current?.lenis?.start()} />
             </main>
