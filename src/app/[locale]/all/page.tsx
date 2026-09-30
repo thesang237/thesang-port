@@ -34,6 +34,7 @@ const GROUPS: Group[] = [
             { route: '/floema/about', title: 'Floema — About', desc: 'About page of the Floema recreation', tags: ['Portfolio'] },
             { route: '/floema/collections', title: 'Floema — Collections', desc: 'Collections page of the Floema recreation', tags: ['Portfolio'] },
             { route: '/truus', title: 'Truus', desc: 'Truus portfolio site recreation', tags: ['Portfolio'] },
+            { route: '/igloo', title: 'Igloo Inc.', desc: 'Scroll-driven multi-scene WebGL recreation — igloo, ice crystals, ring portal, particle colony', tags: ['Portfolio', 'Scroll', '3D'] },
             { route: '/emil', title: 'Emil', desc: 'Emil Kowalski portfolio site recreation', tags: ['Portfolio', 'Scroll'] },
         ],
     },

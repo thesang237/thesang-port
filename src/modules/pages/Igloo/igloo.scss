@@ -1,0 +1,207 @@
+.ig-root {
+    --ig-gutter: clamp(16px, 2.6vw, 44px);
+    --ig-ink: #f7f9fc;
+    --ig-fog: #c3cad4;
+
+    position: relative;
+    min-height: 100vh;
+    background: var(--ig-fog);
+    color: var(--ig-ink);
+    font-family: var(--font-ig-mono), ui-monospace, monospace;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    text-shadow: 0 0 18px rgba(20, 28, 40, 0.18);
+
+    canvas {
+        display: block;
+    }
+
+    button,
+    a {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        cursor: pointer;
+    }
+
+    .ig-decoded {
+        color: var(--ig-ink);
+    }
+
+    // logo draws on after the intro
+    .ig-logo-stroke {
+        stroke-dasharray: 120;
+        stroke-dashoffset: 120;
+    }
+
+    // HUD leader lines
+    .ig-leader {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.3;
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        opacity: 1;
+    }
+
+    .ig-hud-node {
+        text-shadow: 0 0 10px rgba(10, 16, 26, 0.35);
+    }
+
+    .ig-explore {
+        transition: letter-spacing 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &:hover {
+            letter-spacing: 0.06em;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .ig-hud-scale {
+            transform: scale(0.5);
+        }
+    }
+
+    // [ corner brackets ] drawn with gradients so text can be scrambled freely
+    .ig-bracket {
+        --b: 9px;
+        --w: 1px;
+        background:
+            linear-gradient(currentColor, currentColor) top left / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) top left / var(--w) var(--b),
+            linear-gradient(currentColor, currentColor) top right / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) top right / var(--w) var(--b),
+            linear-gradient(currentColor, currentColor) bottom left / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) bottom left / var(--w) var(--b),
+            linear-gradient(currentColor, currentColor) bottom right / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) bottom right / var(--w) var(--b);
+        background-repeat: no-repeat;
+        transition: padding 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &:hover {
+            --b: 14px;
+            padding-left: 1.9rem;
+            padding-right: 1.9rem;
+        }
+    }
+
+    .ig-arrow {
+        opacity: 0.8;
+        transition:
+            transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 0.3s;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &[aria-label='Previous']:hover {
+            transform: translate(-8px, -50%);
+        }
+
+        &[aria-label='Next']:hover {
+            transform: translate(8px, -50%);
+        }
+    }
+
+    .ig-link {
+        display: inline-block;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &:hover {
+            transform: translateX(6px);
+        }
+    }
+
+    .ig-word {
+        transition: color 0.2s;
+
+        &:hover {
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+        }
+    }
+
+    .ig-para {
+        font-weight: 500;
+        color: rgba(247, 249, 252, 0.82);
+    }
+
+    // scroll rail
+    .ig-rail-item {
+        opacity: 0.45;
+        transition: opacity 0.4s;
+
+        .ig-rail-label {
+            opacity: 0;
+            transform: translateX(6px);
+            transition:
+                opacity 0.4s,
+                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ig-rail-dot {
+            width: 5px;
+            height: 5px;
+            border: 1px solid currentColor;
+            transition:
+                background 0.3s,
+                transform 0.4s;
+        }
+
+        &:hover,
+        &.is-active {
+            opacity: 1;
+
+            .ig-rail-label {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        &.is-active .ig-rail-dot {
+            background: currentColor;
+            transform: rotate(45deg) scale(1.2);
+        }
+    }
+
+    .ig-rail-track {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .ig-rail-fill {
+        background: currentColor;
+    }
+
+    .ig-ghost {
+        filter: blur(3px);
+        opacity: 0.55;
+        white-space: nowrap;
+    }
+
+    &.is-detail {
+        .ig-ghosts,
+        .ig-caption,
+        .ig-hero {
+            opacity: 0 !important;
+        }
+    }
+
+    .ig-wave {
+        animation: ig-wave 1.2s ease-in-out infinite;
+    }
+}
+
+@keyframes ig-wave {
+    50% {
+        opacity: 0.3;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ig-root .ig-ghost {
+        display: none;
+    }
+}
