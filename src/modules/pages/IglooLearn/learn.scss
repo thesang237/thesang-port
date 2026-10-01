@@ -1,0 +1,399 @@
+// ─── Igloo, decoded — learn page theme ──────────────────────────────────────
+// Deep slate (the Igloo detail-overlay colour) + the icy palette of the colony.
+
+// The site scales the root font-size with the viewport; this guide uses
+// standard 16px rems so Tailwind spacing reads as designed. Scoped to this page.
+html:has(.il-root) {
+    font-size: 16px;
+}
+
+.il-root {
+    --il-bg: #0a0d13;
+    --il-bg-2: #0e131b;
+    --il-panel: #111823;
+    --il-panel-2: #151d2a;
+    --il-line: rgba(196, 212, 235, 0.09);
+    --il-line-2: rgba(196, 212, 235, 0.16);
+    --il-ink: #e8edf4;
+    --il-dim: #9aa6b7;
+    --il-faint: #627083;
+    --il-ice: #94dbff;
+    --il-lilac: #d4c2ff;
+    --il-mint: #aef0d8;
+    --il-warn: #ffd08a;
+    --il-fog: #c3cad4;
+    --il-gutter: clamp(16px, 3vw, 40px);
+    --il-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+    position: relative;
+    min-height: 100vh;
+    // tooltips near the edge must never widen the page (clip ≠ hidden: sticky still works)
+    overflow-x: clip;
+    background: var(--il-bg);
+    color: var(--il-ink);
+    font-family: var(--font-inter), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+
+    // the global reset unsets <pre>; give code blocks their box back
+    pre {
+        display: block;
+    }
+
+    ::selection {
+        background: rgba(148, 219, 255, 0.3);
+    }
+
+    // SplitText masks clip descenders on tight line-heights — give each mask a little room
+    .il-hero-title > div {
+        padding-bottom: 0.12em;
+        margin-bottom: -0.12em;
+    }
+
+    .il-mono {
+        font-family: var(--font-il-mono), ui-monospace, monospace;
+    }
+
+    // faint dot grid, like the crystal backdrop
+    .il-dots {
+        background-image: radial-gradient(rgba(196, 212, 235, 0.12) 1px, transparent 1.2px);
+        background-size: 22px 22px;
+    }
+
+    // [ corner brackets ] — same trick as the Igloo buttons
+    .il-bracket {
+        --b: 8px;
+        --w: 1px;
+        background:
+            linear-gradient(currentColor, currentColor) top left / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) top left / var(--w) var(--b),
+            linear-gradient(currentColor, currentColor) top right / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) top right / var(--w) var(--b),
+            linear-gradient(currentColor, currentColor) bottom left / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) bottom left / var(--w) var(--b),
+            linear-gradient(currentColor, currentColor) bottom right / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) bottom right / var(--w) var(--b);
+        background-repeat: no-repeat;
+    }
+
+    // ── tabs ──────────────────────────────────────────────────────────────
+    .il-tabs {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .il-tab {
+        position: relative;
+        color: var(--il-faint);
+        transition:
+            color 0.3s,
+            padding 0.5s var(--il-ease);
+
+        &:hover {
+            color: var(--il-ink);
+        }
+
+        &.is-active {
+            color: var(--il-ink);
+            padding-left: 1.05rem;
+            padding-right: 1.05rem;
+        }
+
+        .il-tab-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 99px;
+            background: var(--il-mint);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        &.is-visited .il-tab-dot {
+            opacity: 0.8;
+        }
+    }
+
+    // ── prose ─────────────────────────────────────────────────────────────
+    .il-p {
+        color: #c9d2de;
+        font-size: 16px;
+        line-height: 1.75;
+        max-width: 68ch;
+
+        strong {
+            color: var(--il-ink);
+            font-weight: 600;
+        }
+
+        em {
+            color: var(--il-ice);
+            font-style: normal;
+        }
+    }
+
+    .il-code-inline {
+        font-family: var(--font-il-mono), ui-monospace, monospace;
+        font-size: 0.86em;
+        padding: 0.1em 0.4em;
+        border-radius: 5px;
+        background: rgba(148, 219, 255, 0.08);
+        border: 1px solid rgba(148, 219, 255, 0.14);
+        color: #cfeeff;
+        white-space: nowrap;
+    }
+
+    .il-term {
+        position: relative;
+        border-bottom: 1px dashed rgba(212, 194, 255, 0.55);
+        cursor: help;
+        color: var(--il-ink);
+
+        .il-term-tip {
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 10px);
+            width: min(300px, 80vw);
+            transform: translate(-50%, 6px);
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                opacity 0.25s,
+                transform 0.4s var(--il-ease);
+            z-index: 40;
+        }
+
+        &:hover .il-term-tip,
+        &:focus .il-term-tip {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+    }
+
+    // ── controls ──────────────────────────────────────────────────────────
+    .il-range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 18px;
+        background: transparent;
+        cursor: pointer;
+
+        &::-webkit-slider-runnable-track {
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--il-ice) var(--fill, 50%), rgba(196, 212, 235, 0.16) var(--fill, 50%));
+        }
+
+        &::-moz-range-track {
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--il-ice) var(--fill, 50%), rgba(196, 212, 235, 0.16) var(--fill, 50%));
+        }
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            margin-top: -5px;
+            border-radius: 2px;
+            background: var(--il-ink);
+            box-shadow: 0 0 0 4px rgba(148, 219, 255, 0.12);
+            transform: rotate(45deg);
+            transition: box-shadow 0.2s;
+        }
+
+        &::-moz-range-thumb {
+            width: 11px;
+            height: 11px;
+            border: 0;
+            border-radius: 2px;
+            background: var(--il-ink);
+            transform: rotate(45deg);
+        }
+
+        &:hover::-webkit-slider-thumb,
+        &:focus-visible::-webkit-slider-thumb {
+            box-shadow: 0 0 0 6px rgba(148, 219, 255, 0.22);
+        }
+
+        &:focus-visible {
+            outline: none;
+        }
+    }
+
+    .il-btn {
+        transition:
+            background 0.25s,
+            border-color 0.25s,
+            color 0.25s,
+            transform 0.4s var(--il-ease);
+
+        &:active {
+            transform: scale(0.97);
+        }
+    }
+
+    // ── flashcards ────────────────────────────────────────────────────────
+    .il-card {
+        perspective: 900px;
+
+        .il-card-inner {
+            position: relative;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.7s var(--il-ease);
+        }
+
+        &.is-flipped .il-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .il-card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+        }
+
+        .il-card-back {
+            transform: rotateY(180deg);
+        }
+    }
+
+    // stacked "exploded layers" view (chapter 00)
+    .il-stack {
+        perspective: 1400px;
+    }
+
+    .il-scrollbox {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(196, 212, 235, 0.2) transparent;
+        overscroll-behavior: contain;
+    }
+
+    // micro-hovers showcase (chapter 04) — the same recipes as igloo.scss
+    .il-hv-underline {
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -4px;
+            height: 1px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: var(--origin, left);
+            transition: transform 0.5s var(--il-ease);
+        }
+
+        &:hover::after {
+            transform: scaleX(1);
+        }
+    }
+
+    .il-hv-bracket {
+        transition:
+            padding 0.5s var(--il-ease),
+            letter-spacing 0.5s var(--il-ease);
+
+        &:hover {
+            --b: 14px;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            letter-spacing: 0.04em;
+        }
+    }
+
+    .il-hv-sweep {
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.25) 50%, transparent 70%);
+            transform: translateX(-120%);
+            pointer-events: none;
+        }
+
+        &:hover::before {
+            transform: translateX(120%);
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+    }
+
+    .il-hv-ring {
+        .il-hv-ring-circle {
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition: stroke-dashoffset 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .il-hv-ring-shaft {
+            transform-box: fill-box;
+            transform-origin: left center;
+            transition: transform 0.6s var(--il-ease);
+        }
+
+        &:hover {
+            .il-hv-ring-circle {
+                stroke-dashoffset: 0;
+            }
+
+            .il-hv-ring-shaft {
+                transform: scaleX(1.3);
+            }
+        }
+    }
+
+    .il-hv-rail {
+        .il-hv-rail-label {
+            opacity: 0;
+            transform: translateX(6px);
+            transition:
+                opacity 0.4s,
+                transform 0.5s var(--il-ease);
+        }
+
+        .il-hv-rail-dot {
+            transition:
+                background 0.3s,
+                transform 0.4s var(--il-ease);
+        }
+
+        &:hover {
+            .il-hv-rail-label {
+                opacity: 1;
+                transform: none;
+            }
+
+            .il-hv-rail-dot {
+                background: currentColor;
+                transform: rotate(45deg) scale(1.2);
+            }
+        }
+    }
+
+    .il-grain {
+        pointer-events: none;
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        opacity: 0.05;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 160px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .il-root .il-card .il-card-inner {
+        transition: none;
+    }
+}

@@ -7,7 +7,7 @@ node_modules/
 .examples/
 
 guides/
-refs/*.mp4
+refs/
 
 # next.js
 .next/
@@ -49,3 +49,6 @@ public/worker-*.js
 public/fallback-*.js
 public/sw.js.map
 public/workbox-*.js.map
+
+# clone analysis (frames, specs, verification runs)
+.clone-analysis/

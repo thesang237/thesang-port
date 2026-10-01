@@ -1,0 +1,1389 @@
+// /aim-obys — values ported 1:1 from the reference stylesheet (body font-size 1vw, so 1em = 1% of the viewport width).
+// Class names are prefixed (the originals — container, grid, … — collide with Tailwind utilities).
+
+.aim {
+    --aim-white: #e7e4df;
+    --aim-black: #141414;
+    --aim-ink: #202020;
+    --aim-pad: 0.97em;
+
+    position: relative;
+    font-family: var(--aim-font), 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1vw;
+    line-height: 1;
+    color: var(--aim-black);
+    background-color: var(--aim-white);
+    -webkit-font-smoothing: antialiased;
+    font-kerning: normal;
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    img {
+        display: inline-block;
+        max-width: 100%;
+        vertical-align: middle;
+    }
+
+    // the reference has no reset for inline SVG: it sits on the text baseline (lottie boxes gain the line gap)
+    svg {
+        display: inline;
+        vertical-align: baseline;
+    }
+}
+
+html:has(.aim),
+body:has(.aim) {
+    background-color: #e7e4df;
+    overscroll-behavior: none;
+}
+
+// small UI text (the reference uses h3 for every label)
+.aim-t {
+    display: block;
+    margin: 0 0 0 1px;
+    font-size: 0.95em;
+    font-weight: 400;
+    line-height: 0.928571;
+}
+
+.aim-h2 {
+    margin: 0;
+    font-size: 5.69em;
+    font-weight: 500;
+    line-height: 0.914634;
+    letter-spacing: -0.03em;
+}
+
+.aim-big-text {
+    font-size: 5.5em;
+    font-weight: 500;
+    line-height: 0.914634;
+    letter-spacing: -0.03em;
+    color: var(--aim-ink);
+}
+
+.aim-big-heading {
+    font-size: 9.5em;
+    font-weight: 500;
+    line-height: 0.85;
+    letter-spacing: -0.035em;
+}
+
+.aim-sup {
+    display: inline-block;
+    margin-right: 0.3em;
+    font-size: 0.2em;
+    font-weight: 400;
+    letter-spacing: 0;
+    transform: translate(0.2em, -2.7em);
+}
+
+.aim-mask {
+    position: relative;
+    overflow: hidden;
+}
+
+.aim-no-events {
+    pointer-events: none;
+}
+
+.aim-wrap {
+    position: relative;
+    overflow: clip;
+}
+
+// ───────────────────────── lines & bars ─────────────────────────
+.aim-bar {
+    width: 100%;
+    height: 3.19em;
+    background-color: var(--aim-black);
+
+    // the reference also gives this strip its ".small" text size, so its 0.97em height is 0.74 × 0.97em
+    &--small {
+        position: relative;
+        z-index: 1;
+        height: 0.97em;
+        font-size: 0.74em;
+        background-color: var(--aim-white);
+    }
+}
+
+.aim-line {
+    height: 1px;
+    background-color: var(--aim-black);
+
+    &--1 {
+        width: 98%;
+        margin-left: var(--aim-pad);
+    }
+
+    &--2 {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: var(--aim-pad);
+        width: 98%;
+    }
+
+    &--3 {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 1px;
+        height: 100%;
+    }
+
+    &--fixed {
+        position: absolute;
+        right: 0;
+        bottom: -1px;
+        left: var(--aim-pad);
+        width: 98%;
+    }
+}
+
+// ───────────────────────── navigation ─────────────────────────
+.aim-nav {
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 2.8em;
+    padding: var(--aim-pad) var(--aim-pad) 0;
+    color: var(--aim-black);
+
+    &--hero {
+        position: relative;
+    }
+
+    &--fixed {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 19;
+        transform: translate3d(0, -110%, 0);
+    }
+
+    &__bar {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding-bottom: 0.5em;
+    }
+
+    &__title {
+        display: flex;
+        align-items: flex-end;
+        width: 30%;
+    }
+
+    &__links {
+        display: flex;
+        justify-content: space-between;
+        width: 66.35%;
+    }
+
+    &__group {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    &__right {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        width: 49.7%;
+    }
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-color: var(--aim-white);
+    }
+}
+
+.aim-navlink {
+    margin-right: 0.21em;
+    padding-left: 0.21em;
+    transition: opacity 0.2s;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.4;
+    }
+
+    &--modal {
+        display: flex;
+        align-items: flex-end;
+    }
+}
+
+// ───────────────────────── hero ─────────────────────────
+.aim-hero {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+
+    &__screen {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 100vh;
+    }
+
+    &__top {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        margin-top: 24.9%;
+    }
+
+    &__gap {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 var(--aim-pad);
+    }
+
+    &__barwrap {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        height: 3.19em;
+        padding: 0 var(--aim-pad);
+    }
+
+    &__home {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        height: 100%;
+        padding: 0 var(--aim-pad);
+        background-color: var(--aim-white);
+    }
+
+    &__left {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start;
+        width: 32.8%;
+    }
+
+    &__right {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        width: 66.3%;
+        height: 100%;
+        padding-top: 3em;
+    }
+
+    &__heading {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0.56em;
+    }
+
+    &__logo {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 15.42em;
+        margin-top: var(--aim-pad);
+        padding-left: var(--aim-pad);
+    }
+
+    &__scroll {
+        position: absolute;
+        right: 0;
+        bottom: var(--aim-pad);
+        display: flex;
+    }
+}
+
+.aim-scroll-arrow {
+    width: 0.8em;
+    height: 0.8em;
+    margin-left: 0.42em;
+}
+
+// scroll-scrubbed logo (sits above the hero, below the rest of the page)
+.aim-lottie-fixed {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 11;
+    display: flex;
+    width: 100%;
+    pointer-events: none;
+}
+
+// stretched column (as in the reference) so the lottie box height is definite for the SVG's height: 100%
+.aim-lottie-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.aim-lottie {
+    width: 100%;
+
+    &--scroll {
+        will-change: transform;
+    }
+
+    &--loading {
+        margin-top: 0.07em;
+    }
+}
+
+// modernists list (hero + experiment)
+.aim-mlist {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+
+    &__row {
+        position: relative;
+        display: flex;
+
+        &--hero {
+            margin-bottom: var(--aim-pad);
+        }
+    }
+
+    &__label {
+        width: 7.3em;
+        margin-right: var(--aim-pad);
+    }
+
+    &__names {
+        margin-bottom: 0.56em;
+    }
+
+    &__item {
+        display: flex;
+        margin-bottom: 0.07em;
+
+        &--name {
+            margin-bottom: 0.6em;
+        }
+    }
+}
+
+// ───────────────────────── loader ─────────────────────────
+.aim-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100001; // above the app-level PageLoader
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    pointer-events: none;
+
+    &__logo {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+    }
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background-color: #111;
+    }
+}
+
+// ───────────────────────── about ─────────────────────────
+.aim-content {
+    position: relative;
+    z-index: 3;
+}
+
+.aim-about {
+    position: relative;
+    z-index: 3;
+    padding: 0 var(--aim-pad);
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 97%;
+        margin-top: 20em;
+        margin-bottom: 9.65em;
+        padding-top: 6em;
+    }
+
+    &__part {
+        position: relative;
+        margin-bottom: 0.56em;
+
+        &--1 {
+            margin-bottom: 5.56em;
+        }
+    }
+
+    &__line {
+        width: 100%;
+        height: 5.2em;
+        margin-bottom: -0.2em;
+        overflow: hidden;
+        text-align: left;
+
+        .aim-big-text {
+            margin-top: -0.04em;
+            transform: translate3d(0, 100%, 0);
+        }
+    }
+
+    &__info {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        margin-top: 9.72em;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.97em;
+        width: 100%;
+    }
+
+    &__note {
+        display: flex;
+    }
+}
+
+// underline swap link (Midjourney / Obys)
+.aim-ulink-wrap {
+    display: block;
+    padding-left: 0.21em;
+}
+
+.aim-ulink {
+    position: relative;
+    display: inline-block;
+    height: 1.1em;
+    margin-top: 0.07em;
+    overflow: hidden;
+
+    &__line {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 0.6px;
+        background-color: var(--aim-black);
+
+        &--2 {
+            left: -140%;
+        }
+    }
+}
+
+.aim-spacer {
+    height: 70vh;
+}
+
+// ───────────────────────── experiment (1000vh scroll story) ─────────────────────────
+.aim-exp {
+    position: relative;
+    z-index: 0;
+
+    &__track {
+        position: relative;
+        height: 1000vh;
+        overflow: clip;
+    }
+
+    &__sticky {
+        position: sticky;
+        top: 0;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        height: 100vh;
+    }
+
+    &__photos {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        justify-content: flex-end;
+        height: 100vh;
+    }
+
+    &__cols {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        height: 100%;
+    }
+
+    &__col {
+        width: 33.5%;
+        will-change: transform;
+        transform: translate3d(0, 100vh, 0);
+
+        &--2 {
+            position: relative;
+            z-index: 2;
+            background-color: #5f5151;
+        }
+
+        &--3 {
+            background-color: #412525;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__ui {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 4;
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        padding: var(--aim-pad) 0 var(--aim-pad) var(--aim-pad);
+    }
+
+    &__left {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 50%;
+        padding-top: 2.5em;
+    }
+
+    &__top {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__headings {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        margin-left: -0.35em;
+    }
+
+    &__hmask {
+        position: relative;
+        height: 9.2em;
+        margin-bottom: -0.8em;
+        margin-left: -0.3em;
+        padding-right: 0.5em;
+        overflow: hidden;
+
+        .aim-big-heading {
+            will-change: transform;
+            transform: translate3d(0, 120%, 0);
+        }
+    }
+
+    &__fade {
+        will-change: opacity;
+        opacity: 0;
+    }
+
+    &__right {
+        position: sticky;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-top: 3em;
+    }
+
+    &__counter {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        height: 0.9em;
+    }
+
+    &__digits {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        height: 0.9em;
+        overflow: hidden;
+    }
+
+    &__digit {
+        margin-bottom: 0.69em;
+        will-change: transform;
+    }
+
+    &__static {
+        display: flex;
+        margin-bottom: 0.69em;
+    }
+
+    &__slider {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        width: 33%;
+        height: 100vh;
+        will-change: transform;
+        transform: translate3d(-203%, 100vh, 0);
+    }
+
+    &__slide {
+        position: absolute;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+
+        &--next {
+            top: 100%;
+            right: 0;
+            left: 0;
+            will-change: transform;
+        }
+
+        img {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            will-change: transform, opacity;
+        }
+    }
+
+    &__slide-bg {
+        position: absolute;
+        inset: 0;
+    }
+}
+
+// "Learn More" button
+.aim-btn {
+    position: relative;
+    display: block;
+    width: 48.2%;
+    margin-top: 3.47em;
+    padding: 0.69em 0;
+    overflow: hidden;
+    cursor: pointer;
+
+    &__content {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__arrows {
+        position: relative;
+        width: 0.86em;
+        height: 0.86em;
+        margin-top: -0.14em;
+        overflow: hidden;
+    }
+
+    // arrow 2 starts at -150 % and line 2 at -110 % (set from JS so GSAP owns the transform)
+    &__arrow {
+        position: absolute;
+        inset: 0;
+    }
+
+    &__lines {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        overflow: hidden;
+    }
+
+    &__line {
+        position: absolute;
+        inset: auto 0 0;
+        height: 1px;
+        background-color: var(--aim-black);
+    }
+}
+
+// ───────────────────────── footer ─────────────────────────
+.aim-footer {
+    position: relative;
+    z-index: 10;
+    margin-top: 25em;
+    background-color: var(--aim-white);
+
+    &__inner {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: var(--aim-pad) var(--aim-pad) 0;
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 0.56em;
+    }
+
+    &__anim {
+        display: flex;
+        gap: 0.97em;
+        width: 100%;
+    }
+}
+
+// ───────────────────────── gallery overlay ─────────────────────────
+.aim-gallery {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    width: 100%;
+    height: 100vh;
+    padding: 0 var(--aim-pad);
+    overflow: auto;
+    overscroll-behavior: contain;
+
+    &__popup {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        width: 74.2%;
+        height: 100vh;
+        margin-top: var(--aim-pad);
+        padding-right: var(--aim-pad);
+        color: var(--aim-white);
+        opacity: 0;
+    }
+
+    &__head {
+        position: sticky;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    &__close {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 0.56em;
+        padding-left: 55.7%;
+    }
+
+    &__rule {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-top: var(--aim-pad);
+        border-top: 1px solid var(--aim-white);
+
+        &--counter {
+            width: 100%;
+            margin-top: 3.47em;
+            margin-bottom: 5em;
+            border-top-width: 0;
+            border-bottom: 1px solid var(--aim-white);
+        }
+    }
+
+    &__cut {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-end;
+        width: 100%;
+        height: 100vh;
+        margin-top: -1.15em;
+        margin-bottom: 1.3em;
+    }
+
+    &__scroller {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        width: 100%;
+        overflow: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 0.97em;
+        width: 66.3%;
+        margin-bottom: 4.17em;
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+
+    &__cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &--1 {
+            width: 32.2%;
+        }
+
+        &--2 {
+            width: 66%;
+        }
+
+        &--ghost {
+            opacity: 0;
+        }
+    }
+
+    &__img {
+        width: 100%;
+        margin-bottom: 0.69em;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+        }
+    }
+
+    &__label {
+        margin-bottom: 0.56em;
+    }
+
+    &__blur {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        background-color: #0e0e0ec2;
+        opacity: 0;
+        backdrop-filter: blur(10px);
+    }
+}
+
+// ───────────────────────── page transition ─────────────────────────
+.aim-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 100002;
+    display: none;
+    pointer-events: none;
+
+    &__shape {
+        width: 100%;
+        height: 100vh;
+        background-color: #111;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .aim-lottie--scroll {
+        will-change: auto;
+    }
+}
+
+// ───────────────────────── phone-only pieces (hidden above 479px) ─────────────────────────
+.aim-mob,
+.aim-mob-flex,
+.aim-mnav,
+.aim-mmenu {
+    display: none;
+}
+
+.aim-menu-label {
+    font-weight: 500;
+}
+
+.aim-mmenu {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100vh;
+    padding: 0 5.2em 5.2em;
+    overflow: hidden;
+    color: var(--aim-white);
+
+    &__close {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        width: 100%;
+        padding: 5.2em;
+        text-align: left;
+        opacity: 0;
+    }
+
+    &__links {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        margin-top: 40em;
+    }
+
+    &__link {
+        display: block;
+        height: 15.3em;
+        overflow: hidden;
+
+        &.is-active {
+            opacity: 0.3;
+        }
+    }
+
+    &__word {
+        display: block;
+        font-size: 15.5em;
+        font-weight: 500;
+        line-height: 0.914634;
+        letter-spacing: -0.03em;
+    }
+
+    &__text {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        > p {
+            opacity: 0;
+        }
+    }
+
+    &__desc {
+        margin-bottom: 30em;
+        padding-top: 3em;
+        border-top: 1px solid var(--aim-white);
+        opacity: 0;
+    }
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background-color: #18181a;
+    }
+}
+
+// ───────────────────────── tablet (reference breakpoints) ─────────────────────────
+@media screen and (max-width: 991px) {
+    .aim-nav__title,
+    .aim-mlist {
+        width: 22.1em;
+    }
+
+    .aim-nav__links {
+        width: 45em;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .aim-nav__title,
+    .aim-mlist {
+        width: 100%;
+    }
+}
+
+// ───────────────────────── phone (≤ 479px) ─────────────────────────
+@media screen and (max-width: 479px) {
+    .aim-desk,
+    .aim-desk-flex,
+    .aim-hero__logo,
+    .aim-hero__gap,
+    .aim-nav--hero,
+    .aim-nav__bar,
+    .aim-line--1,
+    .aim-line--3,
+    .aim-line--fixed,
+    .aim-spacer,
+    .aim-exp__slider,
+    .aim-exp__counter,
+    [data-aim='exp-foot'] {
+        display: none !important;
+    }
+
+    .aim-mob {
+        display: block;
+    }
+
+    .aim-mob-flex {
+        display: flex;
+    }
+
+    .aim-t {
+        font-size: 3.8em;
+        line-height: 1;
+    }
+
+    .aim-h2 {
+        font-size: 9.6em;
+    }
+
+    .aim-big-heading {
+        font-size: 16em;
+    }
+
+    // "Menu" bars
+    .aim-mnav {
+        position: relative;
+        z-index: 4;
+        display: flex;
+        width: 100%;
+
+        &--fixed {
+            border-bottom: 1px solid var(--aim-black);
+        }
+
+        &__item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 14em;
+            padding-left: 5.2em;
+        }
+
+        &__btn {
+            display: flex;
+            align-items: center;
+            height: 80%;
+        }
+    }
+
+    .aim-nav {
+        height: 14em;
+        padding: 0;
+    }
+
+    // hero
+    .aim-hero__top {
+        margin-top: 15%;
+    }
+
+    .aim-hero__barwrap {
+        padding: 0 5.2em;
+    }
+
+    .aim-hero__home {
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 0 5.2em;
+    }
+
+    .aim-hero__left {
+        width: 100%;
+        margin-bottom: 10em;
+    }
+
+    // (keeps its 3em top padding: the reference's desktop rule outranks the phone one here)
+    .aim-hero__right {
+        width: 100%;
+        height: auto;
+        padding-bottom: 5.2em;
+        border-top: 1px solid black;
+        border-bottom: 1px solid var(--aim-black);
+    }
+
+    .aim-hero__heading {
+        margin-bottom: 0;
+        margin-left: 35%;
+    }
+
+    .aim-hero__scroll {
+        top: 3em;
+        right: auto;
+        bottom: auto;
+        left: 0;
+    }
+
+    .aim-scroll-arrow {
+        width: 3em;
+        height: auto;
+        margin-left: 1.4em;
+    }
+
+    .aim-line--2 {
+        left: 5.2em;
+        width: 90%;
+    }
+
+    .aim-mlist {
+        justify-content: flex-start;
+
+        &__row--hero {
+            align-items: flex-start;
+        }
+
+        &__label {
+            width: 33%;
+            margin-right: 4em;
+        }
+
+        &__item--name {
+            margin-bottom: 3em;
+        }
+
+        // the reference's text wrappers get a 5em bottom margin on phones
+        &__names {
+            margin-bottom: 5em;
+        }
+    }
+
+    // logo lotties sit inside a 4.7em frame on phones
+    .aim-lottie-col,
+    .aim-loader {
+        padding: 4.7em 4.7em 0;
+    }
+
+    .aim-loader {
+        height: 100vh;
+    }
+
+    // about: plain paragraphs
+    .aim-about {
+        margin-top: 20em;
+        padding: 20em 5.2em 0;
+
+        &__phone {
+            position: relative;
+            z-index: 1;
+            flex-direction: column;
+            width: 100%;
+            margin-top: 7em;
+            margin-bottom: 9.65em;
+            padding-top: 6em;
+        }
+
+        &__part {
+            margin-bottom: 5em;
+
+            &--1 {
+                margin-bottom: 10em;
+            }
+        }
+
+        &__grid {
+            grid-template-columns: 1fr;
+            gap: 2em;
+        }
+    }
+
+    .aim-big-text--phone {
+        margin-top: -0.04em;
+        font-size: 9.6em;
+        line-height: 0.93;
+    }
+
+    .aim-ulink-wrap {
+        padding-left: 0.35em;
+    }
+
+    .aim-ulink {
+        height: 4.4em;
+        margin-top: 0.21em;
+    }
+
+    // experiment: stacked photos, heading, list, then the six works as cards
+    .aim-exp {
+        z-index: 2;
+        margin-top: 30em;
+
+        &__track {
+            height: auto;
+        }
+
+        &__sticky {
+            position: relative;
+            flex-direction: column;
+            height: auto;
+        }
+
+        &__photos {
+            position: relative;
+            height: auto;
+        }
+
+        &__cols {
+            flex-direction: column;
+        }
+
+        &__col {
+            width: 100%;
+            height: auto;
+            transform: none !important;
+
+            img {
+                height: auto;
+            }
+        }
+
+        &__ui {
+            position: relative;
+            flex-direction: column;
+            height: auto;
+            padding: 20em 5.2em 0;
+        }
+
+        &__left {
+            width: 100%;
+            padding-top: 0;
+        }
+
+        &__hmask {
+            height: 15.8em;
+
+            .aim-big-heading {
+                transform: translate3d(0, 110%, 0);
+            }
+        }
+
+        &__fade {
+            opacity: 1 !important;
+        }
+
+        &__right {
+            position: relative;
+            width: 100%;
+            margin-bottom: 6em;
+        }
+
+        [data-aim='exp-name'] {
+            opacity: 1 !important;
+        }
+
+        .aim-mlist__label {
+            width: 30.3%;
+        }
+
+        &__phone {
+            flex-direction: column;
+        }
+
+        &__card {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 5em;
+            padding: 0 5.2em;
+        }
+
+        &__card-img {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 2em;
+
+            img {
+                width: 100%;
+            }
+        }
+
+        &__card-name {
+            margin-bottom: 5em;
+        }
+    }
+
+    .aim-btn {
+        width: 100%;
+        margin-top: 10em;
+        margin-bottom: 30em;
+        padding-top: 3em;
+        padding-bottom: 0;
+
+        &__arrows {
+            width: 3em;
+            height: 3em;
+        }
+
+        &__arrow--2 {
+            display: none;
+        }
+    }
+
+    // footer
+    .aim-footer {
+        margin-top: 40em;
+        padding: 0 5.2em;
+
+        &__inner {
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+        &__text {
+            flex-direction: column;
+            margin-bottom: 5em;
+        }
+
+        &__anim {
+            width: 101%;
+            margin-top: 2em;
+            padding-bottom: 2em;
+        }
+    }
+}

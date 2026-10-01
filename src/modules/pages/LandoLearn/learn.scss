@@ -1,0 +1,425 @@
+// ─── Ellis Morrow, decoded — learn page theme ───────────────────────────────
+// The source's own palette: dark olive section green, one lime accent, warm paper ink.
+
+// The host site scales the root font-size with the viewport; this guide uses
+// standard 16px rems so Tailwind spacing reads as designed. Scoped to this page.
+html:has(.ll-root) {
+    font-size: 16px;
+}
+
+body:has(.ll-root) {
+    background: #171a12;
+}
+
+.ll-root {
+    --ll-bg: #171a12;
+    --ll-bg-2: #1b1f15;
+    --ll-panel: #22281c;
+    --ll-panel-2: #283022;
+    --ll-line: rgba(241, 243, 232, 0.09);
+    --ll-line-2: rgba(241, 243, 232, 0.17);
+    --ll-ink: #f1f3e8;
+    --ll-dim: #b5b7ae;
+    --ll-faint: #7f8375;
+    --ll-lime: #cdff0b;
+    --ll-lime-soft: #b8d43a;
+    --ll-gold: #d6ad5a;
+    --ll-mint: #a8d8b0;
+    --ll-warn: #ffb36b;
+    --ll-paper: #dbe1d3;
+    --ll-gutter: clamp(16px, 3vw, 40px);
+    --ll-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --ll-sans: var(--ll-font-sans), 'Helvetica Neue', Arial, sans-serif;
+    --ll-serif: var(--ll-font-serif), 'Times New Roman', serif;
+    // the source's components (PartnerLogo…) read these names
+    --ln-sans: var(--ll-sans);
+    --ln-serif: var(--ll-serif);
+
+    position: relative;
+    min-height: 100vh;
+    // tooltips near the edge must never widen the page (clip ≠ hidden: sticky still works)
+    overflow-x: clip;
+    background: var(--ll-bg);
+    color: var(--ll-ink);
+    font-family: var(--ll-sans);
+    -webkit-font-smoothing: antialiased;
+
+    // the global reset unsets <pre>; give code blocks their box back
+    pre {
+        display: block;
+    }
+
+    ::selection {
+        background: rgba(205, 255, 11, 0.3);
+    }
+
+    // SplitText masks clip descenders on tight line-heights — give each mask a little room
+    .ll-hero-title > div,
+    .ll-mask-line {
+        padding-bottom: 0.12em;
+        margin-bottom: -0.12em;
+    }
+
+    .ll-mono {
+        font-family: var(--font-ll-mono), ui-monospace, monospace;
+    }
+
+    // faint dot grid behind the hero
+    .ll-dots {
+        background-image: radial-gradient(rgba(241, 243, 232, 0.12) 1px, transparent 1.2px);
+        background-size: 22px 22px;
+    }
+
+    // [ corner brackets ] around the active tab
+    .ll-bracket {
+        --b: 8px;
+        --w: 1px;
+        background:
+            linear-gradient(currentColor, currentColor) top left / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) top left / var(--w) var(--b),
+            linear-gradient(currentColor, currentColor) top right / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) top right / var(--w) var(--b),
+            linear-gradient(currentColor, currentColor) bottom left / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) bottom left / var(--w) var(--b),
+            linear-gradient(currentColor, currentColor) bottom right / var(--b) var(--w),
+            linear-gradient(currentColor, currentColor) bottom right / var(--w) var(--b);
+        background-repeat: no-repeat;
+    }
+
+    // ── tabs ──────────────────────────────────────────────────────────────
+    .ll-tabs {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .ll-tab {
+        position: relative;
+        color: var(--ll-faint);
+        transition:
+            color 0.3s,
+            padding 0.5s var(--ll-ease);
+
+        &:hover {
+            color: var(--ll-ink);
+        }
+
+        &.is-active {
+            color: var(--ll-ink);
+            padding-left: 1.05rem;
+            padding-right: 1.05rem;
+        }
+
+        .ll-tab-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 99px;
+            background: var(--ll-mint);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        &.is-visited .ll-tab-dot {
+            opacity: 0.8;
+        }
+    }
+
+    // ── prose ─────────────────────────────────────────────────────────────
+    .ll-p {
+        color: #cfd3c4;
+        font-size: 16px;
+        line-height: 1.75;
+        max-width: 68ch;
+
+        strong {
+            color: var(--ll-ink);
+            font-weight: 600;
+        }
+
+        em {
+            color: var(--ll-lime);
+            font-style: normal;
+        }
+    }
+
+    .ll-code-inline {
+        font-family: var(--font-ll-mono), ui-monospace, monospace;
+        font-size: 0.86em;
+        padding: 0.1em 0.4em;
+        border-radius: 5px;
+        background: rgba(205, 255, 11, 0.08);
+        border: 1px solid rgba(205, 255, 11, 0.14);
+        color: #e6f7a8;
+        white-space: nowrap;
+
+        // long formulas must not run off a phone screen
+        @media (max-width: 640px) {
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .ll-term {
+        position: relative;
+        border-bottom: 1px dashed rgba(214, 173, 90, 0.55);
+        cursor: help;
+        color: var(--ll-ink);
+
+        .ll-term-tip {
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 10px);
+            width: min(300px, 80vw);
+            transform: translate(-50%, 6px);
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                opacity 0.25s,
+                transform 0.4s var(--ll-ease);
+            z-index: 40;
+        }
+
+        &:hover .ll-term-tip,
+        &:focus .ll-term-tip {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+    }
+
+    // ── controls ──────────────────────────────────────────────────────────
+    .ll-range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 18px;
+        background: transparent;
+        cursor: pointer;
+
+        &::-webkit-slider-runnable-track {
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--ll-lime) var(--fill, 50%), rgba(241, 243, 232, 0.16) var(--fill, 50%));
+        }
+
+        &::-moz-range-track {
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--ll-lime) var(--fill, 50%), rgba(241, 243, 232, 0.16) var(--fill, 50%));
+        }
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            margin-top: -5px;
+            border-radius: 2px;
+            background: var(--ll-ink);
+            box-shadow: 0 0 0 4px rgba(205, 255, 11, 0.12);
+            transform: rotate(45deg);
+            transition: box-shadow 0.2s;
+        }
+
+        &::-moz-range-thumb {
+            width: 11px;
+            height: 11px;
+            border: 0;
+            border-radius: 2px;
+            background: var(--ll-ink);
+            transform: rotate(45deg);
+        }
+
+        &:hover::-webkit-slider-thumb,
+        &:focus-visible::-webkit-slider-thumb {
+            box-shadow: 0 0 0 6px rgba(205, 255, 11, 0.22);
+        }
+
+        &:focus-visible {
+            outline: none;
+        }
+    }
+
+    .ll-btn {
+        transition:
+            background 0.25s,
+            border-color 0.25s,
+            color 0.25s,
+            transform 0.4s var(--ll-ease);
+
+        &:active {
+            transform: scale(0.97);
+        }
+    }
+
+    // ── flashcards ────────────────────────────────────────────────────────
+    .ll-card {
+        perspective: 900px;
+
+        .ll-card-inner {
+            position: relative;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.7s var(--ll-ease);
+        }
+
+        &.is-flipped .ll-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .ll-card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+        }
+
+        .ll-card-back {
+            transform: rotateY(180deg);
+        }
+    }
+
+    // stacked "exploded layers" view (chapter 00)
+    .ll-stack {
+        perspective: 1400px;
+    }
+
+    .ll-scrollbox {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(241, 243, 232, 0.2) transparent;
+        overscroll-behavior: contain;
+    }
+
+    .ll-serif {
+        font-family: var(--ll-serif);
+        font-weight: 400;
+    }
+
+    .ll-cond {
+        font-variation-settings: 'wdth' 75;
+        font-weight: 800;
+    }
+
+    // the source's contour lines (same SVG, used as a mask so the colour follows the theme)
+    .ll-contours {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: var(--ll-contour, rgba(241, 243, 232, 0.06));
+        -webkit-mask: url('/landonorris/contours.svg') 0 0 / 1920px 2400px repeat-y;
+        mask: url('/landonorris/contours.svg') 0 0 / 1920px 2400px repeat-y;
+    }
+
+    // teaching copy of the block reveal (motion-kit/BlockReveal): line > inner > [text, block]
+    .ll-br-inner {
+        position: relative;
+        display: inline-block;
+    }
+
+    .ll-br-text {
+        opacity: var(--br-text, 0);
+    }
+
+    .ll-br-block {
+        position: absolute;
+        inset: 0;
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+        pointer-events: none;
+    }
+
+    .ll-xray .ll-br-block {
+        outline: 1px dashed var(--ll-warn);
+        outline-offset: 2px;
+        opacity: 0.85;
+    }
+
+    // teaching copy of motion-kit/RollingText: each glyph is a column whose copy hangs just below it
+    .ll-rt {
+        display: inline-flex;
+        overflow: hidden;
+        vertical-align: top;
+        white-space: pre;
+    }
+
+    .ll-rt-char {
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ll-rt-col {
+        display: flex;
+        flex-direction: column;
+        will-change: transform;
+    }
+
+    .ll-rt-a,
+    .ll-rt-b {
+        display: block;
+    }
+
+    .ll-rt-b {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        color: var(--rt-hover, currentColor);
+    }
+
+    .ll-xray .ll-rt,
+    .ll-xray .ll-rt-char {
+        overflow: visible;
+        outline: 1px dashed rgba(255, 179, 107, 0.7);
+    }
+
+    .ll-lime-btn {
+        background: var(--ll-lime);
+        color: #171a12;
+        transition:
+            background 0.25s,
+            transform 0.4s var(--ll-ease);
+
+        &:hover {
+            background: #b9e600;
+        }
+
+        &:active {
+            transform: scale(0.97);
+        }
+    }
+
+    .ll-grain {
+        pointer-events: none;
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        opacity: 0.05;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 160px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ll-root .ll-card .ll-card-inner {
+        transition: none;
+    }
+}
+
+// DOM-sync demo: a CSS-only movement the WebGL layer can only follow by reading the rect
+@keyframes ll-wobble {
+    0%,
+    100% {
+        transform: translateX(-60px) scale(0.92);
+    }
+
+    50% {
+        transform: translateX(60px) scale(1.05);
+    }
+}
+
+// reduced-motion demo: a plain CSS marquee (the real one runs on the GSAP ticker)
+@keyframes ll-marquee {
+    to {
+        transform: translateX(-50%);
+    }
+}

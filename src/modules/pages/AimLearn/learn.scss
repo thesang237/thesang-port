@@ -1,0 +1,334 @@
+// ─── AIM scroll scenes, decoded — learn page theme ──────────────────────────
+// Paper & ink: the source page's own palette (warm off-white, near-black, hairlines) plus one orange taken from its artworks.
+
+// The host site scales the root font-size with the viewport; this guide uses standard 16px rems. Scoped to this page.
+html:has(.al-root) {
+    font-size: 16px;
+}
+
+body:has(.al-root) {
+    background: #e7e4df;
+}
+
+.al-root {
+    --al-bg: #e7e4df;
+    --al-bg-2: #ddd9d2;
+    --al-panel: #f1eee9;
+    --al-line: rgba(20, 20, 20, 0.12);
+    --al-line-2: rgba(20, 20, 20, 0.26);
+    --al-ink: #141414;
+    --al-dim: #46443f;
+    --al-faint: #6b6862;
+    --al-accent: #ef5a1f;
+    --al-accent-ink: #b33a08;
+    --al-blue: #2f5d8a;
+    --al-green: #3f6b3a;
+    --al-code: #141414;
+    --al-gutter: clamp(16px, 3vw, 40px);
+    --al-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --al-sans: var(--font-inter), 'Helvetica Neue', Arial, sans-serif;
+    --al-display: var(--aim-font), var(--font-inter), 'Helvetica Neue', Arial, sans-serif;
+
+    position: relative;
+    min-height: 100vh;
+    // tooltips near the edge must never widen the page (clip ≠ hidden: sticky still works)
+    overflow-x: clip;
+    background: var(--al-bg);
+    color: var(--al-ink);
+    font-family: var(--al-sans);
+    // KH Teka ships only 400 and 500: never fake a bolder cut
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+
+    // the global reset unsets <pre>; give code blocks their box back
+    pre {
+        display: block;
+    }
+
+    ::selection {
+        background: rgba(239, 90, 31, 0.28);
+    }
+
+    .al-mono {
+        font-family: var(--font-al-mono), ui-monospace, monospace;
+    }
+
+    .al-display {
+        font-family: var(--al-display);
+        font-weight: 500;
+    }
+
+    // masked hero lines clip descenders on tight line-heights — give each mask a little room
+    .al-mask-line {
+        padding-bottom: 0.12em;
+        margin-bottom: -0.12em;
+    }
+
+    // faint dot grid behind the hero
+    .al-dots {
+        background-image: radial-gradient(rgba(20, 20, 20, 0.16) 1px, transparent 1.2px);
+        background-size: 22px 22px;
+    }
+
+    // ── tabs ──────────────────────────────────────────────────────────────
+    .al-tabs {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .al-tab {
+        position: relative;
+        color: var(--al-faint);
+        border-bottom: 2px solid transparent;
+        transition:
+            color 0.2s,
+            border-color 0.2s;
+
+        &:hover {
+            color: var(--al-ink);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--al-ink);
+            outline-offset: -2px;
+        }
+
+        &.is-active {
+            color: var(--al-ink);
+            border-bottom-color: var(--al-ink);
+        }
+
+        .al-tab-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 99px;
+            background: var(--al-accent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        &.is-visited .al-tab-dot {
+            opacity: 1;
+        }
+    }
+
+    // ── prose ─────────────────────────────────────────────────────────────
+    .al-p {
+        color: var(--al-dim);
+        font-size: 16px;
+        line-height: 1.75;
+        max-width: 68ch;
+
+        strong {
+            color: var(--al-ink);
+            font-weight: 600;
+        }
+
+        em {
+            color: var(--al-accent-ink);
+            font-style: normal;
+        }
+    }
+
+    .al-code-inline {
+        font-family: var(--font-al-mono), ui-monospace, monospace;
+        font-size: 0.86em;
+        padding: 0.1em 0.4em;
+        border-radius: 3px;
+        background: rgba(20, 20, 20, 0.07);
+        border: 1px solid rgba(20, 20, 20, 0.1);
+        color: var(--al-ink);
+        white-space: nowrap;
+
+        // long formulas must not run off a phone screen
+        @media (max-width: 640px) {
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .al-term {
+        position: relative;
+        border-bottom: 1px dashed var(--al-accent-ink);
+        cursor: help;
+        color: var(--al-ink);
+
+        &:focus-visible {
+            outline: 2px solid var(--al-ink);
+            outline-offset: 2px;
+        }
+
+        .al-term-tip {
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 10px);
+            width: min(300px, 80vw);
+            transform: translate(-50%, 6px);
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                opacity 0.2s,
+                transform 0.3s var(--al-ease);
+            z-index: 40;
+        }
+
+        &:hover .al-term-tip,
+        &:focus .al-term-tip {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+    }
+
+    // ── controls ──────────────────────────────────────────────────────────
+    .al-range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 18px;
+        background: transparent;
+        cursor: pointer;
+
+        &::-webkit-slider-runnable-track {
+            height: 2px;
+            background: linear-gradient(90deg, var(--al-ink) var(--fill, 50%), rgba(20, 20, 20, 0.2) var(--fill, 50%));
+        }
+
+        &::-moz-range-track {
+            height: 2px;
+            background: linear-gradient(90deg, var(--al-ink) var(--fill, 50%), rgba(20, 20, 20, 0.2) var(--fill, 50%));
+        }
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            margin-top: -5px;
+            border-radius: 0;
+            background: var(--al-ink);
+            box-shadow: 0 0 0 0 rgba(239, 90, 31, 0.3);
+            transition: box-shadow 0.2s;
+        }
+
+        &::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border: 0;
+            border-radius: 0;
+            background: var(--al-ink);
+        }
+
+        &:hover::-webkit-slider-thumb {
+            box-shadow: 0 0 0 5px rgba(239, 90, 31, 0.25);
+        }
+
+        &:focus-visible::-webkit-slider-thumb {
+            box-shadow: 0 0 0 5px rgba(239, 90, 31, 0.55);
+        }
+
+        &:focus-visible {
+            outline: none;
+        }
+    }
+
+    .al-btn {
+        transition:
+            background 0.16s,
+            border-color 0.16s,
+            color 0.16s,
+            transform 0.16s var(--al-ease);
+
+        &:active {
+            transform: scale(0.97);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--al-ink);
+            outline-offset: 2px;
+        }
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    }
+
+    .al-ink-btn {
+        background: var(--al-ink);
+        color: var(--al-bg);
+
+        &:hover {
+            background: #2b2b2b;
+        }
+    }
+
+    // ── flashcards ────────────────────────────────────────────────────────
+    .al-card {
+        perspective: 900px;
+
+        &:focus-visible {
+            outline: 2px solid var(--al-ink);
+            outline-offset: 3px;
+        }
+
+        .al-card-inner {
+            position: relative;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s var(--al-ease);
+        }
+
+        &.is-flipped .al-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .al-card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+        }
+
+        .al-card-back {
+            transform: rotateY(180deg);
+        }
+    }
+
+    .al-scrollbox {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(20, 20, 20, 0.3) transparent;
+        overscroll-behavior: contain;
+    }
+
+    // code panels stay ink-dark on the paper page
+    .al-code pre {
+        background: var(--al-code) !important;
+    }
+
+    .al-code .hl {
+        background: rgba(239, 90, 31, 0.18);
+        box-shadow: inset 2px 0 0 var(--al-accent);
+    }
+
+    // a hairline-framed "x-ray": dashed outlines on masks and boxes
+    .al-xray * {
+        outline: 1px dashed rgba(179, 58, 8, 0.7);
+        outline-offset: -1px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .al-root .al-card .al-card-inner {
+        transition: none;
+    }
+}
+
+// pin demo x-ray: show GSAP's spacer and the sticky track
+.al-root .al-pin-xray {
+    .pin-spacer,
+    [data-track] {
+        outline: 2px dashed var(--al-accent);
+        outline-offset: -2px;
+    }
+}
