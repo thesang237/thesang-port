@@ -1,0 +1,2364 @@
+// /kpr — every rule is scoped under .kpr (plus the cursor class on <html> while the page is mounted).
+// Scale: the reference's rem = 10px × vw/1600, clamped 0.64–1.2 → --u.
+
+.kpr {
+    --u: clamp(6.4px, 0.625vw, 12px);
+    --pad: calc(1.6 * var(--u));
+    --bar: calc(4.6 * var(--u));
+    --col: calc(5.8 * var(--u));
+    --radius: calc(1 * var(--u));
+    --gutter: calc(11.6 * var(--u));
+    --ink: #000;
+    --paper: #fff;
+    --lime: #c0fb50;
+    --lavender: #8b7ed9;
+    --line-dark: rgba(0, 0, 0, 0.14);
+    --line-light: rgba(255, 255, 255, 0.24);
+    --sans: var(--kpr-font-sans), 'Helvetica Neue', Arial, sans-serif;
+    --mono: var(--kpr-font-mono), ui-monospace, monospace;
+    --display: var(--kpr-font-display), var(--kpr-font-sans), sans-serif;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+    --dur-fast: 160ms;
+    --dur-base: 240ms;
+
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: clip;
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    :focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 3px;
+        box-shadow: 0 0 0 5px rgba(127, 127, 127, 0.35);
+        border-radius: 2px;
+    }
+
+    pre {
+        margin: 0;
+        font: inherit;
+        white-space: pre;
+    }
+
+    p,
+    h1,
+    h2,
+    h3 {
+        margin: 0;
+    }
+
+    video {
+        display: block;
+    }
+}
+
+html.kpr-has-cursor .kpr,
+html.kpr-has-cursor .kpr * {
+    cursor: none !important;
+}
+
+// ── type ────────────────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .kpr-h1 {
+        font-family: var(--sans);
+        font-weight: 760;
+        font-size: calc(5.7 * var(--u));
+        line-height: 0.88;
+        letter-spacing: -0.055em;
+        text-transform: uppercase;
+        font-feature-settings:
+            'case' on,
+            'ss01' on;
+    }
+
+    .kpr-body1 {
+        font-family: var(--sans);
+        font-weight: 400;
+        font-size: max(14px, calc(1.5 * var(--u)));
+        line-height: 1.33;
+        letter-spacing: -0.005em;
+        text-wrap: pretty;
+    }
+
+    .kpr-body2 {
+        font-family: var(--sans);
+        font-size: max(13px, calc(1.2 * var(--u)));
+        line-height: 1.36;
+        text-wrap: pretty;
+    }
+
+    .kpr-cap1,
+    .kpr-cap2,
+    .kpr-cap3 {
+        font-family: var(--mono);
+        font-weight: 450;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        line-height: 1;
+        font-feature-settings: 'zero' on;
+    }
+
+    .kpr-cap1 {
+        font-size: max(13px, calc(1.35 * var(--u)));
+        font-weight: 500;
+    }
+
+    .kpr-cap2 {
+        font-size: max(11px, calc(0.95 * var(--u)));
+    }
+
+    .kpr-cap3 {
+        font-size: max(10px, calc(0.85 * var(--u)));
+        line-height: 1.15;
+    }
+
+    .kpr-dot {
+        display: inline-block;
+        width: max(5px, calc(0.5 * var(--u)));
+        height: max(5px, calc(0.5 * var(--u)));
+        margin-right: max(7px, calc(0.75 * var(--u)));
+        background: currentColor;
+        vertical-align: 0.05em;
+        flex: none;
+    }
+
+    // masked line reveal
+    .kpr-lines {
+        position: relative;
+
+        .kpr-lines__vis {
+            display: block;
+        }
+
+        .kpr-line {
+            display: block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: max-content;
+            padding-bottom: 0.08em; // descenders stay inside the mask
+            margin-bottom: -0.08em;
+
+            > span {
+                display: block;
+                transform-origin: 0 100%;
+                will-change: transform;
+            }
+        }
+
+        &.is-indent .kpr-line:first-child > span {
+            padding-left: var(--indent, calc(8 * var(--u)));
+        }
+    }
+
+    // caption with a dot and per-char type-on
+    .kpr-cap {
+        display: flex;
+        align-items: flex-start;
+        font-family: var(--mono);
+        font-weight: 450;
+        font-size: max(10px, calc(0.85 * var(--u)));
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+
+        .kpr-dot {
+            margin-top: 0.25em;
+        }
+
+        .kpr-ch {
+            display: inline-block;
+        }
+    }
+
+    .kpr-title1 {
+        position: relative;
+
+        .kpr-title1__cap {
+            position: absolute;
+            left: 0;
+            top: 0.3em;
+        }
+    }
+
+    .kpr-hacky {
+        position: relative;
+        display: inline-block;
+        white-space: pre;
+
+        .kpr-hacky__spacer {
+            visibility: hidden;
+        }
+
+        .kpr-hacky__anim {
+            position: absolute;
+            left: 0;
+            top: 0;
+            white-space: pre;
+        }
+    }
+
+    .kpr-hair {
+        position: absolute;
+        display: block;
+        background: currentColor;
+        opacity: 0.18;
+        pointer-events: none;
+
+        &.kpr-hair--h {
+            height: 1px;
+            left: 0;
+            right: 0;
+            transform-origin: 0 50%;
+        }
+
+        &.kpr-hair--v {
+            width: 1px;
+            top: 0;
+            bottom: 0;
+            transform-origin: 50% 0;
+        }
+    }
+}
+
+// ── layers ──────────────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-stage {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+
+        canvas {
+            display: block;
+        }
+    }
+
+    .kpr-ui {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .kpr-sec {
+        position: absolute;
+        inset: 0;
+        visibility: hidden;
+        opacity: 0;
+
+        button,
+        a,
+        [data-cursor] {
+            pointer-events: auto;
+        }
+    }
+
+    .kpr-cut {
+        position: fixed;
+        inset: 0;
+        z-index: 3;
+        background: var(--paper);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .kpr-track {
+        position: relative;
+        height: 2100vh; // replaced in JS by (TOTAL + 1) × innerHeight
+        pointer-events: none;
+    }
+}
+
+// ── HUD frame ───────────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-hud {
+        --hud: #fff;
+        --hud-line: var(--line-light);
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        pointer-events: none;
+        color: var(--hud);
+        transition: color 400ms var(--ease-out);
+
+        &[data-theme='dark'] {
+            --hud: #000;
+            --hud-line: var(--line-dark);
+        }
+    }
+
+    .kpr-hud__frame {
+        position: absolute;
+        inset: var(--pad);
+        border: 1px solid var(--hud-line);
+        border-radius: var(--radius);
+        transition: border-color 400ms var(--ease-out);
+    }
+
+    .kpr-hud__bar {
+        position: absolute;
+        left: var(--pad);
+        right: var(--pad);
+        top: var(--pad);
+        height: var(--bar);
+        display: flex;
+        border-bottom: 1px solid var(--hud-line);
+        transition: border-color 400ms var(--ease-out);
+    }
+
+    .kpr-hud__burger {
+        width: var(--col);
+        height: 100%;
+        display: grid;
+        place-items: center;
+        border-right: 1px solid var(--hud-line);
+        border-radius: var(--radius) 0 0 0;
+        pointer-events: auto;
+        transition:
+            background-color var(--dur-fast) var(--ease-out),
+            border-color 400ms var(--ease-out);
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: color-mix(in srgb, currentColor 8%, transparent);
+            }
+        }
+    }
+
+    .kpr-hud__burgerIcon {
+        width: max(20px, calc(2.25 * var(--u)));
+    }
+
+    .kpr-hud__track {
+        position: relative;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .kpr-hud__progress {
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        opacity: 0.07;
+        transform-origin: 0 50%;
+        transform: scaleX(0);
+    }
+
+    .kpr-hud__nav {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: calc(2.2 * var(--u));
+    }
+
+    .kpr-hud__navItem {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 0.35em 0.3em;
+        overflow: hidden;
+        opacity: 0.45;
+        pointer-events: auto;
+        transition: opacity var(--dur-base) var(--ease-out);
+
+        .kpr-dot {
+            width: 0;
+            margin-right: 0;
+            transition:
+                width var(--dur-base) var(--ease-out),
+                margin var(--dur-base) var(--ease-out);
+        }
+
+        &.is-active {
+            opacity: 1;
+
+            .kpr-dot {
+                width: max(5px, calc(0.5 * var(--u)));
+                margin-right: max(7px, calc(0.75 * var(--u)));
+            }
+        }
+    }
+
+    // link-hover: a block slides in behind the label, label colour flips
+    .kpr-lh__bg {
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        transform: translateX(-101%);
+        transition: transform 320ms var(--ease-out);
+    }
+
+    .kpr-lh__content {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        transition: color var(--dur-fast) var(--ease-out);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .kpr-hud__navItem:hover,
+        .kpr-lh:hover {
+            opacity: 1;
+
+            .kpr-lh__bg {
+                transform: translateX(0);
+            }
+
+            .kpr-lh__content {
+                color: var(--lh-ink, #000);
+            }
+        }
+    }
+
+    .kpr-hud[data-theme='dark'] .kpr-hud__navItem {
+        --lh-ink: #fff;
+    }
+
+    .kpr-signin {
+        position: absolute;
+        top: var(--pad);
+        right: var(--pad);
+        height: var(--bar);
+        padding: 0 calc(2.7 * var(--u));
+        display: flex;
+        align-items: center;
+        color: #000;
+        pointer-events: auto;
+        z-index: 1;
+
+        .kpr-signin__bg {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            border-radius: 0 var(--radius) calc(0.4 * var(--u)) var(--radius);
+            // notched bottom-left corner (the reference's folder tab)
+            clip-path: polygon(0 0, 100% 0, 100% 100%, calc(1.6 * var(--u)) 100%, 0 calc(100% - 1.6 * var(--u)));
+            transition: background-color var(--dur-fast) var(--ease-out);
+        }
+
+        .kpr-hacky {
+            position: relative;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover .kpr-signin__bg {
+                background: var(--lime);
+            }
+        }
+    }
+
+    // the sign-in pill stays white on every theme (as the reference: on white pages it reads as text)
+
+    .kpr-hud__rail {
+        position: absolute;
+        left: var(--pad);
+        top: calc(var(--pad) + var(--bar));
+        bottom: var(--pad);
+        width: var(--col);
+        border-right: 1px solid var(--hud-line);
+        transition: border-color 400ms var(--ease-out);
+    }
+
+    .kpr-hud__mark {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(50% - var(--bar) / 2);
+        transform: translateY(-50%);
+        display: grid;
+        place-items: center;
+        pointer-events: auto;
+        height: calc(8 * var(--u));
+    }
+
+    .kpr-hud__markIcon {
+        width: max(26px, calc(3.4 * var(--u)));
+    }
+
+    .kpr-hud__railBottom {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .kpr-hud__console {
+        display: none;
+    }
+
+    .kpr-audio {
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        pointer-events: auto;
+
+        .kpr-audio__bar {
+            width: 1px;
+            height: 13px;
+            background: currentColor;
+            transform: scaleY(0.25);
+            animation: kpr-bars 0.8s ease-in-out infinite alternate;
+            animation-play-state: paused;
+        }
+
+        &.is-on .kpr-audio__bar {
+            animation-play-state: running;
+        }
+    }
+}
+
+@keyframes kpr-bars {
+    0% {
+        transform: scaleY(0.2);
+    }
+
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+// ── landing ─────────────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-landing {
+        color: #fff;
+    }
+
+    .kpr-landing__fade {
+        position: absolute;
+        inset: 0;
+    }
+
+    .kpr-landing__body {
+        position: absolute;
+        left: var(--gutter);
+        top: calc(10.7 * var(--u));
+        width: calc(30 * var(--u));
+        min-width: 260px;
+    }
+
+    .kpr-landing__titles {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: calc(6.4 * var(--u));
+        font-family: var(--sans);
+        font-weight: 820;
+        font-size: calc(16.4 * var(--u));
+        line-height: 0.83;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .kpr-landing__word {
+        position: relative;
+        width: max-content;
+
+        &.is-0 {
+            margin-left: 37.4%;
+        }
+
+        &.is-1 {
+            margin-left: 45%;
+        }
+
+        &.is-2 {
+            margin-left: 9.1%;
+        }
+    }
+
+    .kpr-landing__sub {
+        position: absolute;
+        right: calc(100% + 0.02em);
+        top: 0.04em;
+        font-family: var(--mono);
+        font-weight: 400;
+        font-size: max(10px, calc(0.95 * var(--u)));
+        letter-spacing: 0;
+        line-height: 1;
+    }
+
+    .kpr-landing__dot {
+        letter-spacing: 0;
+    }
+
+    .kpr-scrollhint {
+        position: absolute;
+        right: calc(var(--pad) + 6 * var(--u));
+        bottom: calc(var(--pad) + 3.6 * var(--u));
+        display: flex;
+        align-items: center;
+        gap: 0.8em;
+        color: #fff;
+
+        .kpr-scrollhint__icon {
+            width: 1.2em;
+            animation: kpr-nudge 1.6s var(--ease-in-out) infinite;
+        }
+    }
+}
+
+@keyframes kpr-nudge {
+    0%,
+    100% {
+        transform: translateY(-2px);
+    }
+
+    50% {
+        transform: translateY(3px);
+    }
+}
+
+// ── project intro ───────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-intro {
+        color: #000;
+        --kpr-out: 0;
+    }
+
+    // measured from the reference at 1920 × 1029 (u = 12 px): one horizontal rule under the title,
+    // one vertical rule left of the trailer card
+    .kpr-intro__grid {
+        position: absolute;
+        inset: calc(var(--pad) + var(--bar)) var(--pad) var(--pad) calc(var(--pad) + var(--col));
+
+        .kpr-intro__v1 {
+            right: calc(57.2 * var(--u) - var(--pad));
+            top: 0;
+            bottom: 0;
+        }
+
+        .kpr-intro__h1 {
+            top: calc(23.6 * var(--u) - var(--pad) - var(--bar));
+            left: 0;
+            right: calc(57.2 * var(--u) - var(--pad));
+        }
+
+        .kpr-intro__v2 {
+            display: none;
+        }
+    }
+
+    .kpr-intro__title {
+        position: absolute;
+        left: var(--gutter);
+        top: calc(10.2 * var(--u));
+        width: calc(80 * var(--u));
+
+        .kpr-h1 {
+            font-size: calc(5.1 * var(--u));
+            line-height: 0.93;
+        }
+    }
+
+    .kpr-intro__small {
+        position: absolute;
+        left: var(--gutter);
+        top: calc(27.7 * var(--u));
+        width: calc(23.7 * var(--u));
+        aspect-ratio: 546 / 306;
+    }
+
+    .kpr-intro__smallcap {
+        display: none;
+    }
+
+    .kpr-intro__char {
+        position: absolute;
+        left: calc(65 * var(--u));
+        bottom: calc(5.75 * var(--u));
+        width: calc(34.2 * var(--u));
+        height: min(calc(32.9 * var(--u)), 44svh);
+    }
+
+    .kpr-intro__charcap {
+        position: absolute;
+        left: calc(4.4 * var(--u));
+        top: calc(2.5 * var(--u));
+        color: #fff;
+        opacity: calc(1 - var(--kpr-out));
+    }
+
+    .kpr-intro__tall {
+        position: absolute;
+        right: calc(6 * var(--u));
+        top: calc(10.8 * var(--u));
+        width: calc(47.2 * var(--u));
+        height: calc(100svh - 10.8 * var(--u) - 7.1 * var(--u));
+    }
+
+    .kpr-out {
+        opacity: calc(1 - var(--kpr-out, 0));
+    }
+
+    .kpr-play {
+        position: absolute;
+        left: calc(4 * var(--u));
+        bottom: calc(2.3 * var(--u));
+        width: calc(6 * var(--u));
+        min-width: 44px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        color: #fff;
+        display: grid;
+        place-items: center;
+        background: transparent;
+        transition:
+            transform var(--dur-fast) var(--ease-out),
+            background-color var(--dur-fast) var(--ease-out);
+
+        .kpr-play__icon {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: rgba(255, 255, 255, 0.24);
+            }
+        }
+
+        &:active {
+            transform: scale(0.97);
+        }
+    }
+
+    .kpr-intro__tallcap {
+        position: absolute;
+        left: calc(3.2 * var(--u));
+        top: calc(2.5 * var(--u));
+        color: #fff;
+    }
+
+    .kpr-intro__body {
+        position: absolute;
+        left: var(--gutter);
+        bottom: calc(6.4 * var(--u));
+        width: calc(23 * var(--u));
+        min-width: 220px;
+    }
+}
+
+// ── story ───────────────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-story {
+        color: #fff;
+        --side: calc(46 * var(--u));
+    }
+
+    .kpr-story__col {
+        position: absolute;
+        left: calc(var(--pad) + var(--col));
+        right: var(--pad);
+        top: calc(var(--pad) + var(--bar));
+        will-change: transform;
+    }
+
+    .kpr-story__row {
+        position: relative;
+        display: flex;
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    .kpr-story__row1 {
+        height: 55svh;
+    }
+
+    .kpr-story__row2 {
+        height: 45svh;
+    }
+
+    .kpr-story__row3 {
+        height: 100svh;
+    }
+
+    .kpr-story__row4 {
+        height: 100svh;
+    }
+
+    .kpr-story__top {
+        top: 0;
+    }
+
+    .kpr-story__main {
+        position: relative;
+        flex: 1;
+        padding: calc(4 * var(--u)) calc(4.4 * var(--u));
+    }
+
+    .kpr-story__side {
+        position: relative;
+        width: var(--side);
+        padding: calc(4.4 * var(--u)) calc(4.6 * var(--u));
+    }
+
+    .kpr-story__vr {
+        right: 0;
+    }
+
+    .kpr-story__vr--right {
+        right: 0;
+    }
+
+    .kpr-story__side--left {
+        width: calc(30 * var(--u));
+    }
+
+    .kpr-story__diag {
+        top: 0;
+        left: 0;
+        width: 141%;
+        right: auto;
+        transform-origin: 0 0;
+        rotate: 47.6deg;
+    }
+
+    .kpr-story__main--right {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding-top: 22svh;
+    }
+
+    .kpr-story__main .kpr-h1 {
+        max-width: calc(84 * var(--u));
+    }
+
+    .kpr-terminal {
+        line-height: 1.25;
+        opacity: 0.85;
+    }
+
+    .kpr-coords {
+        line-height: 1.25;
+    }
+
+    .kpr-degrees {
+        position: absolute;
+        right: calc(4.6 * var(--u));
+        top: calc(4.4 * var(--u));
+        display: flex;
+        align-items: center;
+        gap: 0.8em;
+
+        .kpr-degrees__bar {
+            display: flex;
+            gap: 1px;
+
+            b {
+                width: 0.55em;
+                height: 0.9em;
+                background: currentColor;
+
+                &:nth-child(2) {
+                    opacity: 0.6;
+                }
+
+                &:nth-child(3) {
+                    opacity: 0.3;
+                }
+            }
+        }
+    }
+
+    .kpr-topo {
+        position: absolute;
+        right: calc(1 * var(--u));
+        bottom: calc(-2 * var(--u));
+        width: calc(42 * var(--u));
+        aspect-ratio: 1;
+        object-fit: contain;
+        opacity: 0.9;
+    }
+
+    .kpr-story__main--sym {
+        flex: none;
+        width: calc(30 * var(--u));
+    }
+
+    .kpr-story__symcap {
+        position: absolute;
+        right: calc(2 * var(--u));
+        top: calc(3 * var(--u));
+    }
+}
+
+// ── collection intro ────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-collection {
+        color: #000;
+        --kpr-slide: 100svh;
+    }
+
+    .kpr-slide {
+        transform: translate3d(0, var(--kpr-slide, 0), 0);
+        will-change: transform;
+    }
+
+    .kpr-collection__left {
+        position: absolute;
+        left: calc(var(--pad) + var(--col));
+        top: calc(var(--pad) + var(--bar));
+        bottom: var(--pad);
+        width: calc(30 * var(--u));
+    }
+
+    .kpr-count {
+        position: absolute;
+        left: calc(2.6 * var(--u));
+        bottom: calc(1 * var(--u));
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: min(calc(34 * var(--u)), 54svh);
+        line-height: 0.8;
+        letter-spacing: -0.02em;
+        transform-origin: 0 100%;
+        transform: rotate(-90deg) translate(0, 100%);
+        white-space: nowrap;
+
+        .kpr-count__num {
+            display: inline-flex;
+            font-variant-numeric: tabular-nums;
+        }
+    }
+
+    .kpr-count__foot {
+        position: absolute;
+        left: calc(26 * var(--u));
+        bottom: calc(2 * var(--u));
+        display: flex;
+        align-items: center;
+        gap: 0.8em;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+
+        .kpr-count__arrows {
+            width: 1.7em;
+            rotate: 90deg;
+        }
+    }
+
+    .kpr-collection__hero {
+        position: absolute;
+        left: 50%;
+        top: 52%;
+        width: min(43.5vw, 80svh);
+        aspect-ratio: 0.972;
+        transform: translate(-50%, -50%);
+    }
+
+    .kpr-collection__vr {
+        left: auto;
+        right: calc(-6 * var(--u));
+        top: -30svh;
+        bottom: -30svh;
+    }
+
+    .kpr-collection__right {
+        position: absolute;
+        right: calc(var(--pad) + 2.6 * var(--u));
+        top: calc(var(--pad) + var(--bar));
+        bottom: var(--pad);
+        width: calc(22.6 * var(--u));
+    }
+
+    .kpr-collection__crystal {
+        position: relative;
+        height: 52%;
+    }
+
+    .kpr-collection__measure {
+        position: absolute;
+        right: 0;
+        top: 8%;
+        height: 80%;
+        opacity: 0.6;
+    }
+
+    .kpr-collection__video {
+        position: absolute;
+        left: -4%;
+        top: 6%;
+        width: 92%;
+        aspect-ratio: 1;
+        object-fit: contain;
+    }
+
+    .kpr-collection__hr {
+        top: auto;
+        bottom: 0;
+    }
+
+    .kpr-collection__cap {
+        position: absolute;
+        left: 0;
+        top: calc(3 * var(--u));
+    }
+
+    .kpr-collection__traits {
+        position: relative;
+        margin-top: calc(9 * var(--u));
+    }
+
+    .kpr-collection__img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 800 / 699;
+        object-fit: cover;
+        border-radius: calc(0.6 * var(--u));
+    }
+
+    .kpr-collection__cap--in {
+        left: calc(2 * var(--u));
+        top: calc(2 * var(--u));
+        color: #fff;
+    }
+}
+
+// ── gallery ─────────────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-gallery {
+        color: #000;
+        --kpr-slide: 38svh;
+    }
+
+    .kpr-gallery__tl {
+        position: absolute;
+        left: calc(var(--pad) + var(--col));
+        top: calc(var(--pad) + var(--bar));
+        width: calc(52 * var(--u));
+        padding: calc(10 * var(--u)) 0 calc(3 * var(--u)) calc(var(--gutter) - var(--pad) - var(--col));
+    }
+
+    .kpr-gallery__tr {
+        position: absolute;
+        left: 54vw;
+        right: calc(var(--pad) + 14 * var(--u));
+        top: calc(var(--pad) + var(--bar));
+        padding: calc(10 * var(--u)) 0 calc(3 * var(--u)) calc(3 * var(--u));
+        display: flex;
+        gap: calc(6 * var(--u));
+
+        .kpr-body2 {
+            max-width: calc(30 * var(--u));
+        }
+    }
+
+    .kpr-gallery__hr {
+        top: auto;
+        bottom: 0;
+    }
+
+    .kpr-gallery__cap {
+        flex: none;
+        width: 9vw;
+    }
+
+    .kpr-gallery__ring {
+        position: absolute;
+        left: calc(var(--pad) + var(--col));
+        right: var(--pad);
+        top: 40svh;
+        height: 42svh;
+        pointer-events: auto;
+        touch-action: pan-y;
+        opacity: calc(1 - var(--kpr-out, 0));
+    }
+
+    .kpr-gallery__arrow {
+        position: absolute;
+        left: calc(50% - var(--col) / 2);
+        width: 12px;
+        translate: -50% 0;
+
+        &.is-up {
+            top: -2.2svh;
+        }
+
+        &.is-down {
+            bottom: -2.2svh;
+            rotate: 180deg;
+        }
+    }
+
+    .kpr-gallery__mid {
+        top: 61svh;
+        left: calc(var(--pad) + var(--col));
+        right: var(--pad);
+        opacity: 0.12;
+    }
+}
+
+// ── tableaux & launch ───────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-tab {
+        color: #fff;
+    }
+
+    .kpr-tab__story {
+        position: absolute;
+        left: 50%;
+        bottom: calc(5.6 * var(--u));
+        transform: translateX(-50%);
+        text-align: center;
+        width: min(92vw, calc(56 * var(--u)));
+        text-shadow: 0 1px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .kpr-tab__cap {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2em;
+        margin-bottom: calc(1.4 * var(--u));
+
+        .kpr-dot {
+            margin: 0 0.6em;
+        }
+    }
+
+    .kpr-tab__text {
+        font-size: max(15px, calc(1.75 * var(--u)));
+        line-height: 1.2;
+
+        .kpr-line {
+            margin-inline: auto;
+        }
+    }
+
+    .kpr-hold {
+        position: absolute;
+        right: calc(var(--pad) + 4.4 * var(--u));
+        bottom: calc(var(--pad) + 4 * var(--u));
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1em;
+        color: #fff;
+
+        .kpr-hold__svg {
+            width: calc(7 * var(--u));
+            min-width: 48px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1;
+            rotate: -90deg;
+        }
+
+        .kpr-hold__track {
+            opacity: 0.4;
+        }
+
+        .kpr-hold__fill {
+            stroke-width: 1.5;
+        }
+
+        .kpr-hold__plus {
+            opacity: 0.8;
+        }
+    }
+
+    .kpr-launch {
+        color: #000;
+    }
+
+    .kpr-launch__word {
+        position: absolute;
+        left: 8.3%;
+        right: 5.7%;
+        top: calc(var(--bar) + var(--pad) + 6 * var(--u));
+        aspect-ratio: 6.9;
+    }
+
+    // the stack's three cards are drawn in WebGL (choreo.ts, measured from the reference in u); these
+    // boxes sit on the same rects and only carry the captions
+    .kpr-launch__card {
+        position: absolute;
+        left: calc(50vw + (var(--x) - var(--w) / 2) * var(--u));
+        top: calc(50svh - (var(--y) + var(--h) / 2) * var(--u));
+        width: calc(var(--w) * var(--u));
+        height: calc(var(--h) * var(--u));
+        color: #fff;
+    }
+
+    .kpr-launch__a {
+        --x: -3;
+        --y: 0;
+        --w: 39.3;
+        --h: 36.6;
+    }
+
+    .kpr-launch__b {
+        --x: 22.3;
+        --y: -5.8;
+        --w: 17.1;
+        --h: 34.6;
+    }
+
+    .kpr-launch__c {
+        --x: -2.4;
+        --y: -26.3;
+        --w: 31.4;
+        --h: 17.75;
+    }
+
+    .kpr-launch__cardcap {
+        position: absolute;
+        left: calc(3.2 * var(--u));
+        top: calc(3 * var(--u));
+    }
+
+    .kpr-launch__c .kpr-launch__cardcap {
+        top: calc(5.2 * var(--u));
+    }
+
+    .kpr-launch__foot {
+        position: absolute;
+        left: var(--gutter);
+        bottom: calc(6 * var(--u));
+        width: calc(26 * var(--u));
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: calc(1.6 * var(--u));
+        padding-bottom: calc(2 * var(--u));
+    }
+
+    .kpr-launch__hr {
+        top: auto;
+        bottom: 0;
+    }
+
+    .kpr-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8em;
+        height: max(40px, var(--bar));
+        padding: 0 calc(2.6 * var(--u));
+        font-family: var(--mono);
+        font-weight: 450;
+        font-size: max(11px, calc(0.95 * var(--u)));
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        color: #000;
+        pointer-events: auto;
+        transition:
+            color var(--dur-fast) var(--ease-out),
+            transform var(--dur-fast) var(--ease-out);
+
+        .kpr-btn__bg {
+            position: absolute;
+            inset: 0;
+            border: 1px solid currentColor;
+            border-radius: calc(0.5 * var(--u));
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1.2 * var(--u)), calc(100% - 1.2 * var(--u)) 100%, 0 100%);
+            transition: background-color var(--dur-fast) var(--ease-out);
+        }
+
+        .kpr-btn__icon {
+            position: relative;
+            width: 0.9em;
+        }
+
+        .kpr-hacky {
+            position: relative;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: #fff;
+
+                .kpr-btn__bg {
+                    background: #000;
+                }
+            }
+        }
+
+        &:active {
+            transform: scale(0.97);
+        }
+    }
+
+    .kpr-btn--dark {
+        color: #fff;
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                color: #000;
+
+                .kpr-btn__bg {
+                    background: #fff;
+                }
+            }
+        }
+    }
+}
+
+// ── footer ──────────────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-footer {
+        position: relative;
+        z-index: 10;
+        background: #000;
+        color: #fff;
+        text-transform: uppercase;
+        overflow: hidden;
+        padding-top: calc(var(--pad) + var(--bar));
+        --lh-ink: #000;
+    }
+
+    .kpr-footer__top {
+        display: flex;
+        min-height: calc(35 * var(--u));
+        border-bottom: 1px solid #333;
+    }
+
+    .kpr-footer__item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: calc(3 * var(--u));
+        border-left: 1px solid var(--line-light);
+        min-height: calc(35 * var(--u));
+
+        &:first-child {
+            border-left: 0;
+        }
+    }
+
+    .kpr-footer__head {
+        display: flex;
+        align-items: center;
+    }
+
+    .kpr-footer__console {
+        font-family: var(--mono);
+        font-size: max(10px, calc(1 * var(--u)));
+        line-height: 1.22;
+        letter-spacing: -0.04em;
+        opacity: 0.5;
+    }
+
+    .kpr-footer__links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        font-family: var(--mono);
+        font-size: max(12px, calc(1.4 * var(--u)));
+        line-height: 1.22;
+        letter-spacing: -0.04em;
+    }
+
+    .kpr-lh {
+        position: relative;
+        display: inline-flex;
+        overflow: hidden;
+        vertical-align: top;
+        pointer-events: auto;
+
+        &.is-active {
+            .kpr-lh__bg {
+                transform: translateX(0);
+            }
+
+            .kpr-lh__content {
+                color: var(--lh-ink, #000);
+            }
+        }
+
+        .kpr-lh__ext {
+            width: 0.7em;
+            margin-left: 0.4em;
+        }
+    }
+
+    .kpr-footer__press {
+        display: flex;
+        flex-direction: column;
+        gap: calc(2.6 * var(--u));
+        font-family: var(--mono);
+        font-size: max(12px, calc(1.4 * var(--u)));
+        line-height: 1.22;
+        letter-spacing: -0.04em;
+    }
+
+    .kpr-footer__desc {
+        opacity: 0.5;
+    }
+
+    .kpr-footer__logo {
+        padding: calc(17 * var(--u)) var(--pad) 0;
+        overflow: hidden;
+
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .kpr-footer__logoInner {
+        transform: translate3d(0, 100%, 0);
+        will-change: transform;
+    }
+
+    .kpr-footer__bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: calc(8 * var(--u));
+        min-height: 56px;
+        padding: 0 var(--pad);
+    }
+
+    .kpr-footer__region {
+        display: flex;
+        align-items: center;
+        gap: 0.6em;
+
+        .kpr-footer__chev {
+            width: 0.9em;
+        }
+    }
+
+    .kpr-footer__legal {
+        display: flex;
+        gap: calc(4.8 * var(--u));
+    }
+
+    .kpr-footer__copy {
+        opacity: 0.5;
+    }
+}
+
+// ── menu ────────────────────────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-menu {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        visibility: hidden;
+        opacity: 0;
+        text-transform: uppercase;
+    }
+
+    .kpr-menu__underlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, #fff 28%, rgba(255, 255, 255, 0.75));
+        opacity: 0;
+        pointer-events: auto;
+    }
+
+    .kpr-menu__panel {
+        position: absolute;
+        left: var(--pad);
+        top: var(--pad);
+        bottom: var(--pad);
+        display: flex;
+        color: #fff;
+    }
+
+    .kpr-menu__maskOuter,
+    .kpr-menu__maskInner,
+    .kpr-menu__barOuter,
+    .kpr-menu__barInner {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .kpr-menu__maskOuter {
+        width: calc(60 * var(--u));
+        border-radius: var(--radius) 0 0 var(--radius);
+    }
+
+    .kpr-menu__content {
+        height: 100%;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kpr-menu__section {
+        display: flex;
+        padding: calc(2.5 * var(--u));
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+
+    .kpr-menu__nav {
+        flex: 1;
+        padding-top: calc(3.7 * var(--u));
+    }
+
+    .kpr-menu__left {
+        width: calc(14.5 * var(--u));
+        flex: none;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .kpr-menu__right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .kpr-menu__item {
+        position: relative;
+        display: inline-block;
+        margin-bottom: calc(0.9 * var(--u));
+        padding: calc(0.3 * var(--u)) calc(1.6 * var(--u)) calc(0.3 * var(--u)) calc(0.6 * var(--u));
+        pointer-events: auto;
+        --lh-ink: #000;
+
+        .kpr-menu__bg {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transform: translateY(calc(-0.2 * var(--u)));
+            background: #fff;
+            border-radius: calc(0.26 * var(--u)) calc(0.26 * var(--u)) 0 calc(0.26 * var(--u));
+            // notched bottom-right corner
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1.6 * var(--u)), calc(100% - 1.6 * var(--u)) 100%, 0 100%);
+            transition: opacity var(--dur-fast) var(--ease-out);
+        }
+
+        .kpr-menu__corner {
+            display: none;
+        }
+
+        .kpr-menu__labelMask {
+            position: relative;
+            display: block;
+            overflow: hidden;
+        }
+
+        .kpr-menu__label {
+            display: block;
+            font-family: var(--sans);
+            font-size: calc(6.4 * var(--u));
+            font-weight: 650;
+            letter-spacing: -0.07em;
+            line-height: 0.85;
+            padding-top: 0.06em;
+            transition: color var(--dur-fast) var(--ease-out);
+        }
+
+        .kpr-menu__extra {
+            position: absolute;
+            left: 100%;
+            top: 0.2em;
+            margin-left: calc(0.9 * var(--u));
+            white-space: pre;
+            opacity: 0;
+            transition: opacity var(--dur-fast) var(--ease-out);
+        }
+
+        &.is-active {
+            .kpr-menu__bg {
+                opacity: 1;
+                background: var(--lime);
+            }
+
+            .kpr-menu__label {
+                color: #000;
+            }
+
+            .kpr-menu__extra {
+                opacity: 1;
+                color: var(--lime);
+            }
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                .kpr-menu__bg {
+                    opacity: 1;
+                }
+
+                &:not(.is-active) .kpr-menu__bg {
+                    background: #fff;
+                }
+
+                .kpr-menu__label {
+                    color: #000;
+                }
+
+                .kpr-menu__extra {
+                    opacity: 1;
+                }
+            }
+        }
+
+        &:focus-visible .kpr-menu__bg {
+            opacity: 1;
+        }
+
+        &:focus-visible .kpr-menu__label {
+            color: #000;
+        }
+    }
+
+    .kpr-menu__socials,
+    .kpr-menu__market {
+        font-family: var(--mono);
+        font-size: max(12px, calc(1.2 * var(--u)));
+        gap: calc(0.9 * var(--u));
+        --lh-ink: #000;
+    }
+
+    .kpr-menu__market {
+        flex-direction: row;
+        align-items: center;
+
+        .kpr-menu__marketIcon {
+            width: 1.3em;
+        }
+    }
+
+    .kpr-menu__misc {
+        height: calc(6.2 * var(--u));
+        align-items: center;
+        padding-top: 0;
+        padding-bottom: 0;
+
+        .kpr-menu__chev {
+            width: 0.9em;
+            margin-left: 0.6em;
+        }
+    }
+
+    .kpr-menu__copy {
+        opacity: 0.4;
+    }
+
+    .kpr-menu__bar {
+        width: var(--col);
+        height: 100%;
+    }
+
+    .kpr-menu__barInner {
+        position: relative;
+        background: #000;
+        border-left: 1px solid var(--line-light);
+        border-radius: 0 var(--radius) var(--radius) 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .kpr-menu__close {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--bar);
+        display: grid;
+        place-items: center;
+        border-bottom: 1px solid var(--line-light);
+        pointer-events: auto;
+
+        .kpr-menu__closeIcon {
+            width: 15px;
+        }
+    }
+
+    .kpr-menu__mark {
+        width: max(26px, calc(3.4 * var(--u)));
+    }
+
+    .kpr-menu__audio {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+}
+
+// ── loader, trailer, cursor ─────────────────────────────────────────────────────────────────────
+
+.kpr {
+    .kpr-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        background: #fff;
+        color: #000;
+        display: grid;
+        place-items: center;
+        text-transform: uppercase;
+
+        &.is-ready {
+            cursor: pointer;
+        }
+    }
+
+    .kpr-loader__bar {
+        position: relative;
+        width: min(calc(87 * var(--u)), 86vw);
+        height: 1px;
+        background: #e1e1e1;
+    }
+
+    .kpr-loader__progress {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        transform-origin: 0 50%;
+        transform: scaleX(0);
+    }
+
+    .kpr-loader__details {
+        position: absolute;
+        top: calc(100% + 1em);
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .kpr-loader__left {
+        display: flex;
+        align-items: center;
+        gap: 0.75em;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kpr-loader__tri {
+        width: 2.2em;
+    }
+
+    .kpr-loader__files {
+        position: relative;
+        text-align: right;
+        opacity: 0.5;
+    }
+
+    .kpr-loader__file {
+        position: relative;
+        display: none;
+
+        &.is-on {
+            display: block;
+        }
+
+        .kpr-hacky__spacer {
+            visibility: hidden;
+        }
+
+        .kpr-hacky__anim {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+    }
+
+    .kpr-loader__cta {
+        position: fixed;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 400ms var(--ease-out);
+
+        .kpr-loader__ring {
+            position: absolute;
+            max-width: none;
+            width: 92px;
+            height: 92px;
+            left: -46px;
+            top: -46px;
+            fill: none;
+            stroke: #000;
+            stroke-width: 1;
+            stroke-dasharray: 3 5;
+            animation: kpr-spin 12s linear infinite;
+        }
+
+        .kpr-loader__bars {
+            position: absolute;
+            left: -20px;
+            top: -20px;
+            width: 40px;
+        }
+
+        .kpr-loader__ctaLabel {
+            position: absolute;
+            top: 56px;
+            left: 0;
+            translate: -50% 0;
+            white-space: nowrap;
+        }
+    }
+
+    .kpr-loader.is-ready .kpr-loader__cta {
+        opacity: 1;
+    }
+
+    .kpr-loader__actions {
+        position: absolute;
+        bottom: calc(6 * var(--u));
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        gap: calc(3 * var(--u));
+    }
+
+    .kpr-loader__enter {
+        visibility: hidden;
+        opacity: 0;
+        padding: 1em 1.4em;
+        border: 1px solid #000;
+        border-radius: calc(0.5 * var(--u));
+        transition:
+            background-color var(--dur-fast) var(--ease-out),
+            color var(--dur-fast) var(--ease-out);
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: #000;
+                color: #fff;
+            }
+        }
+    }
+
+    .kpr-trailer {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(0, 0, 0, 0.72);
+        display: grid;
+        place-items: center;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: auto;
+    }
+
+    .kpr-trailer__panel {
+        position: relative;
+        width: min(80vw, 140svh);
+        aspect-ratio: 16 / 9;
+        background: #111;
+        border-radius: var(--radius);
+        color: #fff;
+        overflow: hidden;
+
+        video {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .kpr-trailer__ph {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1em;
+        background: linear-gradient(135deg, #2b2560, #6e63b8 55%, #c79a86);
+
+        span:last-child {
+            opacity: 0.6;
+        }
+    }
+
+    .kpr-trailer__close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: var(--bar);
+        height: var(--bar);
+        display: grid;
+        place-items: center;
+
+        svg {
+            width: 15px;
+        }
+    }
+
+    .kpr-cursor {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        pointer-events: none;
+        opacity: 0;
+        mix-blend-mode: difference;
+        color: #fff;
+        transition: opacity var(--dur-base) var(--ease-out);
+    }
+
+    .kpr-cursor__cross,
+    .kpr-cursor__dot {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .kpr-cursor__h,
+    .kpr-cursor__v {
+        position: absolute;
+        background: currentColor;
+        transition:
+            transform 240ms var(--ease-out),
+            opacity 240ms var(--ease-out);
+    }
+
+    // "+" with a gap: drawn as two bars with a transparent middle (mask)
+    .kpr-cursor__h {
+        width: 22px;
+        height: 1px;
+        left: -11px;
+        top: 0;
+        mask: linear-gradient(90deg, #000 40%, transparent 40% 60%, #000 60%);
+    }
+
+    .kpr-cursor__v {
+        width: 1px;
+        height: 22px;
+        left: 0;
+        top: -11px;
+        mask: linear-gradient(180deg, #000 40%, transparent 40% 60%, #000 60%);
+    }
+
+    .kpr-cursor__label {
+        position: absolute;
+        left: 16px;
+        top: 10px;
+        font-family: var(--mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        opacity: 0;
+        transition: opacity var(--dur-fast) var(--ease-out);
+    }
+
+    .kpr-cursor__dot {
+        width: 4px;
+        height: 4px;
+        margin: -2px 0 0 -2px;
+        background: currentColor;
+    }
+
+    .kpr-cursor[data-state='link'] {
+        .kpr-cursor__h {
+            transform: scaleX(1.7);
+        }
+
+        .kpr-cursor__v {
+            transform: scaleY(1.7);
+        }
+    }
+
+    .kpr-cursor[data-state='drag'] {
+        .kpr-cursor__h {
+            transform: scaleX(2.2);
+        }
+
+        .kpr-cursor__v {
+            transform: scaleY(0.4);
+            opacity: 0.4;
+        }
+
+        .kpr-cursor__label {
+            opacity: 1;
+        }
+    }
+}
+
+@keyframes kpr-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// ── phone (< 768px): stacked blocks, top bar only, fewer details ────────────────────────────────
+
+@media (max-width: 767px) {
+    .kpr {
+        --u: 3.75px;
+        --pad: 0px;
+        --bar: 48px;
+        --col: 0px;
+        --gutter: 16px;
+
+        .kpr-hud__frame,
+        .kpr-hud__rail,
+        .kpr-hud__nav,
+        .kpr-collection__right,
+        .kpr-story__side--left,
+        .kpr-intro__grid {
+            display: none;
+        }
+
+        .kpr-hud__burger {
+            width: 52px;
+            border-radius: 0;
+        }
+
+        .kpr-signin {
+            padding: 0 16px;
+        }
+
+        .kpr-h1 {
+            font-size: 26px;
+            line-height: 0.92;
+        }
+
+        // phones: authored desktop line breaks may wrap inside their masks
+        .kpr-lines .kpr-line {
+            white-space: normal;
+            width: auto;
+        }
+
+        .kpr-lines.is-indent .kpr-line:first-child > span {
+            padding-left: 36px;
+        }
+
+        .kpr-landing__body {
+            top: 72px;
+            width: auto;
+            right: 16px;
+        }
+
+        .kpr-landing__titles {
+            font-size: 15vw;
+            bottom: 96px;
+        }
+
+        .kpr-landing__word {
+            &.is-0 {
+                margin-left: 22%;
+            }
+
+            &.is-1 {
+                margin-left: 12%;
+            }
+
+            &.is-2 {
+                margin-left: 4%;
+            }
+        }
+
+        .kpr-landing__sub {
+            display: none;
+        }
+
+        .kpr-scrollhint {
+            right: 16px;
+            bottom: 24px;
+        }
+
+        .kpr-intro__title {
+            top: 76px;
+            width: auto;
+            right: 16px;
+        }
+
+        .kpr-intro__small {
+            left: 16px;
+            top: 190px;
+            width: 40vw;
+        }
+
+        .kpr-intro__smallcap {
+            display: none;
+        }
+
+        .kpr-intro__char {
+            left: 16px;
+            bottom: 120px;
+            width: 52vw;
+            height: 30svh;
+        }
+
+        .kpr-intro__tall {
+            right: 16px;
+            top: auto;
+            bottom: 200px;
+            width: 38vw;
+            height: 34svh;
+        }
+
+        .kpr-intro__body {
+            bottom: 24px;
+            right: 16px;
+            width: auto;
+        }
+
+        .kpr-story__col {
+            left: 0;
+            right: 0;
+            top: var(--bar);
+        }
+
+        .kpr-story__row {
+            flex-direction: column;
+        }
+
+        .kpr-story__main {
+            padding: 24px 16px;
+            flex: none;
+        }
+
+        .kpr-story__side {
+            width: auto;
+            padding: 16px;
+        }
+
+        .kpr-story__main--right {
+            padding-top: 20svh;
+        }
+
+        .kpr-topo {
+            width: 60vw;
+            right: 0;
+            bottom: auto;
+            top: 40px;
+        }
+
+        .kpr-collection__left {
+            left: 0;
+            width: 36vw;
+        }
+
+        .kpr-count {
+            font-size: 30vw;
+            left: 8px;
+        }
+
+        .kpr-count__foot {
+            display: none;
+        }
+
+        .kpr-collection__hero {
+            left: auto;
+            right: 16px;
+            transform: translate(0, -50%);
+            width: 56vw;
+        }
+
+        .kpr-gallery__tl {
+            left: 0;
+            width: 100%;
+            padding: 72px 16px 16px;
+        }
+
+        .kpr-gallery__tr {
+            display: none;
+        }
+
+        .kpr-gallery__ring {
+            left: 0;
+            right: 0;
+            top: 36svh;
+        }
+
+        .kpr-gallery__arrow {
+            left: 50%;
+        }
+
+        .kpr-tab__story {
+            bottom: 96px;
+        }
+
+        .kpr-hold {
+            right: 16px;
+            bottom: 16px;
+        }
+
+        .kpr-launch__word {
+            left: 16px;
+            right: 16px;
+            top: 80px;
+        }
+
+        .kpr-launch__a {
+            left: 10%;
+            top: 150px;
+            width: 52%;
+        }
+
+        .kpr-launch__b {
+            left: 66%;
+            top: 170px;
+            width: 22%;
+        }
+
+        .kpr-launch__c {
+            left: 22%;
+            top: calc(150px + 52vw * 0.75);
+            width: 44%;
+        }
+
+        .kpr-launch__foot {
+            left: 16px;
+            right: 16px;
+            width: auto;
+            bottom: 24px;
+        }
+
+        .kpr-footer__top {
+            flex-direction: column;
+        }
+
+        .kpr-footer__item {
+            border-left: 0;
+            border-bottom: 1px solid var(--line-light);
+            min-height: 0;
+            gap: 20px;
+            padding: 24px 16px;
+        }
+
+        .kpr-footer__logo {
+            padding: 64px 16px 0;
+        }
+
+        .kpr-footer__bottom {
+            flex-wrap: wrap;
+            gap: 12px;
+            height: auto;
+            padding: 16px;
+        }
+
+        .kpr-footer__legal {
+            gap: 16px;
+        }
+
+        .kpr-menu__panel {
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+        .kpr-menu__maskOuter {
+            width: calc(100vw - 52px);
+            border-radius: 0;
+        }
+
+        .kpr-menu__bar {
+            width: 52px;
+        }
+
+        .kpr-menu__left {
+            width: 80px;
+        }
+
+        .kpr-menu__item .kpr-menu__label {
+            font-size: 52px;
+        }
+
+        .kpr-menu__item .kpr-menu__extra {
+            display: none;
+        }
+
+        .kpr-loader__files {
+            display: none;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kpr {
+        .kpr-scrollhint__icon,
+        .kpr-loader__ring {
+            animation: none;
+        }
+
+        .kpr-lh__bg,
+        .kpr-hud__navItem .kpr-dot {
+            transition-duration: 1ms;
+        }
+    }
+}
+
+// ── opening (after the loader): KPR wordmark over the barcode, white where the card has opened ─────
+
+.kpr {
+    .kpr-intro-logo {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        pointer-events: none;
+    }
+
+    .kpr-intro-logo__layer {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+    }
+
+    .kpr-intro-logo--white {
+        clip-path: inset(50% 50% 50% 50%);
+    }
+
+    .kpr-intro-logo__svg {
+        display: block;
+        width: 85.8vw;
+        max-width: none;
+        height: auto;
+        overflow: visible;
+    }
+}
