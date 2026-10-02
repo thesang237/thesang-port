@@ -139,6 +139,39 @@ keeper symbol stays (frame 92; 93–100 are a zoomed symbol, unused). It plays o
   over KEEPERS, with captions; they turn edge-on as the footer comes.
 - Verified: 60 fps with 4× CPU slowdown (max frame 16.8 ms, ≤ 31 draw calls), lint + build pass.
 
+## Pass 4 (2026-10-03)
+
+- **Scroll warp** (`WARP` in `scroll/timeline.ts`): windows stay in film screens; the warp maps scroll
+  to film time. Hero 0–2 → 1.25 screens of scroll, intro 2–4.15 → 1.35, keeper-symbol beat 8.35–9.7 →
+  0.75. Track = `SCROLL_TOTAL` + 1 screens; nav jumps and `?at=` go through `scrollFromT`
+  (tools: `window.__kprScroll` under `?replay`).
+- **Cards are masks**: the picture is sampled in screen space inside the card's upright rect
+  (`uRect`, `uView`), so a card's lean, turn and tilt move only its shape; the painting stays straight
+  and keeps its own pointer parallax (scene camera orbit / small slide for flat images) and a
+  page-scroll lag (`SCROLL_LAG`: the picture trails the card's vertical travel). Images with a baked
+  shape (ring cards, KEEPERS) still map to the card.
+- **Keep entrance**: one curve for all three cards (rise + turn + the centre card growing to full
+  screen), wider gaps.
+- **Button**: hairline on the 45° cut; on hover the cut closes into a rounded corner, fill switches at
+  once, border drops.
+- **Launch stack**: re-spaced so no card overlaps; stack cards are one-sided.
+- **Story headings**: fade in line by line with the scroll (`scrubLines` in `Story.tsx`), reversing on
+  the way up; the rows no longer play a timed exit before they leave the screen.
+
+## Pass 5 (2026-10-03)
+
+- **Launch**: its scroll is compressed (warp knot at 18.3, ×0.55); cards arrive sooner; the film now
+  runs one screen past `TOTAL` while the footer slides up, and `launchLeave` drives the exit: cards
+  rise with the footer and turn away (THE KEEP card 0.9π, others 0.75π), captions move and fade with them.
+- **Picture frame** (`CardState.frame`): a fixed rect for the picture, so a card can shrink and turn
+  while its painting stays still. Used on the hero: the girl while her card grows and turns, the story
+  while it shrinks around the screen centre and turns, the portrait while it turns in. The second turn
+  continues in the same direction as the first and dips back in depth.
+- **Button outline** (`dom/ui/BtnFrame.tsx`): one SVG path at the real size; the 45° cut has its
+  hairline and morphs smoothly (0.5 s) into a rounded corner on hover, fill switches at once.
+- **Second story heading**: lines fade in by their own position on screen (bottom edge → 72 %), so the
+  fade is seen as each line comes into view; it reverses on scroll up.
+
 ## Decisions
 
 - Cards are one shader (`NotchedCard`): SDF rounded rect minus a chamfered notch, a 45° corner cut,

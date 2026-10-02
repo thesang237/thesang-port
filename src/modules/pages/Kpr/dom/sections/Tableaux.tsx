@@ -5,7 +5,9 @@ import { useRef, useState } from 'react';
 import { gsap } from '@/components/motion-kit/gsap';
 
 import { LAUNCH, TABLEAUX } from '../../data/copy';
-import { W } from '../../scroll/timeline';
+import { launchLeave, W } from '../../scroll/timeline';
+import { film } from '../../scroll/useScrollStore';
+import BtnFrame from '../ui/BtnFrame';
 import { Caption, Hacky, Hair, Lines } from '../ui/Text';
 import { useAct } from '../ui/useAct';
 
@@ -85,7 +87,10 @@ export function Tableaux() {
 /** Launch: KEEPERS wordmark (drawn in WebGL so the cards can sit in front) + caption, line, CTA. */
 export function Launch() {
     const ref = useRef<HTMLElement>(null);
-    useAct(ref, [W.launchIn[0] + 0.3, W.launch[1] + 2]);
+    useAct(ref, [W.launchIn[0] + 0.3, W.launch[1] + 2], (root) => {
+        // the card captions leave with their cards as the footer comes up
+        root.style.setProperty('--kpr-leave', launchLeave(film.view).toFixed(3));
+    });
     return (
         <section ref={ref} className="kpr-sec kpr-launch" aria-label="Launch">
             <h2 className="kpr-sr">{LAUNCH.word}</h2>
@@ -108,7 +113,7 @@ export function Launch() {
                     {LAUNCH.body}
                 </p>
                 <a className="kpr-btn" href="#top" data-r="fade" data-d="0.7" data-sfx>
-                    <span className="kpr-btn__bg" aria-hidden="true" />
+                    <BtnFrame />
                     <Hacky text={LAUNCH.cta} reveal={false} />
                 </a>
                 <Hair dir="h" className="kpr-launch__hr" d={0.4} />

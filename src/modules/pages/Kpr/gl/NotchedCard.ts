@@ -4,7 +4,8 @@ import * as THREE from 'three';
 
 import { damp } from '../scroll/timeline';
 
-import { createNotchedMaterial, type NotchedUniforms } from './materials/notched';
+import { type CardShared, createNotchedMaterial, type NotchedUniforms } from './materials/notched';
+import { stageDistance } from './layout';
 import type { PaintedScene, PaintedView } from './PaintedScene';
 
 /** Everything a card can do, as plain numbers (written by the choreography, read once per frame). */
@@ -42,6 +43,9 @@ export type CardState = {
     tiltY: number;
     edge: number;
     order: number;
+    /** where the picture sits (stage px, upright); null = the card's own rect. Set it to keep the
+     *  painting still while the card (its mask) shrinks, grows or turns. */
+    frame: { x: number; y: number; w: number; h: number } | null;
     /** inputs for the painted scene on the face that is showing */
     view: { progress: number; zoom: number; fx: number; fy: number; dolly: number };
 };
@@ -73,6 +77,7 @@ export const baseState = (): CardState => ({
     tiltY: 0.16,
     edge: 0,
     order: 0,
+    frame: null,
     view: { progress: 0, zoom: 1, fx: 0.5, fy: 0.5, dolly: 0 },
 });
 
@@ -83,10 +88,10 @@ export type Face = { tex: THREE.Texture | null; aspect: number; base: THREE.Colo
  *  makes the two read as separate layers. Each card gets a slightly different pair. */
 const FRAME_LAMBDA = 3.2;
 const INNER_LAMBDA = 5.5;
-/** flat images at full pointer: how far the picture turns inside the frame (perspective warp) and
- *  how far it slides with that turn (uv units) */
-const IMAGE_TURN = 0.55;
-const IMAGE_SHIFT = 0.012;
+/** flat images at full pointer: how far the picture slides inside the frame (uv units) */
+const IMAGE_SHIFT = 0.018;
+/** page-scroll parallax: how far (uv) the picture lags when its card is half a screen off centre */
+const SCROLL_LAG = 0.035;
 
 /** one "rem" of the reference (10px at 1600 wide, clamped 6.4–12) */
 const unit = () => Math.min(12, Math.max(6.4, window.innerWidth * 0.00625));
@@ -110,7 +115,7 @@ export class NotchedCard {
     readonly needs: { scene: PaintedScene; view: PaintedView }[] = [];
     private views = [0, 1].map(() => ({ progress: 0, px: 0, py: 0, tiltX: 0, tiltY: 0, zoom: 1, fx: 0.5, fy: 0.5, dolly: 0, time: 0 }));
 
-    constructor(geometry: THREE.PlaneGeometry, shared: { noise: THREE.Texture | null; flick: THREE.Texture | null }) {
+    constructor(geometry: THREE.PlaneGeometry, shared: CardShared) {
         const mat = createNotchedMaterial(shared);
         this.mesh = new THREE.Mesh(geometry, mat);
         this.mesh.frustumCulled = false;
@@ -197,15 +202,26 @@ export class NotchedCard {
         u.uChamfer.value.set(s.chamfer[0], s.chamfer[1]);
         u.uOpacity.value = s.opacity;
         // flat images: the picture follows the pointer inside the frame (scenes do it with their camera)
-        // flat images: the picture turns inside the frame with the pointer (faster than the frame leans),
-        // painted scenes do the same with their camera
+        // the picture stays upright on screen (the card is only its mask): its rect is the card's rect
+        // projected at the card's depth, without rotation. Images with a baked shape (ring cards, the
+        // KEEPERS word) keep the shape on the card instead.
+        const showsShape = (showing ?? this.faces[0])?.alphaMap;
+        if (showsShape) u.uRect.value.set(0, 0, 0, 0);
+        else {
+            const D = stageDistance(window.innerHeight);
+            const f = s.frame;
+            const k = f ? 1 : D / Math.max(1, D - s.z);
+            const r = f ?? s;
+            u.uRect.value.set(r.x * k, r.y * k, Math.max(1, r.w * k), Math.max(1, r.h * k));
+        }
+        // inside: flat images slide a little with the pointer (scenes move their own camera), and every
+        // picture lags behind the card's vertical travel on screen (page-scroll parallax)
         const flat = !showing?.scene;
-        const look = flat ? IMAGE_TURN * s.parallax : 0;
         const shift = flat ? IMAGE_SHIFT * s.parallax : 0;
-        u.uZoom.value = s.zoom * (1 + (shift + look * 0.12) * 2);
+        const travel = showsShape || s.frame ? 0 : Math.max(-1, Math.min(1, (s.y * 2) / window.innerHeight));
+        u.uZoom.value = s.zoom * (1 + shift * 2 + (showsShape ? 0 : SCROLL_LAG * 2));
         u.uFocus.value.set(s.fx, s.fy);
-        u.uLook.value.set(-this.ip.x * look, -this.ip.y * look);
-        u.uParallax.value.set(-this.ip.x * shift, -this.ip.y * shift);
+        u.uParallax.value.set(-this.ip.x * shift, -this.ip.y * shift + travel * SCROLL_LAG);
         tmpColor.set(s.washColor);
         u.uWash.value.set(tmpColor.r, tmpColor.g, tmpColor.b, s.wash);
         u.uDim.value = s.dim;

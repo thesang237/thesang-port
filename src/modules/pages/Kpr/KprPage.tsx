@@ -25,7 +25,7 @@ import { Launch, Tableaux } from './dom/sections/Tableaux';
 import { registerEases } from './dom/ui/reveal';
 import { clearAnchors, measureAnchors } from './gl/layout';
 import { clearFrame, runFrame } from './scroll/frame';
-import { damp, navAt, RESTS, themeAt, TOTAL } from './scroll/timeline';
+import { damp, navAt, RESTS, SCROLL_TOTAL, scrollFromT, tFromScroll, themeAt, TOTAL } from './scroll/timeline';
 import { film, resetFilm, resetUi, useUi } from './scroll/useScrollStore';
 
 const Stage = dynamic(() => import('./gl/Stage'), { ssr: false });
@@ -65,7 +65,7 @@ function Clock({ cut }: { cut: React.RefObject<HTMLDivElement | null> }) {
                 film.vw = w;
                 film.vh = h;
                 film.phone = w < 768;
-                if (track.current) track.current.style.height = `${Math.round((TOTAL + 1) * h)}px`;
+                if (track.current) track.current.style.height = `${Math.round((SCROLL_TOTAL + 1) * h)}px`;
             }
             measureAnchors(document.querySelector('.kpr') ?? document, film.vw, film.vh);
             lenis.resize();
@@ -87,6 +87,8 @@ function Clock({ cut }: { cut: React.RefObject<HTMLDivElement | null> }) {
 
         // dev/testing conveniences: ?skip (auto-enter once loaded), ?at=12.5 (jump to a screen)
         const params = new URLSearchParams(window.location.search);
+        // verification tooling: film t → scroll screens
+        if (params.has('replay')) Object.assign(window, { __kprScroll: scrollFromT });
         const at = params.get('at');
         let pendingJump = at !== null ? Number(at) : null;
 
@@ -98,10 +100,10 @@ function Clock({ cut }: { cut: React.RefObject<HTMLDivElement | null> }) {
             film.dt = dt;
             film.time += dt;
             if (pendingJump !== null && film.started) {
-                lenis.scrollTo(pendingJump * film.vh, { immediate: true, force: true });
+                lenis.scrollTo(scrollFromT(pendingJump) * film.vh, { immediate: true, force: true });
                 pendingJump = null;
             }
-            const t = Math.max(0, lenis.scroll / film.vh);
+            const t = Math.max(0, tFromScroll(lenis.scroll / film.vh));
             film.t = t;
             const v = (t - lastT) / dt;
             lastT = t;
@@ -116,7 +118,7 @@ function Clock({ cut }: { cut: React.RefObject<HTMLDivElement | null> }) {
                     film.view = r;
                     if (cut.current) gsap.fromTo(cut.current, { opacity: 1 }, { opacity: 0, duration: 0.16, ease: 'none' });
                 }
-            } else film.view = Math.min(t, TOTAL);
+            } else film.view = Math.min(t, TOTAL + 1); // + the screen where the footer slides up
 
             const nav = navAt(film.view);
             const theme = film.covered ? 'light' : themeAt(film.view);
@@ -153,7 +155,7 @@ function Clock({ cut }: { cut: React.RefObject<HTMLDivElement | null> }) {
         });
     }, [lenis]);
 
-    // the invisible track only gives the browser a scrollbar: (TOTAL + 1) screens
+    // the invisible track only gives the browser a scrollbar: (SCROLL_TOTAL + 1) screens
     return <div ref={track} className="kpr-track" aria-hidden="true" />;
 }
 

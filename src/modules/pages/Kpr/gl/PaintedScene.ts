@@ -29,10 +29,6 @@ export type PaintedView = {
 
 export const baseView = (): PaintedView => ({ progress: 0, px: 0, py: 0, tiltX: 0, tiltY: 0, zoom: 1, fx: 0.5, fy: 0.5, dolly: 0, time: 0 });
 
-/** How far the inner camera turns with the card's lean, as a share of the horizontal field of view
- *  per radian of lean (0.3 → a 0.15 rad lean shifts the picture by ~4.5 % of its width). */
-const PORTAL = 0.3;
-
 /**
  * One painted glTF scene, rendered from its own camera into a texture that a card shows.
  * - unlit materials (the paint already has its light), alpha blended, drawn back to front by the
@@ -133,7 +129,8 @@ export class PaintedScene {
     }
 
     render(renderer: THREE.WebGLRenderer, v: PaintedView) {
-        // camera: baked clip (or rest pose), then pointer travel, card tilt and dolly
+        // camera: baked clip (or rest pose), then pointer orbit and dolly (the card's own lean never
+        // reaches the painting: the card is only its mask)
         // (the mixer skips writing values that haven't changed, so the pointer's offsets are undone after
         // the render below instead of resetting the pose here)
         if (this.mixer) this.mixer.setTime(Math.min(this.duration - 1e-3, Math.max(0, v.progress) * this.duration));
@@ -160,13 +157,6 @@ export class PaintedScene {
             this.camera.getWorldDirection(this.fwd);
             this.rig.position.addScaledVector(this.fwd, v.dolly);
         }
-        // the frame's lean turns the camera by a share of the field of view, so every scene (wide or
-        // narrow lens, zoomed or not) shifts by about the same small part of the picture
-        const fovH = (2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(this.camera.fov) / 2) * this.camera.aspect)) / z0;
-        this.e.set(v.tiltX * PORTAL * fovH, v.tiltY * PORTAL * fovH, 0, 'YXZ');
-        this.q.setFromEuler(this.e);
-        this.rig.quaternion.premultiply(this.q);
-
         // zoom into a focus point with a view offset (keeps the true perspective of the planes)
         const { x: W, y: H } = this.size;
         const z = Math.max(1, v.zoom);

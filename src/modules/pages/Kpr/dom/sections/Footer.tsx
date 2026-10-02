@@ -9,6 +9,7 @@ import { onFrame } from '../../scroll/frame';
 import { clamp01, ease } from '../../scroll/timeline';
 import { film } from '../../scroll/useScrollStore';
 import { Chevron, Download, External, KprLogo } from '../icons';
+import BtnFrame from '../ui/BtnFrame';
 import { Hacky, scrambleTween } from '../ui/Text';
 
 /** Link with the reference's hover: a block slides in behind the label, colours flip, label decodes. */
@@ -117,7 +118,7 @@ export default function Footer() {
                             <LinkHover href={`mailto:${FOOTER.email}`}>{FOOTER.email}</LinkHover>
                         </div>
                         <a className="kpr-btn kpr-btn--dark" href="#" data-sfx>
-                            <span className="kpr-btn__bg" aria-hidden="true" />
+                            <BtnFrame />
                             <Download className="kpr-btn__icon" />
                             <Hacky text={FOOTER.brandbook} reveal={false} />
                         </a>

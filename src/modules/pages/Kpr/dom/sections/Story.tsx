@@ -34,6 +34,43 @@ function columnY(t: number) {
     return COLUMN[COLUMN.length - 1][1];
 }
 
+/** each line: fades in over 0.35 screens and rises a little, the next one starts 0.14 screens later */
+function scrubLines(root: HTMLElement, sel: string, t: number, start: number) {
+    root.querySelectorAll<HTMLElement>(`${sel} .kpr-line > span`).forEach((el, i) => {
+        const k = ease.out(seg(t, start + i * 0.14, start + i * 0.14 + 0.35));
+        const o = k.toFixed(3);
+        if (el.style.opacity !== o) {
+            el.style.opacity = o;
+            el.style.transform = `translate3d(0, ${((1 - k) * 0.25).toFixed(3)}em, 0)`;
+        }
+    });
+}
+
+/**
+ * Lines that scroll up into view: each fades in while it travels from the bottom edge to 72 % of the
+ * screen height. Positions come from one measurement (per viewport size) plus the known column
+ * offset, so the frame loop never reads layout.
+ */
+const lineTops = new WeakMap<HTMLElement, { top: number; colY: number; vh: number }>();
+function scrubLinesInView(root: HTMLElement, sel: string, t: number) {
+    const vh = window.innerHeight;
+    const colY = columnY(t);
+    root.querySelectorAll<HTMLElement>(`${sel} .kpr-line > span`).forEach((el) => {
+        let m = lineTops.get(el);
+        if (!m || m.vh !== vh) {
+            m = { top: el.getBoundingClientRect().top, colY, vh };
+            lineTops.set(el, m);
+        }
+        const top = m.top + ((colY - m.colY) * vh) / 100;
+        const k = ease.out(seg(top / vh, 1.0, 0.72));
+        const o = k.toFixed(3);
+        if (el.style.opacity !== o) {
+            el.style.opacity = o;
+            el.style.transform = `translate3d(0, ${((1 - k) * 0.25).toFixed(3)}em, 0)`;
+        }
+    });
+}
+
 export default function Story() {
     const ref = useRef<HTMLElement>(null);
     const r1 = useRef<HTMLDivElement>(null);
@@ -49,6 +86,9 @@ export default function Story() {
         // row 1 rises from mid-screen and settles at the top, row 3 rises through the screen as the
         // camera goes down the mountains, row 4 is in place under the logo wipe
         col.style.transform = `translate3d(0, ${columnY(t)}svh, 0)`;
+        // the two big headings fade in line by line with the scroll (and back out when scrolling up)
+        scrubLines(root, '.kpr-story__h1a', t, 5.0);
+        scrubLinesInView(root, '.kpr-story__h1b', t);
         // loading percent in the terminal block (only touches the DOM when the number changes)
         const pct = Math.round(seg(t, 5.0, 8.4) * 100);
         const el = root.querySelector<HTMLElement>('[data-pct]');
@@ -66,9 +106,9 @@ export default function Story() {
             }
         }
     });
-    useAct(r1, W.storyRow1);
+    useAct(r1, [W.storyRow1[0], 7.45]);
     useAct(r2, W.storyRow2);
-    useAct(r3, W.storyRow3);
+    useAct(r3, [6.4, 9.1]);
     useAct(r4, [W.storyRow4[0] + 0.1, W.storyRow4[1]]);
 
     return (
@@ -80,7 +120,7 @@ export default function Story() {
                         <Hair dir="v" className="kpr-story__vr" d={0.15} />
                         <div className="kpr-title1">
                             <Caption text={STORY.row1.index} className="kpr-title1__cap" d={0.1} />
-                            <Lines lines={STORY.row1.lines} className="kpr-h1" indent d={0.15} />
+                            <Lines lines={STORY.row1.lines} className="kpr-h1 kpr-story__h1a" indent scrub />
                         </div>
                     </div>
                     <div className="kpr-story__side">
@@ -123,7 +163,7 @@ export default function Story() {
                     <div className="kpr-story__main kpr-story__main--right">
                         <div className="kpr-title2">
                             <Caption text={STORY.row3.index} className="kpr-title1__cap" d={0.1} />
-                            <Lines lines={STORY.row3.lines} className="kpr-h1" indent d={0.15} />
+                            <Lines lines={STORY.row3.lines} className="kpr-h1 kpr-story__h1b" indent scrub />
                         </div>
                     </div>
                 </div>

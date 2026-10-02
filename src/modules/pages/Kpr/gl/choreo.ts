@@ -6,7 +6,7 @@
  * history, so scrolling back up reverses everything exactly.
  */
 import { GALLERY_RING, IMAGES } from '../data/media';
-import { clamp01, ease, lerp, seg, sub, W } from '../scroll/timeline';
+import { clamp01, ease, launchLeave, lerp, seg, sub, W } from '../scroll/timeline';
 import { film } from '../scroll/useScrollStore';
 
 import { anchor, type Rect } from './layout';
@@ -58,8 +58,10 @@ const GROW = [4.0, 4.6] as const;
 const FLIP1 = [4.2, 5.1] as const;
 const SHRINK = [9.7, 10.15] as const;
 const FLIP2 = [10.15, 10.9] as const;
-/** sliver centre, in viewport widths from the centre */
-const SLIVER_X = -0.08;
+/** the glow that passes over cards while they change scale (screen-blended, see notched.ts) */
+const GLOW_COLOR = '#c06cff';
+const HAND_GLOW = 0.4;
+
 /** the story painting is framed a little tighter than the file's camera (as the reference) */
 const STORY_ZOOM = 1.12;
 
@@ -142,8 +144,9 @@ export function choreograph(c: Cast) {
         s.view.zoom = lerp(LANDING_ZOOM, 1.8, zoomK);
         s.view.fx = 0.5;
         s.view.fy = lerp(0.418, 0.41, zoomK);
-        s.wash = 0.42 * Math.sin(Math.PI * seg(t, 1.25, 2.6));
-        s.washColor = '#ddd6ff';
+        // a gentle pink-purple glow passes over the painting as it becomes a card
+        s.wash = 0.36 * Math.sin(Math.PI * seg(t, 1.2, 2.7));
+        s.washColor = GLOW_COLOR;
         // 2 · intro idle float
         const hold = seg(t, 2.4, 2.8) * (1 - seg(t, W.introOut[0], W.introOut[0] + 0.2));
         r.y += Math.sin(time * 0.7) * 5 * hold * idle;
@@ -151,6 +154,8 @@ export function choreograph(c: Cast) {
         // 3 · grow + lean, then a half turn onto the story (back face), opening to full screen
         const a = io(sub(t, W.introOut, 0, 0.45));
         r = { ...r, w: r.w * (1 + 0.14 * a), h: r.h * (1 + 0.14 * a), x: r.x - 0.04 * vw * a };
+        // the girl's picture stays where it was while her card grows and turns away
+        const girlFrame: Rect = { ...r };
         const grow = io(seg(t, GROW));
         const f = inOut(seg(t, FLIP1));
         const tall: Rect = { x: -0.03 * vw, y: 0, w: 0.36 * vw, h: vh * 1.04 };
@@ -165,14 +170,16 @@ export function choreograph(c: Cast) {
             s.view.zoom = STORY_ZOOM;
             s.view.fy = 0.5;
         }
-        // 5 · shrink to a sliver (the keeper symbol rides it), then the second half turn onto the portrait
+        // 5 · the story card shrinks around the screen centre into a narrow card (the keeper symbol rides
+        // it), then keeps turning the same way onto the portrait, dipping back in depth as it turns.
+        // The story painting stays still behind it the whole time (fixed frame); so does the portrait.
         const e1 = io(seg(t, SHRINK));
-        const sliver: Rect = { x: SLIVER_X * vw, y: 0, w: 0.12 * vw, h: vh * 1.04 };
+        const sliver: Rect = { x: 0, y: 0, w: 0.16 * vw, h: vh * 0.92 };
         r = mixRect(r, sliver, e1);
         const f2 = inOut(seg(t, FLIP2));
-        r = mixRect(r, mixRect({ ...sliver, w: 0.3 * vw }, portraitRect, io(clamp01(f2 * 2 - 1))), io(clamp01(f2 * 2)));
+        r = mixRect(r, portraitRect, ease.smooth(f2));
         s.ry -= Math.PI * f2;
-        s.rz += -0.04 * e1 * (1 - f2) + 0.02 * Math.sin(Math.PI * f2);
+        s.z = -320 * Math.sin(Math.PI * f2);
         // 6 · portrait shrinks into the ring's front slot while the purple layers grow out of it
         const pk = seg(t, FLIP2[1] - 0.1, FLIP2[1] + 0.2);
         r.y += Math.sin(time * 0.6) * 4 * idle * pk * (1 - seg(t, W.galleryIn));
@@ -183,6 +190,9 @@ export function choreograph(c: Cast) {
         // bottom right; story = tab on the top right while it opens and shrinks; portrait = the same as the girl
         const facing = Math.round(Math.abs(s.ry) / Math.PI);
         const R = autoRadius(r.w, r.h, u);
+        if (facing === 0 && (grow > 0 || f > 0)) s.frame = girlFrame;
+        else if (facing === 1) s.frame = full;
+        else if (facing === 2 && f2 < 1) s.frame = portraitRect;
         if (facing === 0) {
             if (opening) {
                 const w2 = io(clamp01((film.intro - 0.42) / 0.58));
@@ -308,87 +318,81 @@ export function choreograph(c: Cast) {
         }
     }
 
-    // ── THE KEEP: three cards rise from below, turning to face us, centred; the main one fills ────
-    const kIn = W.keepIn;
-    const kb = io(sub(t, kIn, 0.0, 0.5));
-    const km = io(sub(t, kIn, 0.06, 0.56));
-    const kc = io(sub(t, kIn, 0.12, 0.62));
-    const a2 = io(sub(t, kIn, 0.55, 1));
+    // ── THE KEEP: three cards rise together on ONE curve, turning to face us as they come up; the
+    // centre one grows to full screen while the two others keep travelling out past it (all at once)
+    const kp = inOut(seg(t, W.keepIn));
+    const flipK = io(clamp01(kp / 0.6));
+    const sideFlip = (s: CardState, side: number) => {
+        s.ry = side * (Math.PI / 2) * (1 - flipK);
+        s.rx = 0.35 * (1 - flipK);
+    };
     {
         const s = c.keepB.state;
         reset(s);
-        riseFlip(s, { x: -0.215 * vw, y: 0.1 * vh, w: 0.13 * vw, h: 0.5 * vh }, kb, 1, vh);
-        s.x -= a2 * 0.35 * vw;
-        s.y += a2 * 0.25 * vh;
+        rect(s, { x: lerp(-0.25, -0.5, kp * kp) * vw, y: lerp(-1.0, 0.95, kp) * vh, w: 0.13 * vw, h: 0.5 * vh });
+        sideFlip(s, 1);
         s.rz = -0.02;
         s.zoom = 1.05;
         s.notch = [1, 1, 0.45 * s.h, 2 * u];
-        s.opacity = kb > 0.001 ? 1 : 0;
+        s.opacity = kp > 0.001 && kp < 0.999 ? 1 : 0;
         s.order = 40;
     }
     {
         const s = c.keepC.state;
         reset(s);
-        riseFlip(s, { x: 0.17 * vw, y: -0.33 * vh, w: 0.15 * vw, h: 0.24 * vh }, kc, -1, vh);
-        s.x += a2 * 0.2 * vw;
-        s.y -= a2 * 0.3 * vh;
+        rect(s, { x: lerp(0.24, 0.52, kp * kp) * vw, y: lerp(-1.3, 0.4, kp) * vh, w: 0.15 * vw, h: 0.24 * vh });
+        sideFlip(s, -1);
         s.rz = 0.03;
         s.zoom = 1.1;
         s.fy = 0.45;
         s.notch = [0, 0, 0.3 * s.w, 2.2 * u];
-        s.opacity = kc > 0.001 ? 1 : 0;
+        s.opacity = kp > 0.001 && kp < 0.999 ? 1 : 0;
         s.order = 42;
     }
 
     // tableau handoffs: the outgoing card and the incoming one move TOGETHER on one curve — the
     // outgoing shrinks to a wide strip tilted one way and leaves upward, the incoming rises tilted the
     // other way and opens to full screen. Both paintings take a purple tint while they travel.
-    // one curve per handoff, shared by both cards so they move as a pair
-    const handK = (win: readonly [number, number]) => {
-        const p = inOut(seg(t, win));
-        return { p, k1: ease.smooth(clamp01(p / 0.5)), k2: ease.smooth(clamp01((p - 0.5) / 0.5)) };
-    };
+    // handoffs: ONE eased curve per handoff drives both cards, size and position together. The outgoing
+    // scene shrinks while it travels up and away; the incoming one starts small, far below, and grows
+    // into full screen as it rises. Both glow pink-purple mid-way.
+    const away = (dir: number): Rect => ({ x: 0.02 * dir * vw, y: -dir * 1.08 * vh, w: 0.46 * vw, h: 0.3 * vh });
     const handOut = (s: CardState, win: readonly [number, number], tilt: number) => {
-        const { p, k1, k2 } = handK(win);
+        const p = inOut(seg(t, win));
         if (p <= 0) return p;
-        const top: Rect = { x: -0.03 * vw, y: 0.27 * vh, w: 0.9 * vw, h: 0.5 * vh };
-        const r = mixRect({ x: s.x, y: s.y, w: s.w, h: s.h }, top, k1);
-        r.y += k2 * 0.85 * vh;
+        const r = mixRect({ x: s.x, y: s.y, w: s.w, h: s.h }, away(-1), p);
         rect(s, r);
-        s.rz += tilt * k1;
-        s.notch = [3, 0, 0.27 * r.w, 5 * u * k1];
-        s.wash = Math.max(s.wash, 0.38 * Math.sin(Math.PI * clamp01(p * 1.4)));
-        s.opacity *= 1 - seg(t, win[1] - 0.03, win[1]);
+        s.rz += tilt * p;
+        s.notch = [3, 0, 0.27 * r.w, 5 * u * clamp01(p * 2.5)];
+        s.wash = Math.max(s.wash, HAND_GLOW * Math.sin(Math.PI * p));
+        s.opacity *= p < 0.999 ? 1 : 0;
         return p;
     };
     const handIn = (s: CardState, win: readonly [number, number], tilt: number) => {
-        const { p, k1, k2 } = handK(win);
-        // starts just under the bottom edge, so it shows as soon as the pair starts moving
-        const low: Rect = { x: 0.02 * vw, y: -0.78 * vh, w: 0.88 * vw, h: 0.5 * vh };
-        const mid: Rect = { x: 0.02 * vw, y: -0.3 * vh, w: 0.88 * vw, h: 0.5 * vh };
-        rect(s, mixRect(mixRect(low, mid, k1), full, k2));
-        s.rz = tilt * (1 - k2);
-        s.notch = [0, 0, 0.62 * s.w, 3.5 * u * (1 - k2)];
-        s.wash = 0.38 * (1 - k2) * (p > 0 ? 1 : 0);
-        s.opacity = seg(t, win[0], win[0] + 0.02);
+        const p = inOut(seg(t, win));
+        rect(s, mixRect(away(1), full, p));
+        s.rz = tilt * (1 - p);
+        s.notch = [0, 0, 0.62 * s.w, 3.5 * u * clamp01((1 - p) * 2.5)];
+        s.wash = HAND_GLOW * Math.sin(Math.PI * p);
+        s.opacity = p > 0.001 ? 1 : 0;
         return p;
     };
     const fullRadius = (s: CardState) => {
         const fullness = clamp01((s.w - vw * 0.96) / (vw * 0.04));
         s.radius = s.notch[3] > 0.5 ? -1 : autoRadius(s.w, s.h, u) * (1 - fullness);
-        s.washColor = '#8a5fd6';
+        s.washColor = GLOW_COLOR;
         s.skew = Math.max(-0.06, Math.min(0.06, film.vel * 0.004)) * (s.w < vw * 0.99 ? 1 : 0.3);
     };
     {
         const s = c.keep.state;
         reset(s);
-        // entrance: rises flipping into the centre of the stack, then opens to full screen
-        riseFlip(s, { x: 0.01 * vw, y: 0.02 * vh, w: 0.27 * vw, h: 0.46 * vh }, km, -1, vh);
-        rect(s, mixRect({ x: s.x, y: s.y, w: s.w, h: s.h }, full, a2));
-        s.ry *= 1 - a2;
-        s.rx *= 1 - a2;
-        s.notch = [3, 0, 0.3 * s.w, 3 * u * (1 - a2)];
-        s.opacity = km > 0.001 ? 1 : 0;
+        // entrance: rises and turns with the two others while it grows to full screen (size eases in, so
+        // it reads as a card first and fills the screen at the end)
+        const grow = Math.pow(kp, 1.7);
+        rect(s, { x: 0, y: lerp(-0.95 * vh, 0, out(kp)), w: lerp(0.24 * vw, vw, grow), h: lerp(0.4 * vh, vh, grow) });
+        sideFlip(s, -1);
+        s.notch = [3, 0, 0.3 * s.w, 3 * u * (1 - grow)];
+        s.opacity = kp > 0.001 ? 1 : 0;
         handOut(s, W.handoff1, -0.09);
         fullRadius(s);
         s.order = 44;
@@ -410,22 +414,24 @@ export function choreograph(c: Cast) {
         s.order = 48;
     }
 
-    // ── LAUNCH: three cards rise flipping into an interlocking stack over KEEPERS (measured) ──────
+    // ── LAUNCH: three cards rise flipping into a stack over KEEPERS (shapes measured on the reference,
+    // spaced ~3 u apart so they never overlap; one-sided, so they vanish when they turn away) ──────
     const li = W.launchIn;
     const settle = seg(t, li[1] - 0.2, W.launch[1]);
-    const leave = io(seg(t, W.launch[1] - 0.35, W.launch[1]));
-    const stack = (s: CardState, r: Rect, k: number, side: number, bob: number) => {
+    const leave = launchLeave(t);
+    const stack = (s: CardState, r: Rect, k: number, side: number, bob: number, turn: number) => {
         riseFlip(s, r, k, side, vh);
         s.y += Math.sin(time * 0.7 + bob) * 3 * idle * settle;
-        // they leave by turning edge-on as the footer arrives
-        s.ry += side * leave * Math.PI * 0.55;
+        // they leave with the footer: rising with it while they turn away (one-sided, so they vanish)
+        s.y += leave * 0.55 * vh;
+        s.ry += side * leave * turn;
         s.radius = 1.1 * u;
-        s.opacity = k > 0.001 ? 1 : 0;
+        s.opacity = k > 0.001 && leave < 0.999 ? 1 : 0;
     };
     {
         const s = c.launchA.state;
         reset(s);
-        stack(s, { x: -3 * u, y: 0, w: 39.3 * u, h: 36.6 * u }, io(sub(t, li, 0.3, 0.85)), 1, 0);
+        stack(s, { x: -8 * u, y: 0, w: 39.3 * u, h: 36.6 * u }, io(sub(t, li, 0.15, 0.7)), 1, 0, Math.PI * 0.75);
         s.notch = [1, 1, 0.33 * s.h, 1.7 * u];
         s.notch2 = [2, 0, 0.19 * s.w, 2.7 * u];
         s.order = 48.5;
@@ -433,7 +439,7 @@ export function choreograph(c: Cast) {
     {
         const s = c.launchB.state;
         reset(s);
-        stack(s, { x: 22.3 * u, y: -5.8 * u, w: 17.1 * u, h: 34.6 * u }, io(sub(t, li, 0.38, 0.92)), -1, 1);
+        stack(s, { x: 23.5 * u, y: -5.8 * u, w: 17.1 * u, h: 34.6 * u }, io(sub(t, li, 0.22, 0.77)), -1, 1, Math.PI * 0.9);
         s.zoom = 1.05;
         s.notch = [3, 1, 0.47 * s.h, 1.7 * u];
         s.order = 47;
@@ -441,7 +447,7 @@ export function choreograph(c: Cast) {
     {
         const s = c.launchC.state;
         reset(s);
-        stack(s, { x: -2.4 * u, y: -26.3 * u, w: 31.4 * u, h: 17.75 * u }, io(sub(t, li, 0.46, 1)), 1, 2);
+        stack(s, { x: -5 * u, y: -30 * u, w: 31.4 * u, h: 17.75 * u }, io(sub(t, li, 0.3, 0.85)), 1, 2, Math.PI * 0.75);
         s.notch = [0, 0, 0.68 * s.w, 2.75 * u];
         s.chamfer = [3, 1.7 * u];
         s.order = 49;
@@ -452,7 +458,7 @@ export function choreograph(c: Cast) {
         const k = out(sub(t, li, 0.2, 0.9));
         const ww = 137.2 * u;
         const wh = ww / (c.word.faces[0]?.aspect ?? 6);
-        rect(s, { x: 2 * u, y: 21 * u + lerp(-0.19 * vh, 0, k), w: ww, h: wh });
+        rect(s, { x: 2 * u, y: 21 * u + lerp(-0.19 * vh, 0, k) + leave * 0.55 * vh, w: ww, h: wh });
         s.radius = 0;
         s.parallax = 0;
         s.tiltX = 0.02;

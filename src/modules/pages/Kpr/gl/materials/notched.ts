@@ -31,7 +31,8 @@ const fragment = /* glsl */ `
     uniform float uRadius;
     uniform vec4 uNotch;      // corner (0 TL, 1 TR, 2 BR, 3 BL), axis (0 along the horizontal edge, 1 vertical), length, depth
     uniform vec4 uNotch2;     // a second notch, same layout (depth 0 = off)
-    uniform vec2 uLook;       // the picture's own turn inside the frame (yaw, pitch; flat images only)
+    uniform vec4 uRect;       // the card's upright rect on screen (centre x, y, w, h in stage px; w 0 = off)
+    uniform vec4 uView;       // stage size (css px) and drawing buffer size (device px)
     uniform vec2 uChamfer;    // corner, size
     uniform sampler2D uMapF;
     uniform sampler2D uMapB;
@@ -126,16 +127,22 @@ const fragment = /* glsl */ `
         float mask = 1.0 - smoothstep(-aa * 0.5, aa * 0.5, d);
         if (mask * uOpacity <= 0.0) discard;
 
+        // The picture is pinned to the screen, not to the card: it is sampled from where this pixel is
+        // on screen inside the card's upright rect (uRect: centre + size in stage px). The card's lean,
+        // turn and tilt only move the mask; the picture behind stays straight.
+        vec2 fuv = uv;
+        vec2 fsize = uSize;
+        if (uRect.z > 0.5) {
+            vec2 sp = gl_FragCoord.xy / uView.zw * uView.xy - uView.xy * 0.5;
+            fuv = (sp - uRect.xy) / uRect.zw + 0.5;
+            fsize = uRect.zw;
+        }
         // cover-fit the face into the card, then zoom around the focus point
-        float ca = uSize.x / max(uSize.y, 1.0);
+        float ca = fsize.x / max(fsize.y, 1.0);
         float fa = back ? uFace.w : uFace.z;
         vec2 region = ca > fa ? vec2(1.0, fa / ca) : vec2(ca / fa, 1.0);
         region /= uZoom;
-        vec2 c = (uv - 0.5) * region;
-        // flat images turn inside the frame: a perspective warp (the picture plane yawed/pitched behind
-        // the card) instead of a slide, so the near side grows and the far side shrinks
-        float w = 1.0 + c.x * uLook.x + c.y * uLook.y;
-        vec2 puv = uFocus + c / w + uParallax;
+        vec2 puv = uFocus + (fuv - 0.5) * region + uParallax;
 
         vec3 col;
         if (back) {
@@ -151,9 +158,14 @@ const fragment = /* glsl */ `
         }
 
         // inner rim (used on the sliver edges while a card swings)
-        if (uEdge.w > 0.0) col = mix(col, uEdge.rgb, (1.0 - smoothstep(0.0, uEdge.w, -d)) * 0.6);
+        // (a rim thinner than a quarter pixel is off: with a near-zero width the smoothstep would turn the
+        // anti-aliased outer pixels white and draw a faint outline)
+        if (uEdge.w > 0.25) col = mix(col, uEdge.rgb, (1.0 - smoothstep(0.0, uEdge.w, max(-d, 0.0))) * 0.6);
 
-        col = mix(col, uWash.rgb, uWash.a);
+        // wash = a glow, not a fade: screen-blended (it lightens toward the colour, never greys out),
+        // a little stronger toward the card's edges
+        float glow = uWash.a * (0.8 + 0.5 * length(fuv - 0.5));
+        col = 1.0 - (1.0 - col) * (1.0 - uWash.rgb * clamp(glow, 0.0, 1.0));
         col *= 1.0 - uDim;
 
         // film grain + flicker (noise.webp / flick.webp from the reference)
@@ -168,12 +180,16 @@ const fragment = /* glsl */ `
     }
 `;
 
+/** uniforms shared by every card (one object, updated once per frame by the stage) */
+export type CardShared = { noise: THREE.Texture | null; flick: THREE.Texture | null; view: { value: THREE.Vector4 } };
+
 export type NotchedUniforms = {
     uSize: { value: THREE.Vector2 };
     uRadius: { value: number };
     uNotch: { value: THREE.Vector4 };
     uNotch2: { value: THREE.Vector4 };
-    uLook: { value: THREE.Vector2 };
+    uRect: { value: THREE.Vector4 };
+    uView: { value: THREE.Vector4 };
     uChamfer: { value: THREE.Vector2 };
     uMapF: { value: THREE.Texture | null };
     uMapB: { value: THREE.Texture | null };
@@ -199,13 +215,14 @@ export type NotchedUniforms = {
     uAlphaMap: { value: number };
 };
 
-export function createNotchedMaterial(shared: { noise: THREE.Texture | null; flick: THREE.Texture | null }) {
+export function createNotchedMaterial(shared: CardShared) {
     const uniforms: NotchedUniforms = {
         uSize: { value: new THREE.Vector2(100, 100) },
         uRadius: { value: 12 },
         uNotch: { value: new THREE.Vector4(1, 0, 0, 0) },
         uNotch2: { value: new THREE.Vector4(1, 0, 0, 0) },
-        uLook: { value: new THREE.Vector2() },
+        uRect: { value: new THREE.Vector4() },
+        uView: shared.view,
         uChamfer: { value: new THREE.Vector2(2, 0) },
         uMapF: { value: null },
         uMapB: { value: null },

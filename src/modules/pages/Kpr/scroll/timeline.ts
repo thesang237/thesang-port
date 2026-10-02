@@ -39,10 +39,45 @@ export const W = {
     launch: [18.75, 20.2],
 } as const satisfies Record<string, readonly [number, number]>;
 
-/** Length of the film; the page track is (TOTAL + 1) screens, then the footer follows in flow. */
+/** Length of the film in film screens (see WARP below for its length in scroll). */
 export const TOTAL = 20.2;
 
 /** Rest positions per act, used by reduced motion (the film snaps between stills) and nav jumps. */
+/**
+ * Scroll → film clock. Every window above is in film screens; this warp decides how many screens of
+ * actual scroll each stretch takes. Knots are [film t, scroll s]; between knots it is linear.
+ * The hero (0–2), the intro (2–4.15), the keeper-symbol beat (8.35–9.7) and the launch (18.3–end) play
+ * ~1.6–1.8× faster per screen of scroll than the rest. Past the end the film keeps running 1:1 while the
+ * footer slides up (the launch cards leave during that screen).
+ */
+const WARP: readonly (readonly [number, number])[] = [
+    [0, 0],
+    [2.0, 1.25],
+    [4.15, 2.6],
+    [8.35, 6.8],
+    [9.7, 7.55],
+    [18.3, 7.55 + (18.3 - 9.7)],
+    // the launch stack holds only briefly before the footer comes up
+    [TOTAL, 7.55 + (18.3 - 9.7) + (TOTAL - 18.3) * 0.55],
+];
+/** length of the film in screens of scroll; the page track is (SCROLL_TOTAL + 1) screens */
+export const SCROLL_TOTAL = WARP[WARP.length - 1][1];
+
+const interp = (x: number, from: 0 | 1, to: 0 | 1) => {
+    if (x <= WARP[0][from]) return WARP[0][to] + (x - WARP[0][from]);
+    for (let i = 1; i < WARP.length; i++) {
+        const a = WARP[i - 1];
+        const b = WARP[i];
+        if (x <= b[from]) return a[to] + ((x - a[from]) / (b[from] - a[from])) * (b[to] - a[to]);
+    }
+    const l = WARP[WARP.length - 1];
+    return l[to] + (x - l[from]);
+};
+/** film t at a scroll position (screens) */
+export const tFromScroll = (s: number) => interp(s, 1, 0);
+/** scroll position (screens) that shows film t */
+export const scrollFromT = (t: number) => interp(t, 0, 1);
+
 export const RESTS = [0.3, 3.1, 5.9, 7.9, 9.4, 10.95, 12.8, 15.1, 16.6, 18.1, 19.6] as const;
 
 export const NAV_TARGETS = { project: 3.1, keep: 15.1, factions: 16.6, world: 18.1 } as const;
@@ -91,3 +126,6 @@ export const ease = {
 
 /** frame-rate independent smoothing toward a target (web-motion rule 16) */
 export const damp = (current: number, target: number, lambda: number, dt: number) => lerp(current, target, 1 - Math.exp(-lambda * dt));
+
+/** the launch stack leaving while the footer slides up (film runs past TOTAL for one screen) */
+export const launchLeave = (t: number) => ease.inOutStrong(seg(t, TOTAL + 0.05, TOTAL + 0.65));

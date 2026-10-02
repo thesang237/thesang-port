@@ -9,12 +9,22 @@ import { gsap } from '@/components/motion-kit/gsap';
  * so screen readers read the text once, as normal text (web-motion rule 11).
  */
 
-type LinesProps = { lines: readonly string[]; className?: string; as?: 'h1' | 'h2' | 'h3' | 'p'; d?: number; indent?: boolean; style?: CSSProperties; children?: ReactNode };
+type LinesProps = {
+    lines: readonly string[];
+    className?: string;
+    as?: 'h1' | 'h2' | 'h3' | 'p';
+    d?: number;
+    indent?: boolean;
+    /** driven by the page scroll instead of a timed reveal (the caller sets each line's opacity) */
+    scrub?: boolean;
+    style?: CSSProperties;
+    children?: ReactNode;
+};
 
 /** Masked line rise. `indent` leaves the first line's start free for a caption (as in the reference). */
-export function Lines({ lines, className = '', as: Tag = 'h2', d = 0, indent, style, children }: LinesProps) {
+export function Lines({ lines, className = '', as: Tag = 'h2', d = 0, indent, scrub, style, children }: LinesProps) {
     return (
-        <Tag className={`kpr-lines ${indent ? 'is-indent' : ''} ${className}`} data-r="lines" data-d={d} style={style}>
+        <Tag className={`kpr-lines ${indent ? 'is-indent' : ''} ${scrub ? 'is-scrub' : ''} ${className}`} data-r={scrub ? undefined : 'lines'} data-d={d} style={style}>
             {children}
             <span className="kpr-sr">{lines.join(' ')}</span>
             <span aria-hidden="true" className="kpr-lines__vis">

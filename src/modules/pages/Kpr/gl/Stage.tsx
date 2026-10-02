@@ -10,17 +10,15 @@ import { film, useUi } from '../scroll/useScrollStore';
 
 import { type Assets, loadAssets } from './assets';
 import { type Cast, choreograph, logoRide } from './choreo';
+import { stageDistance } from './layout';
 import { disposeKtx2 } from './loaders';
 import { createLogoWipe, LOGO_LAST } from './LogoWipe';
 import { type Face, NotchedCard } from './NotchedCard';
 import { baseView, PaintedScene } from './PaintedScene';
 import { paintText } from './text';
 
-/** Camera distance for the pixel stage: 1 world unit = 1 CSS px at z = 0. */
-const distance = (vh: number) => Math.max(1100, vh * 1.25);
-
 function fitPixelCamera(cam: THREE.PerspectiveCamera, w: number, h: number) {
-    const d = distance(h);
+    const d = stageDistance(h);
     cam.position.set(0, 0, d);
     cam.near = 10;
     cam.far = d * 4;
@@ -47,7 +45,7 @@ type Built = {
 
 function build(assets: Assets, scene: THREE.Scene, displayFont: string): Built {
     const geo = new THREE.PlaneGeometry(1, 1, 24, 1);
-    const shared = { noise: assets.noise, flick: assets.flick };
+    const shared = { noise: assets.noise, flick: assets.flick, view: cardView };
     const card = () => new NotchedCard(geo, shared);
 
     const scenes = Object.fromEntries((Object.keys(PAINTINGS) as PaintingId[]).map((id) => [id, new PaintedScene(assets.paintings[id], PAINTINGS[id], assets.books)])) as Record<
@@ -76,14 +74,14 @@ function build(assets: Assets, scene: THREE.Scene, displayFont: string): Built {
         introTall: card().setFaces(image('trailer')).single(),
         lav: LAV_SHADES.map((base) => card().setFaces({ tex: null, aspect: 1, base }).single()),
         ring,
-        keepB: card().setFaces(image('keepTower')),
-        keepC: card().setFaces(image('crater')),
+        keepB: card().setFaces(image('keepTower')).single(),
+        keepC: card().setFaces(image('crater')).single(),
         keep: card().setFaces(painted('keep')),
         factions: card().setFaces(painted('factions')),
         world: card().setFaces(painted('world')),
-        launchA: card().setFaces(image('crater')),
-        launchB: card().setFaces(image('keepTower')),
-        launchC: card().setFaces(image('eyes')),
+        launchA: card().setFaces(image('crater')).single(),
+        launchB: card().setFaces(image('keepTower')).single(),
+        launchC: card().setFaces(image('eyes')).single(),
         word: wordCard,
     };
     cast.lav.forEach((l) => (l.u.uGrain.value = 0.015));
@@ -118,6 +116,10 @@ function build(assets: Assets, scene: THREE.Scene, displayFont: string): Built {
 
 /** the purple layers that grow behind the 10K portrait: darker, darker still, then the gallery's lavender */
 const LAV_SHADES = ['#7466c6', '#5b4daa', '#8b7ed9'];
+
+/** stage size + drawing buffer size, shared by every card's shader */
+const cardView = { value: new THREE.Vector4(1, 1, 1, 1) };
+const bufferSize = new THREE.Vector2();
 
 /** the logo wipe's own clock (frames), independent of the scroll once triggered */
 const logoClock = { frame: 0 };
@@ -186,6 +188,8 @@ function World() {
         if (!b || film.covered) return;
         const t = film.view;
         choreograph(b.cast);
+        gl.getDrawingBufferSize(bufferSize);
+        cardView.value.set(film.vw, film.vh, bufferSize.x, bufferSize.y);
         const chroma = film.reduced ? 0 : Math.min(0.012, Math.abs(film.vel) * 0.0035);
         const ptrK = film.reduced ? 0 : 1;
         for (const c of b.all) c.apply(film.time, film.dt, film.px * ptrK, film.py * ptrK, chroma);

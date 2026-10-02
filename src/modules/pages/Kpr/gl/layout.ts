@@ -28,3 +28,6 @@ export function anchor(name: string, vw: number, vh: number, fb: [number, number
     const [l, t, w, h] = fb;
     return { x: (l + w / 2 - 0.5) * vw, y: (0.5 - t - h / 2) * vh, w: w * vw, h: h * vh };
 }
+
+/** Camera distance of the pixel stage: 1 world unit = 1 CSS px at z = 0. */
+export const stageDistance = (vh: number) => Math.max(1100, vh * 1.25);

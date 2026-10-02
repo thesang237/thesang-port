@@ -183,6 +183,12 @@ html.kpr-has-cursor .kpr * {
         &.is-indent .kpr-line:first-child > span {
             padding-left: var(--indent, calc(8 * var(--u)));
         }
+
+        // scroll-driven lines: hidden until the scroll brings them in (Story.tsx sets each one)
+        &.is-scrub .kpr-line > span {
+            opacity: 0;
+            will-change: opacity, transform;
+        }
     }
 
     // caption with a dot and per-char type-on
@@ -1231,27 +1237,32 @@ html.kpr-has-cursor .kpr * {
     }
 
     .kpr-launch__a {
-        --x: -3;
+        --x: -8;
         --y: 0;
         --w: 39.3;
         --h: 36.6;
     }
 
     .kpr-launch__b {
-        --x: 22.3;
+        --x: 23.5;
         --y: -5.8;
         --w: 17.1;
         --h: 34.6;
     }
 
     .kpr-launch__c {
-        --x: -2.4;
-        --y: -26.3;
+        --x: -5;
+        --y: -30;
         --w: 31.4;
         --h: 17.75;
     }
 
+    .kpr-launch__card {
+        transform: translate3d(0, calc(var(--kpr-leave, 0) * -55svh), 0);
+    }
+
     .kpr-launch__cardcap {
+        opacity: calc(1 - var(--kpr-leave, 0) * 3);
         position: absolute;
         left: calc(3.2 * var(--u));
         top: calc(3 * var(--u));
@@ -1292,17 +1303,24 @@ html.kpr-has-cursor .kpr * {
         letter-spacing: -0.02em;
         color: #000;
         pointer-events: auto;
-        transition:
-            color var(--dur-fast) var(--ease-out),
-            transform var(--dur-fast) var(--ease-out);
+        transition: transform var(--dur-fast) var(--ease-out);
 
+        // outline with a 45° cut bottom right, drawn as one SVG path (BtnFrame.tsx) so the cut has its
+        // hairline too; on hover the cut morphs into a rounded corner and the fill switches at once
         .kpr-btn__bg {
             position: absolute;
             inset: 0;
-            border: 1px solid currentColor;
-            border-radius: calc(0.5 * var(--u));
-            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1.2 * var(--u)), calc(100% - 1.2 * var(--u)) 100%, 0 100%);
-            transition: background-color var(--dur-fast) var(--ease-out);
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            overflow: visible;
+
+            path {
+                fill: transparent;
+                stroke: currentColor;
+                stroke-width: 1px;
+                vector-effect: non-scaling-stroke;
+            }
         }
 
         .kpr-btn__icon {
@@ -1318,10 +1336,20 @@ html.kpr-has-cursor .kpr * {
             &:hover {
                 color: #fff;
 
-                .kpr-btn__bg {
-                    background: #000;
+                .kpr-btn__bg path {
+                    fill: #000;
+                    stroke: #000;
                 }
             }
+        }
+
+        &:focus-visible .kpr-btn__bg path {
+            fill: #000;
+            stroke: #000;
+        }
+
+        &:focus-visible {
+            color: #fff;
         }
 
         &:active {
@@ -1336,8 +1364,9 @@ html.kpr-has-cursor .kpr * {
             &:hover {
                 color: #000;
 
-                .kpr-btn__bg {
-                    background: #fff;
+                .kpr-btn__bg path {
+                    fill: #fff;
+                    stroke: #fff;
                 }
             }
         }

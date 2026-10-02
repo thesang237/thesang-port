@@ -7,7 +7,7 @@ import { useSmoothScroll } from '@/components/motion-kit/SmoothScroll';
 
 import { NAV } from '../../data/copy';
 import { onFrame } from '../../scroll/frame';
-import { NAV_TARGETS, TOTAL } from '../../scroll/timeline';
+import { NAV_TARGETS, scrollFromT, TOTAL } from '../../scroll/timeline';
 import { film, useUi } from '../../scroll/useScrollStore';
 import { Burger, Console, KeeperMark } from '../icons';
 import { Hacky, scrambleTween } from '../ui/Text';
@@ -53,7 +53,7 @@ export default function Hud() {
     );
 
     const go = (at: number) => {
-        lenis?.scrollTo(at * film.vh, { duration: 2.4, easing: (k: number) => (k < 0.5 ? 8 * k ** 4 : 1 - (-2 * k + 2) ** 4 / 2) });
+        lenis?.scrollTo(scrollFromT(at) * film.vh, { duration: 2.4, easing: (k: number) => (k < 0.5 ? 8 * k ** 4 : 1 - (-2 * k + 2) ** 4 / 2) });
     };
 
     return (
