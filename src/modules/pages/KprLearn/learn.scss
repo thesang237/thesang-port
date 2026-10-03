@@ -1,0 +1,490 @@
+// ─── KPR, decoded — learn page theme ────────────────────────────────────────
+// The source's own language: white paper, black ink, lavender #8b7ed9, lime #c0fb50, Whyte + Plex Mono,
+// notched "folder tab" shapes. Fonts come from the /kpr layout as CSS variables.
+
+// The host site scales the root font-size with the viewport; this guide uses standard 16px rems
+// so Tailwind spacing reads as designed. Scoped to this page.
+html:has(.kl-root) {
+    font-size: 16px;
+}
+
+body:has(.kl-root) {
+    background: #f3f2ee;
+}
+
+.kl-root {
+    --kl-bg: #f3f2ee;
+    --kl-bg-2: #ebeae5;
+    --kl-panel: #ffffff;
+    --kl-panel-2: #efedf8;
+    --kl-line: rgba(12, 12, 14, 0.1);
+    --kl-line-2: rgba(12, 12, 14, 0.2);
+    --kl-ink: #0c0c0e;
+    --kl-body: #2c2c33;
+    --kl-dim: #55555f;
+    --kl-faint: #8a8a94;
+    --kl-lav: #8b7ed9;
+    --kl-lav-deep: #5b4daa;
+    --kl-lav-ink: #3f3486;
+    --kl-lime: #c0fb50;
+    --kl-warn: #d9572b;
+    --kl-black: #0c0c0e;
+    --kl-gutter: clamp(16px, 3vw, 40px);
+    --kl-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --kl-sans: var(--kpr-font-sans), 'Helvetica Neue', Arial, sans-serif;
+    --kl-mono-f: var(--kpr-font-mono), ui-monospace, monospace;
+    --kl-display: var(--kpr-font-display), var(--kpr-font-sans), sans-serif;
+
+    position: relative;
+    min-height: 100vh;
+    // tooltips near the edge must never widen the page (clip ≠ hidden: sticky still works)
+    overflow-x: clip;
+    background: var(--kl-bg);
+    color: var(--kl-ink);
+    font-family: var(--kl-sans);
+    -webkit-font-smoothing: antialiased;
+
+    // the global reset unsets <pre>; give code blocks their box back
+    pre {
+        display: block;
+    }
+
+    ::selection {
+        background: var(--kl-lime);
+        color: var(--kl-black);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--kl-lav-deep);
+        outline-offset: 2px;
+    }
+
+    .kl-mono {
+        font-family: var(--kl-mono-f);
+        font-feature-settings: 'zero' on;
+    }
+
+    .kl-display {
+        font-family: var(--kl-display);
+        font-weight: 700;
+    }
+
+    // headings: Whyte heavy and tight, like the source's titles
+    .kl-head {
+        font-weight: 700;
+        letter-spacing: -0.045em;
+    }
+
+    // the 5×5 square dot of the source's captions
+    .kl-dot {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        flex-shrink: 0;
+        background: currentColor;
+    }
+
+    // faint grid behind the hero (the source's HUD hairlines)
+    .kl-grid-bg {
+        background-image: linear-gradient(var(--kl-line) 1px, transparent 1px), linear-gradient(90deg, var(--kl-line) 1px, transparent 1px);
+        background-size: 80px 80px;
+    }
+
+    // ── notched shapes (the card's folder tab, in CSS) ───────────────────
+    // a tab whose right edge steps down at 45° (demo titles, tabs)
+    .kl-tab-shape {
+        clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+    }
+
+    // panel with a stepped notch on the top right corner
+    .kl-notch {
+        --n-w: 34%;
+        --n-d: 14px;
+        clip-path: polygon(0 0, calc(100% - var(--n-w)) 0, calc(100% - var(--n-w) + var(--n-d)) var(--n-d), 100% var(--n-d), 100% 100%, 0 100%);
+    }
+
+    // 45° cut corner bottom right (the source's button and card chamfer)
+    .kl-cut {
+        --c: 14px;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%);
+    }
+
+    // ── tabs ──────────────────────────────────────────────────────────────
+    .kl-tabs {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .kl-tab {
+        position: relative;
+        color: var(--kl-dim);
+        isolation: isolate;
+        transition: color 0.3s;
+
+        // the source's link hover: a block slides in behind the label
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: var(--kl-black);
+            transform: translateX(-101%);
+            transition: transform 0.45s var(--kl-ease);
+        }
+
+        &:hover {
+            color: #fff;
+
+            &::before {
+                transform: translateX(0);
+            }
+        }
+
+        &.is-active {
+            color: var(--kl-black);
+
+            &::before {
+                transform: none;
+                background: var(--kl-lime);
+                clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+            }
+        }
+
+        overflow: hidden;
+
+        .kl-tab-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--kl-lav);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        &.is-visited .kl-tab-dot {
+            opacity: 1;
+        }
+    }
+
+    // ── prose ─────────────────────────────────────────────────────────────
+    .kl-p {
+        color: var(--kl-body);
+        font-size: 16.5px;
+        line-height: 1.72;
+        max-width: 68ch;
+
+        strong {
+            color: var(--kl-ink);
+            font-weight: 650;
+        }
+
+        em {
+            font-style: normal;
+            background: linear-gradient(transparent 58%, rgba(192, 251, 80, 0.75) 58%);
+        }
+    }
+
+    .kl-code-inline {
+        font-family: var(--kl-mono-f);
+        font-size: 0.84em;
+        padding: 0.1em 0.38em;
+        border-radius: 4px;
+        background: var(--kl-panel-2);
+        border: 1px solid rgba(91, 77, 170, 0.18);
+        color: var(--kl-lav-ink);
+        white-space: nowrap;
+
+        // long formulas must not run off a phone screen
+        @media (max-width: 640px) {
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .kl-term {
+        position: relative;
+        border-bottom: 1px dashed var(--kl-lav);
+        cursor: help;
+        color: var(--kl-ink);
+
+        .kl-term-tip {
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 10px);
+            width: min(300px, 80vw);
+            transform: translate(-50%, 6px);
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                opacity 0.25s,
+                transform 0.4s var(--kl-ease);
+            z-index: 40;
+        }
+
+        &:hover .kl-term-tip,
+        &:focus .kl-term-tip {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        // phones: a term near the edge would push its tip off screen, so tips dock to the bottom
+        @media (max-width: 640px) {
+            .kl-term-tip {
+                position: fixed;
+                left: 16px;
+                right: 16px;
+                bottom: 16px;
+                width: auto;
+                transform: translateY(6px);
+            }
+
+            &:hover .kl-term-tip,
+            &:focus .kl-term-tip {
+                transform: none;
+            }
+        }
+    }
+
+    // ── controls ──────────────────────────────────────────────────────────
+    .kl-range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 18px;
+        background: transparent;
+        cursor: pointer;
+
+        &::-webkit-slider-runnable-track {
+            height: 2px;
+            background: linear-gradient(90deg, var(--kl-ink) var(--fill, 50%), rgba(12, 12, 14, 0.14) var(--fill, 50%));
+        }
+
+        &::-moz-range-track {
+            height: 2px;
+            background: linear-gradient(90deg, var(--kl-ink) var(--fill, 50%), rgba(12, 12, 14, 0.14) var(--fill, 50%));
+        }
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            margin-top: -5px;
+            background: var(--kl-ink);
+            box-shadow: 0 0 0 4px rgba(139, 126, 217, 0.18);
+            clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%);
+            transition: box-shadow 0.2s;
+        }
+
+        &::-moz-range-thumb {
+            width: 11px;
+            height: 11px;
+            border: 0;
+            border-radius: 0;
+            background: var(--kl-ink);
+        }
+
+        &:focus-visible {
+            outline: none;
+
+            &::-webkit-slider-thumb {
+                background: var(--kl-lav-deep);
+            }
+        }
+    }
+
+    .kl-btn {
+        transition:
+            background 0.25s,
+            border-color 0.25s,
+            color 0.25s,
+            transform 0.4s var(--kl-ease);
+
+        &:active {
+            transform: scale(0.97);
+        }
+    }
+
+    // ── flashcards ────────────────────────────────────────────────────────
+    .kl-card {
+        perspective: 900px;
+
+        .kl-card-inner {
+            position: relative;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.7s var(--kl-ease);
+        }
+
+        &.is-flipped .kl-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .kl-card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+        }
+
+        .kl-card-back {
+            transform: rotateY(180deg);
+        }
+    }
+
+    .kl-scrollbox {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(12, 12, 14, 0.25) transparent;
+        overscroll-behavior: contain;
+    }
+
+    // ── teaching copies of the source's text pieces (chapter 10) ─────────
+    // (same class names as the source so its real buildReveal() can drive them)
+    .kl-reveal {
+        .kpr-line {
+            display: block;
+            overflow: hidden;
+            padding-bottom: 0.1em;
+            margin-bottom: -0.1em;
+
+            > span {
+                display: inline-block;
+                transform-origin: 0 100%;
+            }
+        }
+
+        .kpr-ch {
+            display: inline-block;
+            white-space: pre;
+        }
+
+        .kpr-dot {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            margin-right: 8px;
+            background: currentColor;
+            vertical-align: middle;
+        }
+
+        .kpr-hair {
+            display: block;
+            background: currentColor;
+            opacity: 0.35;
+        }
+
+        .kpr-hair--h {
+            height: 1px;
+            width: 100%;
+            transform-origin: 0 50%;
+        }
+
+        .kpr-hair--v {
+            width: 1px;
+            height: 100%;
+            transform-origin: 50% 0;
+        }
+
+        .kpr-hacky {
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .kpr-hacky__spacer {
+            visibility: hidden;
+            text-transform: uppercase;
+        }
+
+        .kpr-hacky__anim {
+            position: absolute;
+            inset: 0;
+            text-transform: uppercase;
+        }
+
+        .kpr-sr {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+    }
+
+    // the source's button (dom/ui/BtnFrame.tsx draws the outline; fill switches at once on hover)
+    .kl-kprbtn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        height: 46px;
+        padding: 0 22px;
+        color: var(--kl-ink);
+        font-family: var(--kl-mono-f);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        isolation: isolate;
+
+        .kpr-btn__bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: visible;
+
+            path {
+                fill: transparent;
+                stroke: currentColor;
+                stroke-width: 1;
+                vector-effect: non-scaling-stroke;
+            }
+        }
+
+        .kpr-hacky {
+            position: relative;
+        }
+
+        .kpr-hacky__spacer {
+            visibility: hidden;
+        }
+
+        .kpr-hacky__anim {
+            position: absolute;
+            inset: 0;
+        }
+
+        &:hover,
+        &:focus-visible {
+            color: #fff;
+
+            .kpr-btn__bg path {
+                fill: var(--kl-black);
+                stroke: var(--kl-black);
+            }
+        }
+    }
+
+    .kl-grain {
+        pointer-events: none;
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        opacity: 0.06;
+        mix-blend-mode: multiply;
+        background-image: url('/kpr/img/extras/noise.webp');
+        background-size: 256px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kl-root .kl-card .kl-card-inner {
+        transition: none;
+    }
+
+    .kl-root .kl-tab::before {
+        transition: none;
+    }
+}
