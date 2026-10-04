@@ -1,0 +1,391 @@
+// ─── Grainline, decoded — learn page theme ──────────────────────────────────
+// The source's own language: deep green-black, white ink, the mint of the bead streams (#55ffc2), the
+// amber of the DNA (#ed863b), the kernel's gold; caps titles in the page's display face, thin rings
+// like the side nav. Display face from the /corn layout, body + mono from the learn layout.
+
+// The host site scales the root font-size with the viewport; this guide uses standard 16px rems
+// so Tailwind spacing reads as designed. Scoped to this page.
+html:has(.cl-root) {
+    font-size: 16px;
+}
+
+body:has(.cl-root) {
+    background: #07110c;
+}
+
+// The global reset sets `button { border: none }`, which removes the border *style*; Tailwind 3's
+// `border` utility only sets a width. Give the guide's buttons a solid zero border back (zero
+// specificity, so every border utility still wins).
+:where(.cl-root) button {
+    border: 0 solid;
+}
+
+.cl-root {
+    --cl-bg: #07110c;
+    --cl-bg-2: #0a1610;
+    --cl-panel: #0d1a13;
+    --cl-panel-2: #11231a;
+    --cl-stage: #040a07;
+    --cl-line: rgba(214, 255, 232, 0.08);
+    --cl-line-2: rgba(214, 255, 232, 0.16);
+    --cl-line-3: rgba(214, 255, 232, 0.3);
+    --cl-ink: #f2f5f1;
+    --cl-body: #c9d3cc;
+    --cl-dim: #9aa79f;
+    --cl-faint: #6c7a71;
+    --cl-mint: #55ffc2;
+    --cl-mint-deep: #1fbf8a;
+    --cl-amber: #ed863b;
+    --cl-gold: #e9c46a;
+    --cl-warn: #ff7a59;
+    --cl-gutter: clamp(16px, 3vw, 40px);
+    --cl-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --cl-sans: var(--cl-font-body), 'Helvetica Neue', Arial, sans-serif;
+    --cl-mono-f: var(--cl-font-mono), ui-monospace, monospace;
+    --cl-display: var(--corn-font-display), var(--cl-font-body), sans-serif;
+
+    position: relative;
+    min-height: 100vh;
+    // tooltips near the edge must never widen the page (clip ≠ hidden: sticky still works)
+    overflow-x: clip;
+    background: var(--cl-bg);
+    color: var(--cl-ink);
+    font-family: var(--cl-sans);
+    -webkit-font-smoothing: antialiased;
+
+    // the global reset unsets <pre>; give code blocks their box back
+    pre {
+        display: block;
+    }
+
+    ::selection {
+        background: var(--cl-mint);
+        color: #04140c;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--cl-mint);
+        outline-offset: 2px;
+    }
+
+    .cl-mono {
+        font-family: var(--cl-mono-f);
+        font-feature-settings: 'zero' on;
+        letter-spacing: 0.02em;
+    }
+
+    // the page's caps face: titles only (it has A–Z 0–9 . , ! ? % $ - [ ] and nothing else)
+    .cl-display {
+        font-family: var(--cl-display);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+    }
+
+    .cl-head {
+        font-family: var(--cl-display);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.015em;
+        line-height: 1.02;
+    }
+
+    // a small ring, like the side nav's: track + arc (set --arc 0..100)
+    .cl-ring {
+        display: inline-block;
+        flex-shrink: 0;
+        width: 14px;
+        height: 14px;
+
+        circle {
+            fill: none;
+            stroke-width: 1.4;
+        }
+
+        .cl-ring__track {
+            stroke: currentColor;
+            opacity: 0.35;
+        }
+
+        .cl-ring__arc {
+            stroke: var(--cl-mint);
+            stroke-dasharray: var(--arc, 0) 100;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dasharray 0.9s var(--cl-ease);
+        }
+
+        .cl-ring__core {
+            fill: currentColor;
+            stroke: none;
+        }
+    }
+
+    // round point used in captions (the page's nav core dot)
+    .cl-dot {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    // the page's background card: base + two soft accent glows
+    .cl-glow-bg {
+        background: radial-gradient(60% 70% at 18% 82%, rgba(0, 68, 132, 0.42), transparent 70%), radial-gradient(55% 60% at 82% 18%, rgba(2, 91, 21, 0.5), transparent 70%), #00160a;
+    }
+
+    .cl-grid-bg {
+        background-image: radial-gradient(rgba(214, 255, 232, 0.12) 1px, transparent 1px);
+        background-size: 28px 28px;
+    }
+
+    // ── tabs ──────────────────────────────────────────────────────────────
+    .cl-tabs {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .cl-tab {
+        position: relative;
+        color: var(--cl-faint);
+        transition: color 0.3s;
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 2px;
+            height: 1px;
+            background: var(--cl-mint);
+            transform: scaleX(0);
+            transform-origin: 0 50%;
+            transition: transform 0.5s var(--cl-ease);
+        }
+
+        &:hover {
+            color: var(--cl-ink);
+        }
+
+        &.is-visited {
+            color: var(--cl-dim);
+        }
+
+        &.is-active {
+            color: var(--cl-ink);
+
+            &::after {
+                transform: none;
+            }
+        }
+    }
+
+    // ── prose ─────────────────────────────────────────────────────────────
+    .cl-p {
+        color: var(--cl-body);
+        font-size: 17px;
+        line-height: 1.72;
+        max-width: 68ch;
+
+        strong {
+            color: var(--cl-ink);
+            font-weight: 650;
+        }
+
+        em {
+            font-style: normal;
+            color: var(--cl-ink);
+            background: linear-gradient(transparent 62%, rgba(85, 255, 194, 0.22) 62%);
+        }
+    }
+
+    .cl-code-inline {
+        font-family: var(--cl-mono-f);
+        font-size: 0.82em;
+        padding: 0.1em 0.4em;
+        border-radius: 4px;
+        background: rgba(85, 255, 194, 0.07);
+        border: 1px solid rgba(85, 255, 194, 0.16);
+        color: #a8ffe0;
+        white-space: nowrap;
+
+        // long formulas must not run off a phone screen
+        @media (max-width: 640px) {
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .cl-term {
+        position: relative;
+        border-bottom: 1px dashed var(--cl-mint-deep);
+        cursor: help;
+        color: var(--cl-ink);
+
+        .cl-term-tip {
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 10px);
+            width: min(300px, 80vw);
+            transform: translate(-50%, 6px);
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                opacity 0.25s,
+                transform 0.4s var(--cl-ease);
+            z-index: 40;
+        }
+
+        &:hover .cl-term-tip,
+        &:focus .cl-term-tip {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        // phones: a term near the edge would push its tip off screen, so tips dock to the bottom
+        @media (max-width: 640px) {
+            .cl-term-tip {
+                position: fixed;
+                left: 16px;
+                right: 16px;
+                bottom: 16px;
+                width: auto;
+                transform: translateY(6px);
+            }
+
+            &:hover .cl-term-tip,
+            &:focus .cl-term-tip {
+                transform: none;
+            }
+        }
+    }
+
+    // ── controls ──────────────────────────────────────────────────────────
+    .cl-range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 18px;
+        background: transparent;
+        cursor: pointer;
+
+        &::-webkit-slider-runnable-track {
+            height: 2px;
+            background: linear-gradient(90deg, var(--cl-mint) var(--fill, 50%), rgba(214, 255, 232, 0.14) var(--fill, 50%));
+        }
+
+        &::-moz-range-track {
+            height: 2px;
+            background: linear-gradient(90deg, var(--cl-mint) var(--fill, 50%), rgba(214, 255, 232, 0.14) var(--fill, 50%));
+        }
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            margin-top: -5px;
+            border-radius: 50%;
+            background: var(--cl-bg);
+            border: 1.5px solid var(--cl-mint);
+            box-shadow: 0 0 0 4px rgba(85, 255, 194, 0.12);
+            transition: box-shadow 0.2s;
+        }
+
+        &::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--cl-bg);
+            border: 1.5px solid var(--cl-mint);
+        }
+
+        &:focus-visible {
+            outline: none;
+
+            &::-webkit-slider-thumb {
+                box-shadow: 0 0 0 5px rgba(85, 255, 194, 0.35);
+            }
+        }
+    }
+
+    .cl-btn {
+        transition:
+            background 0.25s,
+            border-color 0.25s,
+            color 0.25s,
+            transform 0.4s var(--cl-ease);
+
+        &:active {
+            transform: scale(0.97);
+        }
+    }
+
+    // ── flashcards ────────────────────────────────────────────────────────
+    .cl-card {
+        perspective: 900px;
+
+        .cl-card-inner {
+            position: relative;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.7s var(--cl-ease);
+        }
+
+        &.is-flipped .cl-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .cl-card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+        }
+
+        .cl-card-back {
+            transform: rotateY(180deg);
+        }
+    }
+
+    .cl-scrollbox {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(214, 255, 232, 0.2) transparent;
+        overscroll-behavior: contain;
+    }
+
+    // transparent DOM heading in the page's face: the WebGL title is drawn exactly on top (chapter 04)
+    .cl-gl-anchor {
+        color: transparent;
+        font-family: var(--corn-font-display);
+        font-weight: 700;
+        margin: 0;
+        white-space: nowrap;
+
+        &.is-shown {
+            -webkit-text-stroke: 1px #ff5a5a;
+        }
+    }
+
+    .cl-grain {
+        pointer-events: none;
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        opacity: 0.07;
+        mix-blend-mode: overlay;
+        background-image: url('/corn/tex/post-noise.png');
+        background-size: 256px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cl-root .cl-card .cl-card-inner,
+    .cl-root .cl-tab::after,
+    .cl-root .cl-ring .cl-ring__arc {
+        transition: none;
+    }
+}
