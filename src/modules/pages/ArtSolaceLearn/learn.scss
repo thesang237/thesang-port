@@ -1,0 +1,337 @@
+// ─── Solace, decoded — learn page theme ─────────────────────────────────────
+// The artwork's own language: warm sand paper, near-black ink, one rust accent from the "Mars"
+// palette, a fine grain over everything. Display: Instrument Serif; body: Inter; mono: JetBrains Mono.
+
+// The host site scales the root font-size with the viewport; this guide uses standard 16px rems
+// so Tailwind spacing reads as designed. Scoped to this page.
+html:has(.sl-root) {
+    font-size: 16px;
+}
+
+body:has(.sl-root) {
+    background: #f2e6da;
+}
+
+// The global reset sets `button { border: none }`, which removes the border *style*; Tailwind 3's
+// `border` utility only sets a width. Give the guide's buttons a solid zero border back.
+:where(.sl-root) button {
+    border: 0 solid;
+}
+
+.sl-root {
+    --sl-bg: #f2e6da;
+    --sl-bg-2: #ecdfd2;
+    --sl-panel: #f8efe6;
+    --sl-panel-2: #ead9c9;
+    --sl-stage: #fbf5ef;
+    --sl-code: #1e1c21;
+    --sl-line: rgba(30, 28, 33, 0.09);
+    --sl-line-2: rgba(30, 28, 33, 0.16);
+    --sl-line-3: rgba(30, 28, 33, 0.3);
+    --sl-ink: #1e1c21;
+    --sl-body: #3b3531;
+    --sl-dim: #655b53;
+    --sl-faint: #877c72;
+    // the rust: #DE8471 (Mars paper) for fills, a deeper rust for text and lines that need contrast
+    --sl-rust: #de8471;
+    --sl-rust-ink: #a8452a;
+    --sl-rust-soft: rgba(222, 132, 113, 0.16);
+    --sl-warn: #c2412f;
+    --sl-gutter: clamp(16px, 3vw, 40px);
+    --sl-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --sl-sans: var(--font-inter), 'Helvetica Neue', Arial, sans-serif;
+    --sl-mono-f: var(--sl-font-mono), ui-monospace, monospace;
+    --sl-serif: var(--sl-font-display), Georgia, serif;
+
+    position: relative;
+    min-height: 100vh;
+    // tooltips near the edge must never widen the page (clip ≠ hidden: sticky still works)
+    overflow-x: clip;
+    background: var(--sl-bg);
+    color: var(--sl-ink);
+    font-family: var(--sl-sans);
+    -webkit-font-smoothing: antialiased;
+
+    // the global reset unsets <pre>; give code blocks their box back
+    pre {
+        display: block;
+    }
+
+    ::selection {
+        background: var(--sl-ink);
+        color: var(--sl-bg);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--sl-rust-ink);
+        outline-offset: 2px;
+    }
+
+    .sl-mono {
+        font-family: var(--sl-mono-f);
+        font-feature-settings: 'zero' on;
+        letter-spacing: 0.02em;
+    }
+
+    .sl-serif {
+        font-family: var(--sl-serif);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+    }
+
+    .sl-head {
+        font-family: var(--sl-serif);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 0.98;
+    }
+
+    // a grain dot used in captions (one grain of the art's sand)
+    .sl-dot {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        flex-shrink: 0;
+        background: currentColor;
+    }
+
+    // ── tabs ──────────────────────────────────────────────────────────────
+    .sl-tabs {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .sl-tab {
+        position: relative;
+        color: var(--sl-faint);
+        transition: color 0.3s;
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 2px;
+            height: 2px;
+            background: var(--sl-rust);
+            transform: scaleX(0);
+            transform-origin: 0 50%;
+            transition: transform 0.5s var(--sl-ease);
+        }
+
+        &:hover {
+            color: var(--sl-ink);
+        }
+
+        &.is-visited {
+            color: var(--sl-dim);
+        }
+
+        &.is-active {
+            color: var(--sl-ink);
+
+            &::after {
+                transform: none;
+            }
+        }
+    }
+
+    // ── prose ─────────────────────────────────────────────────────────────
+    .sl-p {
+        color: var(--sl-body);
+        font-size: 17px;
+        line-height: 1.72;
+        max-width: 68ch;
+
+        strong {
+            color: var(--sl-ink);
+            font-weight: 600;
+        }
+
+        em {
+            font-style: normal;
+            color: var(--sl-ink);
+            background: linear-gradient(transparent 62%, var(--sl-rust-soft) 62%);
+        }
+    }
+
+    .sl-code-inline {
+        font-family: var(--sl-mono-f);
+        font-size: 0.82em;
+        padding: 0.1em 0.4em;
+        border-radius: 4px;
+        background: rgba(30, 28, 33, 0.06);
+        border: 1px solid rgba(30, 28, 33, 0.12);
+        color: var(--sl-rust-ink);
+        white-space: nowrap;
+
+        // long formulas must not run off a phone screen
+        @media (max-width: 640px) {
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .sl-term {
+        position: relative;
+        border-bottom: 1px dashed var(--sl-rust-ink);
+        cursor: help;
+        color: var(--sl-ink);
+
+        .sl-term-tip {
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 10px);
+            width: min(300px, 80vw);
+            transform: translate(-50%, 6px);
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                opacity 0.25s,
+                transform 0.4s var(--sl-ease);
+            z-index: 40;
+        }
+
+        &:hover .sl-term-tip,
+        &:focus .sl-term-tip {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        // phones: a term near the edge would push its tip off screen, so tips dock to the bottom
+        @media (max-width: 640px) {
+            .sl-term-tip {
+                position: fixed;
+                left: 16px;
+                right: 16px;
+                bottom: 16px;
+                width: auto;
+                transform: translateY(6px);
+            }
+
+            &:hover .sl-term-tip,
+            &:focus .sl-term-tip {
+                transform: none;
+            }
+        }
+    }
+
+    // ── controls ──────────────────────────────────────────────────────────
+    .sl-range {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 18px;
+        background: transparent;
+        cursor: pointer;
+
+        &::-webkit-slider-runnable-track {
+            height: 2px;
+            background: linear-gradient(90deg, var(--sl-ink) var(--fill, 50%), rgba(30, 28, 33, 0.16) var(--fill, 50%));
+        }
+
+        &::-moz-range-track {
+            height: 2px;
+            background: linear-gradient(90deg, var(--sl-ink) var(--fill, 50%), rgba(30, 28, 33, 0.16) var(--fill, 50%));
+        }
+
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            margin-top: -5px;
+            border-radius: 50%;
+            background: var(--sl-rust);
+            border: 1.5px solid var(--sl-ink);
+            box-shadow: 0 0 0 4px rgba(222, 132, 113, 0.18);
+            transition: box-shadow 0.2s;
+        }
+
+        &::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--sl-rust);
+            border: 1.5px solid var(--sl-ink);
+        }
+
+        &:focus-visible {
+            outline: none;
+
+            &::-webkit-slider-thumb {
+                box-shadow: 0 0 0 5px rgba(168, 69, 42, 0.4);
+            }
+        }
+    }
+
+    .sl-btn {
+        transition:
+            background 0.25s,
+            border-color 0.25s,
+            color 0.25s,
+            transform 0.4s var(--sl-ease);
+
+        &:active {
+            transform: scale(0.97);
+        }
+    }
+
+    // ── flashcards ────────────────────────────────────────────────────────
+    .sl-card {
+        perspective: 900px;
+
+        .sl-card-inner {
+            position: relative;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.7s var(--sl-ease);
+        }
+
+        &.is-flipped .sl-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .sl-card-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+        }
+
+        .sl-card-back {
+            transform: rotateY(180deg);
+        }
+    }
+
+    .sl-scrollbox {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(30, 28, 33, 0.25) transparent;
+        overscroll-behavior: contain;
+    }
+
+    // canvases inside demos scale crisply (pixel art of sand, never smoothed)
+    .sl-pixels {
+        image-rendering: pixelated;
+    }
+
+    // the art's grain over the whole guide: an SVG noise tile, multiplied in
+    .sl-grain {
+        pointer-events: none;
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        opacity: 0.22;
+        mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.11  0 0 0 0 0.13  0 0 0 1.1 -0.45'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        background-size: 160px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sl-root .sl-card .sl-card-inner,
+    .sl-root .sl-tab::after {
+        transition: none;
+    }
+}
