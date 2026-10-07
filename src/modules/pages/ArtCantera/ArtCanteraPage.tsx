@@ -1,122 +1,78 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import styles from './cantera.module.scss';
 
-const TOKEN_ID = '39000019';
+import { useEffect, useRef, useState } from 'react';
 
-function randomHash(): string {
-    const bytes = new Uint8Array(32);
-    crypto.getRandomValues(bytes);
-    return '0x' + Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+import { Link } from '@/i18n/navigation';
+
+import { DEFAULT_HASH, isHash, randomHash } from './art/random.js';
+import { renderSize } from './art/scene.js';
+import { useCanteraCanvas } from './useCanteraCanvas';
+
+function initialHash() {
+    if (typeof window === 'undefined') return DEFAULT_HASH;
+    const hash = new URLSearchParams(window.location.search).get('seed');
+    return hash && isHash(hash) ? hash : randomHash();
+}
+function sizeFromViewport() {
+    if (typeof window === 'undefined') return renderSize(720, 1280);
+    const query = new URLSearchParams(window.location.search);
+    const dimension = (key: string, fallback: number) => {
+        const value = Number(query.get(key));
+        return Number.isFinite(value) && value >= 18 && value <= 4096 ? value : fallback;
+    };
+    return renderSize(dimension('w', window.innerWidth), dimension('h', window.innerHeight));
 }
 
-type Status = 'loading' | 'ready' | 'error';
-
-export function ArtCanteraPage() {
-    const [status, setStatus] = useState<Status>('loading');
-
-    useEffect(() => {
-        window.tokenData = { tokenId: TOKEN_ID, hash: randomHash() };
-
-        // Patch setInterval to capture the animation loop ID for cleanup.
-        // The patch is active only for the synchronous duration of the script's
-        // IIFE — from appendChild until onload fires.
-        const intervalIds: number[] = [];
-        const origSetInterval = window.setInterval.bind(window);
-        let capturing = true;
-
-        window.setInterval = (fn: TimerHandler, delay?: number, ...args: unknown[]) => {
-            const id = origSetInterval(fn as TimerHandler, delay, ...args);
-            if (capturing) intervalIds.push(id);
-            return id;
-        };
-
-        const prevBg = document.body.style.backgroundColor;
-        document.body.style.backgroundColor = '#000';
-
-        const script = document.createElement('script');
-        script.src = '/scripts/cantera.js';
-
-        script.onload = () => {
-            capturing = false;
-            window.setInterval = origSetInterval;
-            setStatus('ready');
-        };
-
-        script.onerror = () => {
-            capturing = false;
-            window.setInterval = origSetInterval;
-            setStatus('error');
-        };
-
-        document.head.appendChild(script);
-
-        return () => {
-            // Restore before any other cleanup in case onload never fired
-            capturing = false;
-            window.setInterval = origSetInterval;
-
-            intervalIds.forEach(clearInterval);
-
-            document.body.style.backgroundColor = prevBg;
-
-            document.getElementById('sumCanvas')?.remove();
-            document.getElementById('mainCanvas')?.remove();
-
-            script.remove();
-            delete window.tokenData;
-        };
-    }, []);
-
+function Artwork({ hash, animate }: { hash: string; animate: boolean }) {
+    const canvas = useRef<HTMLCanvasElement>(null);
+    const [size] = useState(sizeFromViewport);
+    const { progress, error } = useCanteraCanvas(canvas, hash, size.width, size.height, animate);
     return (
         <>
-            <style>{`
-                #sumCanvas, #mainCanvas {
-                    padding: 0;
-                    margin: auto;
-                    display: block;
-                    position: fixed;
-                    top: 0; bottom: 0; left: 0; right: 0;
-                }
-            `}</style>
-
-            {status === 'loading' && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        inset: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: '#000',
-                        color: '#999',
-                        fontFamily: 'monospace',
-                        fontSize: 13,
-                        letterSpacing: '0.08em',
-                    }}
-                >
-                    loading…
-                </div>
-            )}
-
-            {status === 'error' && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        inset: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: '#000',
-                        color: '#c0392b',
-                        fontFamily: 'monospace',
-                        fontSize: 13,
-                        letterSpacing: '0.08em',
-                    }}
-                >
-                    failed to load art
-                </div>
+            <canvas ref={canvas} aria-label="Cantera: an eroded stone landscape carved into architectural volumes" className={styles.canvas} />
+            {(progress < 1 || error) && (
+                <p className={styles.status} role="status">
+                    {error || (progress === 0 ? 'Growing terrain…' : `Printing stone · ${Math.round(progress * 100)}%`)}
+                </p>
             )}
         </>
+    );
+}
+export function ArtCanteraPage() {
+    const [hash, setHash] = useState(initialHash);
+    const [animate, setAnimate] = useState(() => typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    useEffect(() => {
+        const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const change = (event: MediaQueryListEvent) => {
+            if (event.matches) setAnimate(false);
+        };
+        media.addEventListener('change', change);
+        return () => media.removeEventListener('change', change);
+    }, []);
+    const regenerate = () => {
+        const next = randomHash();
+        const url = new URL(window.location.href);
+        url.searchParams.set('seed', next);
+        window.history.replaceState(null, '', url);
+        setHash(next);
+    };
+    return (
+        <main className={styles.page}>
+            <Artwork key={hash} hash={hash} animate={animate} />
+            <nav className={styles.tools} aria-label="Artwork controls">
+                <Link href="/art-cantera/learn">Explore the techniques ↗</Link>
+                <button type="button" onClick={() => setAnimate(!animate)} aria-pressed={animate}>
+                    {animate ? 'Pause life' : 'Play life'}
+                </button>
+                <button type="button" onClick={regenerate}>
+                    New seed
+                </button>
+                <a href={`?seed=${hash}`} title="Open this seed again">
+                    {hash.slice(2, 10)}
+                </a>
+            </nav>
+        </main>
     );
 }
