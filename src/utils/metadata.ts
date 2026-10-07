@@ -46,6 +46,7 @@ export const extractMetadata = (params: ExtractMetadataParams): Metadata => {
     const finalImage = getOpenGraphImage(overrideMetadata?.ogImage || metadataBase.ogImage);
 
     return {
+        metadataBase: new URL(ServerVars.APP_DOMAIN),
         applicationName: ServerVars.APP_NAME,
         title: finalTitle,
         description: finalDescription,

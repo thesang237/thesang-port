@@ -103,7 +103,7 @@ const Icon = {
 // ─── pieces ─────────────────────────────────────────────────────────────────
 
 // screenshot, or a typographic cover when there is none (or it fails to load)
-function Thumb({ p, sizes, cover = true }: { p: Project; sizes: string; cover?: boolean }) {
+function Thumb({ p, sizes, cover = true, eager = false }: { p: Project; sizes: string; cover?: boolean; eager?: boolean }) {
     const [failed, setFailed] = useState(false);
     if (p.noThumb || failed)
         return cover ? (
@@ -113,7 +113,7 @@ function Thumb({ p, sizes, cover = true }: { p: Project; sizes: string; cover?: 
             </span>
         ) : null;
     // screenshots are already small webp files; skipping the optimiser keeps re-captures from going stale
-    return <Image src={thumb(p)} alt="" fill unoptimized sizes={sizes} style={{ objectFit: 'cover' }} onError={() => setFailed(true)} />;
+    return <Image src={thumb(p)} alt="" fill unoptimized sizes={sizes} loading={eager ? 'eager' : 'lazy'} style={{ objectFit: 'cover' }} onError={() => setFailed(true)} />;
 }
 
 function Chips({ p, keepSlot }: { p: Project; keepSlot?: boolean }) {
@@ -148,7 +148,7 @@ function Card({ p, i, showCat, flash }: { p: Project; i: number; showCat: boolea
     return (
         <article id={`p-${p.id}`} className="ix-card" style={{ '--i': Math.min(i, 7) } as CSSProperties} data-flash={flash}>
             <div className="ix-card__media">
-                <Thumb p={p} sizes="(min-width: 1200px) 310px, (min-width: 900px) 33vw, 50vw" />
+                <Thumb p={p} sizes="(min-width: 1200px) 310px, (min-width: 900px) 33vw, 50vw" eager={i < 4} />
                 {isNew(p) && <span className="ix-card__new">New</span>}
                 <span className="ix-card__open ix-mono" aria-hidden>
                     Open {Icon.arrow}
@@ -183,7 +183,7 @@ function Row({ p, i, onPeek, flash }: { p: Project; i: number; onPeek: (p: Proje
             onPointerLeave={() => onPeek(null)}
         >
             <div className="ix-row__thumb">
-                <Thumb p={p} sizes="96px" cover={false} />
+                <Thumb p={p} sizes="96px" cover={false} eager={i < 4} />
             </div>
             <div className="ix-row__main">
                 <div className="ix-row__title">
