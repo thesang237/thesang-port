@@ -1,50 +1,36 @@
-import { Effect } from 'postprocessing';
-import * as THREE from 'three';
+import { Effect, EffectAttribute } from 'postprocessing';
+import type { WebGLRenderer, WebGLRenderTarget } from 'three';
+import { Color, Uniform, Vector2 } from 'three';
+
+import { DEFAULT_DITHER, type DitherSettings } from '../settings';
 
 import ditheringShader from './DitheringShader';
 
-export type DitheringEffectOptions = {
-    time?: number;
-    resolution?: THREE.Vector2;
-    gridSize?: number;
-    luminanceMethod?: number;
-    invertColor?: boolean;
-    pixelSizeRatio?: number;
-    grayscaleOnly?: boolean;
-};
-
+export type DitheringEffectOptions = Partial<DitherSettings>;
+/** Owns uniforms only. A slider changes values; it never rebuilds the shader. */
 export class DitheringEffect extends Effect {
-    uniforms: Map<string, THREE.Uniform<number | THREE.Vector2>>;
-
-    constructor({ time = 0, resolution = new THREE.Vector2(1, 1), gridSize = 4.0, luminanceMethod = 0, invertColor = false, pixelSizeRatio = 1, grayscaleOnly = false }: DitheringEffectOptions = {}) {
-        const uniforms = new Map<string, THREE.Uniform<number | THREE.Vector2>>([
-            ['time', new THREE.Uniform(time)],
-            ['resolution', new THREE.Uniform(resolution)],
-            ['gridSize', new THREE.Uniform(gridSize)],
-            ['luminanceMethod', new THREE.Uniform(luminanceMethod)],
-            ['invertColor', new THREE.Uniform(invertColor ? 1 : 0)],
-            ['ditheringEnabled', new THREE.Uniform(1)],
-            ['pixelSizeRatio', new THREE.Uniform(pixelSizeRatio)],
-            ['grayscaleOnly', new THREE.Uniform(grayscaleOnly ? 1 : 0)],
+    constructor(options: DitheringEffectOptions = {}) {
+        const settings = { ...DEFAULT_DITHER, ...options };
+        const uniforms = new Map<string, Uniform<number | Vector2 | Color>>([
+            ['resolution', new Uniform(new Vector2(1, 1))],
+            ['pixelRatio', new Uniform(1)],
         ]);
-
-        super('DitheringEffect', ditheringShader, { uniforms });
-        this.uniforms = uniforms;
-    }
-
-    update(renderer: THREE.WebGLRenderer, inputBuffer: THREE.WebGLRenderTarget, deltaTime: number): void {
-        const timeUniform = this.uniforms.get('time');
-        if (timeUniform !== undefined && typeof timeUniform.value === 'number') {
-            timeUniform.value += deltaTime;
+        for (const [key, value] of Object.entries(settings)) {
+            uniforms.set(key, new Uniform(typeof value === 'string' ? new Color(value) : typeof value === 'boolean' ? Number(value) : value));
         }
-
-        const resolutionUniform = this.uniforms.get('resolution');
-        if (resolutionUniform !== undefined && resolutionUniform.value instanceof THREE.Vector2) {
-            resolutionUniform.value.set(inputBuffer.width, inputBuffer.height);
+        // Texture-sampling effects need a separate input from previous effects.
+        super('DitheringEffect', ditheringShader, { uniforms, attributes: EffectAttribute.CONVOLUTION });
+    }
+    setSettings(settings: DitherSettings): void {
+        for (const [key, value] of Object.entries(settings)) {
+            const uniform = this.uniforms.get(key);
+            if (!uniform) continue;
+            if (typeof value === 'string') (uniform.value as Color).set(value);
+            else uniform.value = typeof value === 'boolean' ? Number(value) : value;
         }
     }
-
-    initialize(_renderer: THREE.WebGLRenderer, _alpha: boolean, _frameBufferType: number): void {
-        // No special initialization required
+    update(renderer: WebGLRenderer, inputBuffer: WebGLRenderTarget): void {
+        (this.uniforms.get('resolution')!.value as Vector2).set(inputBuffer.width, inputBuffer.height);
+        this.uniforms.get('pixelRatio')!.value = renderer.getPixelRatio();
     }
 }
