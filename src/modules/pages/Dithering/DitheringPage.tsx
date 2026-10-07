@@ -1,119 +1,89 @@
 'use client';
-
 import './dithering.css';
 
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Center, Float, OrbitControls, useGLTF } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
-import { folder, Leva, useControls } from 'leva';
-import * as THREE from 'three';
+import type { ReactNode } from 'react';
+import { Component, useCallback, useState, useSyncExternalStore } from 'react';
+import dynamic from 'next/dynamic';
 
-import { EnvironmentWrapper } from './Environment';
-import { PostProcessing } from './PostProcessing';
+import { Link } from '@/i18n/navigation';
 
-useGLTF.preload('/jousting_helmet-transformed.glb');
+import { Poster } from './Poster';
+import { DEFAULT_STUDIO } from './settings';
+import { StudioPanel } from './StudioPanel';
 
-function DemoName() {
-    return (
-        <div className="dithering-demo-container">
-            <div className="dithering-demo-name">Dithering Shader</div>
-            <div className="dithering-demo-author">
-                made by{' '}
-                <span className="dithering-underlined">
-                    <a href="https://niccolofanton.dev" target="_blank" rel="noopener noreferrer">
-                        niccolofanton
-                    </a>
-                </span>
-                {' • '}
-                <a href="https://github.com/niccolofanton/dithering-shader" target="_blank" rel="noopener noreferrer" className="dithering-github-link">
-                    GitHub
-                </a>
-            </div>
-        </div>
-    );
-}
-
-const Effects = memo(() => <PostProcessing />);
-Effects.displayName = 'Effects';
-
-type HelmetProps = {
-    [key: string]: unknown;
+const Scene = dynamic(() => import('./Scene'), { ssr: false, loading: () => <p className="studio-fallback">Preparing the print…</p> });
+const subscribeMotion = (notify: () => void) => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    media.addEventListener('change', notify);
+    return () => media.removeEventListener('change', notify);
 };
-
-function Helmet(props: HelmetProps) {
-    const { nodes, materials } = useGLTF('/jousting_helmet-transformed.glb') as any;
-    return (
-        <group {...props} dispose={null}>
-            <mesh
-                castShadow
-                geometry={nodes.Object_2.geometry}
-                material={materials.model_Material_u1_v1}
-                material-roughness={0.15}
-                position={[-2.016, -0.06, 1.381]}
-                rotation={[-1.601, 0.068, 2.296]}
-                scale={0.038}
-            />
-        </group>
-    );
+class CanvasBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+    state = { failed: false };
+    static getDerivedStateFromError() {
+        return { failed: true };
+    }
+    render() {
+        return this.state.failed ? <Poster message="The renderer could not start. Explore the settings or open the field guide." /> : this.props.children;
+    }
 }
-
 export default function DitheringPage() {
-    const { bgColor } = useControls({
-        'Scene Settings': folder({
-            bgColor: { value: '#ffffff', label: 'Background Color' },
-        }),
-    });
-
-    const { intensity, highlight } = useControls({
-        'Environment Settings': folder({
-            intensity: { value: 1.5, min: 0, max: 5, step: 0.1, label: 'Environment Intensity' },
-            highlight: { value: '#066aff', label: 'Highlight Color' },
-        }),
-    });
-
-    const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-    const [modelScale, setModelScale] = useState(() => (typeof window !== 'undefined' && window.innerWidth <= 768 ? 2.4 : 3));
-
-    useEffect(() => {
-        if (rendererRef.current) {
-            rendererRef.current.setClearColor(new THREE.Color(bgColor));
-        }
-    }, [bgColor]);
-
-    const handleResize = useCallback(() => {
-        setModelScale(window.innerWidth <= 768 ? 2.4 : 3);
-    }, []);
-
-    useEffect(() => {
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [handleResize]);
-
+    const [settings, setSettings] = useState(() => structuredClone(DEFAULT_STUDIO));
+    const [panelOpen, setPanelOpen] = useState(true);
+    const [lost, setLost] = useState(false);
+    const [motionOverride, setMotionOverride] = useState(false);
+    const reduced = useSyncExternalStore(
+        subscribeMotion,
+        () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+        () => true,
+    );
+    const animate = settings.animate && (!reduced || motionOverride);
+    const handleLost = useCallback(() => setLost(true), []);
     return (
-        <div className="dithering-page">
-            <Leva collapsed={false} />
-            <Canvas
-                shadows
-                camera={{ position: [0, -1, 4], fov: 65 }}
-                gl={{ alpha: false }}
-                style={{ position: 'fixed', inset: 0 }}
-                onCreated={({ gl }) => {
-                    rendererRef.current = gl;
-                    gl.setClearColor(new THREE.Color(bgColor));
-                }}
-            >
-                <group position={[0, -0.5, 0]}>
-                    <Float floatIntensity={2} rotationIntensity={1} speed={2}>
-                        <Center scale={modelScale} position={[0, 0.8, 0]} rotation={[0, -Math.PI / 3.5, -0.4]}>
-                            <Helmet />
-                        </Center>
-                    </Float>
-                </group>
-                <OrbitControls />
-                <EnvironmentWrapper intensity={intensity} highlight={highlight} />
-                <Effects />
-            </Canvas>
-            <DemoName />
-        </div>
+        <main className={`dithering-page print-ui ${panelOpen ? 'has-panel' : ''}`}>
+            <div className="studio-stage">
+                <CanvasBoundary>
+                    {lost ? <Poster message="The graphics context was lost. Reload to restart the renderer." /> : <Scene settings={{ ...settings, animate }} onLost={handleLost} />}
+                </CanvasBoundary>
+                <nav className="studio-top">
+                    <Link href="/dithering/learn">Explore the field guide ↗</Link>
+                    <div>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (reduced) setMotionOverride(!animate);
+                                setSettings((s) => ({ ...s, animate: !animate }));
+                            }}
+                        >
+                            {animate ? 'Pause motion' : 'Play motion'}
+                        </button>
+                        {!panelOpen && (
+                            <button type="button" onClick={() => setPanelOpen(true)}>
+                                Open controls
+                            </button>
+                        )}
+                    </div>
+                </nav>
+                <div className="dithering-demo-container">
+                    <span className="print-eyebrow">Nine screens. One image.</span>
+                    <h1>Dithering studio</h1>
+                    <p>Drag to orbit · Scroll to zoom · Change the ink</p>
+                    <p className="studio-credit">
+                        Based on{' '}
+                        <a href="https://niccolofanton.dev" target="_blank" rel="noreferrer">
+                            niccolofanton
+                        </a>
+                        &apos;s{' '}
+                        <a href="https://github.com/niccolofanton/dithering-shader" target="_blank" rel="noreferrer">
+                            dithering shader ↗
+                        </a>
+                        {' · Helmet: '}
+                        <a href="https://sketchfab.com/3d-models/jousting-helmet-a4eea31d9d9441af9434a7da5ae46b54" target="_blank" rel="noreferrer">
+                            The Royal Armoury · CC BY 4.0
+                        </a>
+                    </p>
+                </div>
+            </div>
+            {panelOpen && <StudioPanel settings={settings} onChange={setSettings} onClose={() => setPanelOpen(false)} />}
+        </main>
     );
 }

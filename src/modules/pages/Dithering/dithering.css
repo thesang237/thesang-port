@@ -1,71 +1,301 @@
 @font-face {
     font-family: 'OptimusPrinceps';
     src: url('/OptimusPrinceps.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
     font-display: swap;
 }
-
-@font-face {
-    font-family: 'OptimusPrincepsSemiBold';
-    src: url('/OptimusPrincepsSemiBold.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+html:has(.print-ui) {
+    font-size: 16px;
 }
-
-.dithering-page {
+.print-ui {
+    --print-paper: #f2eee6;
+    --print-ink: #20211f;
+    --print-muted: #646660;
+    --print-line: #b4b5ac;
+    --print-surface: #faf8f2;
+    --print-gap: 16px;
+    --print-radius: 6px;
+    --print-fast: 160ms;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 14px;
+    color: var(--print-ink);
+    color-scheme: light;
+}
+.print-ui :focus-visible {
+    outline: 2px solid var(--print-ink);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 2px var(--print-paper);
+}
+.print-ui button,
+.print-ui select {
+    border: 1px solid var(--print-line);
+    border-radius: var(--print-radius);
+    min-height: 40px;
+    padding: 8px 12px;
+    background: var(--print-surface);
+    transition:
+        background var(--print-fast),
+        color var(--print-fast);
+}
+.print-ui button:active {
+    background: var(--print-line);
+}
+.print-ui select {
     width: 100%;
-    height: 100dvh;
-    overflow: hidden;
-    background: #f0f0f0;
+    font-size: 14px;
 }
-
+.print-ui button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+.print-eyebrow {
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+.print-control {
+    min-width: 0;
+}
+.print-control > label {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+.print-control output,
+.print-color span {
+    font-family: ui-monospace, monospace;
+    font-weight: 400;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+.print-control small {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--print-muted);
+}
+.print-control input[type='range'] {
+    display: block;
+    width: 100%;
+    min-height: 24px;
+    accent-color: var(--print-ink);
+    cursor: pointer;
+}
+.print-control input[type='checkbox'] {
+    accent-color: var(--print-ink);
+    width: 20px;
+    height: 20px;
+}
+.print-color {
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    align-items: center;
+    gap: 8px;
+}
+.print-color label {
+    margin: 0;
+    flex-direction: column;
+    gap: 4px;
+}
+.print-color input {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--print-line);
+    padding: 4px;
+    border-radius: var(--print-radius);
+}
+.print-group {
+    display: grid;
+    gap: 16px;
+    padding: 16px 0 24px;
+}
+.dithering-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    height: 100dvh;
+    background: var(--print-paper);
+}
+.dithering-page.has-panel {
+    grid-template-columns: minmax(0, 1fr) 320px;
+}
+.studio-stage {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+}
+.studio-canvas {
+    position: absolute;
+    inset: 0;
+}
+.studio-top {
+    position: absolute;
+    inset: 24px 24px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+.studio-top > a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    padding: 8px;
+    background: var(--print-paper);
+    border-radius: var(--print-radius);
+    font-size: 12px;
+}
+.studio-top > div {
+    display: flex;
+    gap: 8px;
+}
 .dithering-demo-container {
-    position: fixed;
-    bottom: 30px;
-    left: 30px;
-    z-index: 1000;
+    position: absolute;
+    bottom: 32px;
+    left: 32px;
+    pointer-events: none;
+}
+.dithering-demo-container h1 {
+    font-family: 'OptimusPrinceps', Georgia, serif;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 400;
+    line-height: 1.2;
+}
+.dithering-demo-container p {
+    font-size: 12px;
+    margin-top: 8px;
+}
+.dithering-demo-container a {
+    pointer-events: auto;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.studio-credit {
+    color: var(--print-muted);
+}
+.studio-panel {
     display: flex;
     flex-direction: column;
-    mix-blend-mode: difference;
-    pointer-events: none;
+    min-height: 0;
+    border-left: 1px solid var(--print-line);
+    background: var(--print-paper);
+    z-index: 2;
 }
-
-.dithering-demo-name {
-    font-family: 'OptimusPrincepsSemiBold', serif;
-    font-size: 46px;
-    color: white;
-    pointer-events: none;
+.studio-panel header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 16px;
+    border-bottom: 1px solid var(--print-line);
 }
-
-.dithering-demo-author {
-    font-family: 'OptimusPrinceps', serif;
-    font-size: 16px;
-    color: white;
-    margin-top: -5px;
-    letter-spacing: 1.2px;
+.studio-panel header h2 {
+    font-family: 'OptimusPrinceps', Georgia, serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 8px;
 }
-
-.dithering-demo-author a {
-    color: white;
-    pointer-events: all;
+.studio-panel header button {
+    align-self: flex-start;
+    font-size: 20px;
 }
-
-.dithering-github-link {
-    text-decoration: underline;
+.studio-panel-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 16px;
+    flex: 1;
 }
-
-.dithering-underlined {
-    text-decoration: underline;
+.studio-panel details {
+    border-top: 1px solid var(--print-line);
+    margin-top: 16px;
 }
-
-@media screen and (max-width: 768px) {
-    .dithering-demo-name {
-        font-size: 36.8px;
+.studio-panel summary {
+    min-height: 44px;
+    padding: 16px 0;
+    cursor: pointer;
+    font-family: ui-monospace, monospace;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+.studio-panel footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 16px;
+    gap: 8px;
+    border-top: 1px solid var(--print-line);
+}
+.studio-fallback {
+    position: absolute;
+    inset: 40% 24px auto;
+    text-align: center;
+}
+.studio-poster {
+    height: 100%;
+    display: grid;
+    align-content: center;
+    padding: 64px 24px;
+    gap: 16px;
+}
+.studio-poster img {
+    width: min(100%, 640px);
+    margin: auto;
+}
+.studio-poster p {
+    text-align: center;
+}
+@media (hover: hover) {
+    .print-ui button:hover {
+        background: var(--print-ink);
+        color: var(--print-paper);
     }
-
-    .dithering-demo-author {
-        font-size: 12.8px;
+}
+@media (max-width: 767px) {
+    .dithering-page,
+    .dithering-page.has-panel {
+        display: block;
+        height: auto;
+        min-height: 100svh;
+    }
+    .studio-stage {
+        height: 72svh;
+        min-height: 480px;
+    }
+    .studio-panel {
+        border-left: 0;
+        border-top: 1px solid var(--print-line);
+    }
+    .studio-panel-body {
+        overflow: visible;
+    }
+    .studio-top {
+        inset: 16px 16px auto;
+        align-items: flex-start;
+    }
+    .studio-top > div {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    .studio-top button {
+        font-size: 12px;
+    }
+    .dithering-demo-container {
+        bottom: 24px;
+        left: 24px;
+        right: 24px;
+    }
+    .studio-panel header,
+    .studio-panel-body,
+    .studio-panel footer {
+        padding: 24px;
+    }
+    .print-ui select {
+        font-size: 16px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .print-ui * {
+        scroll-behavior: auto !important;
+        transition-duration: 0s !important;
     }
 }
