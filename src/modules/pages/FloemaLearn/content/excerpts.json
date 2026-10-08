@@ -1,0 +1,80 @@
+{
+    "map": {
+        "file": "FloemaExperience.tsx",
+        "line": 69,
+        "code": "home.current = scene.reduced ? home.target : damp(home.current, home.target, 0.1, dt);\nhome.title = scene.reduced ? home.titleTarget : damp(home.title, home.titleTarget, 0.1, dt);",
+        "highlight": [1]
+    },
+    "motion": {
+        "file": "motion.ts",
+        "line": 24,
+        "code": "export const damp = (value: number, target: number, ease: number, dt: number) => mix(value, target, 1 - Math.pow(1 - ease, dt * 60));",
+        "highlight": [1]
+    },
+    "gestures": {
+        "file": "hooks/useGesture.ts",
+        "line": 28,
+        "code": "if (Math.abs(x) + Math.abs(y) > 6) {\n    moved = true;\n    element.setPointerCapture(event.pointerId);\n}\nhandlers.drag?.(x, y, false);",
+        "highlight": [1, 2]
+    },
+    "loops": {
+        "file": "scene.ts",
+        "line": 68,
+        "code": "export function homeY(scene: SceneState, rect: Rect, total: number) {\n    return wrap(rect.y + scene.home.current, scene.height - total, scene.height);\n}",
+        "highlight": [1, 2]
+    },
+    "webgl": {
+        "file": "canvas/Scene.tsx",
+        "line": 20,
+        "code": "vec4 p = modelViewMatrix * vec4(position, 1.0);\np.z += sin(p.y / uHeight * 3.14159265 + 1.57079633) * uSpeed;\ngl_Position = projectionMatrix * p;",
+        "highlight": [1, 2]
+    },
+    "hover": {
+        "file": "components/AnimatedControl.tsx",
+        "line": 28,
+        "code": "const length = outline?.getTotalLength() ?? 0;\nif (outline) gsap.set(outline, { attr: { 'stroke-dasharray': `${length} ${length}`, 'stroke-dashoffset': length } });\n// SVG attributes retain fractional distances, so the stroke draws continuously.\nconst outlineDraw = outline ? gsap.to(outline, { attr: { 'stroke-dashoffset': 0 }, duration: motion.outline, ease: motion.ease, paused: true }) : null;\nconst enter = () => {",
+        "highlight": [1, 2]
+    },
+    "reveal": {
+        "file": "pages/About.tsx",
+        "line": 161,
+        "code": "if (visible && !reveal.played) {\n    reveal.played = true;\n    revealed.current.add(reveal.element);\n    reveal.element.dataset.revealed = 'true';\n    reveal.animation.play();\n}",
+        "highlight": [1, 2]
+    },
+    "collections": {
+        "file": "pages/Collections.tsx",
+        "line": 86,
+        "code": ".set(outgoing, { autoAlpha: 0 }, exit)\n.set(copies[index], { autoAlpha: 1 }, exit)\n.fromTo(copyLines[index], { y: 0, yPercent: 110 }, { y: 0, yPercent: 0, duration: reduced ? 0.16 : 1, stagger: reduced ? 0 : 0.06, ease: motion.ease, overwrite: true }, exit);",
+        "highlight": [1, 2]
+    },
+    "product": {
+        "file": "scene.ts",
+        "line": 33,
+        "code": "const x = mix(left + c.current, c.detail.x, progress);\nconst w = mix(35.76 * unit, c.detail.width, progress);\nconst h = mix(50.48 * unit, c.detail.height, progress);",
+        "highlight": [1, 2]
+    },
+    "about": {
+        "file": "pages/About.tsx",
+        "line": 147,
+        "code": "const progress = clamp((photo.top - scroll + photo.height) / (scene.height + photo.height), 0, 1);\nconst amount = scene.width < 1024 ? 10 : 50;\nphoto.image.style.transform = reduced ? '' : `translate3d(0,${mix(amount, -amount, progress)}px,0) scale(${mix(1, 1.15, progress)})`;",
+        "highlight": [1, 2]
+    },
+    "routes": {
+        "file": "FloemaExperience.tsx",
+        "line": 126,
+        "code": "cover(destination, () => router.push(url, { scroll: false }));",
+        "highlight": [1]
+    },
+    "performance": {
+        "file": "canvas/Scene.tsx",
+        "line": 93,
+        "code": "objects.flat.dispose();\nobjects.subdivided.dispose();",
+        "highlight": [1]
+    },
+    "build": {
+        "file": "motion.ts",
+        "line": 22,
+        "code": "export const mix = (a: number, b: number, progress: number) => a + (b - a) * progress;\nexport const wrap = (value: number, min: number, max: number) => ((((value - min) % (max - min)) + max - min) % (max - min)) + min;\nexport const damp = (value: number, target: number, ease: number, dt: number) => mix(value, target, 1 - Math.pow(1 - ease, dt * 60));",
+        "highlight": [1, 2]
+    }
+}
