@@ -1,5 +1,3 @@
-import HomePage from '@/modules/pages/Floema/pages/HomePage';
-
 export default function Page() {
-    return <HomePage />;
+    return null; // The persistent layout owns the view during route transitions.
 }

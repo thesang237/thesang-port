@@ -1,0 +1,1197 @@
+{
+    "intro": "The surprise of what is possible\nto make with a simple\nand thin thread.",
+    "button": "Discover Collections",
+    "collections": [
+        {
+            "title": "Vita",
+            "description": "The organic structure of the Life collection contains minute shapes created with precious metal threads, all different from each other, and small gold or silver spheres, that unveil themselves with the light reflection."
+        },
+        {
+            "title": "Treccia",
+            "description": "Every single piece of this collection is created handwaving several precious threads. Some of the twines contain precious and colorful stones, set by the Florentine master Marco with a special technique.\nThe result is an invisible setting that lets the stone-free to shine."
+        },
+        {
+            "title": "Aria",
+            "description": "The oval shape represents perfection, balance, and elegance.\nIt is enriched by fantastic filigree workmanship, and a small precious sphere made of metal in the center. Light and minima, the Aria collection earrings are perfect to wear on every occasion"
+        },
+        {
+            "title": "Onde",
+            "description": "The fluid movement of the elements of this collection joins the soft shapes of the filigree, that look like floating in the structures. The repetition of the waves creates big but incredibly light earrings, comfortable to wear because almost imperceptible."
+        }
+    ],
+    "products": [
+        {
+            "id": "silver-necklace-0",
+            "title": "Silver Necklace",
+            "collection": "Vita",
+            "collectionIndex": 0,
+            "image": {
+                "src": "/floema/images/586bd4abaf94c8a4.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/8007e207b3833887.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "gold-bracelet-0",
+            "title": "Gold Bracelet",
+            "collection": "Vita",
+            "collectionIndex": 0,
+            "image": {
+                "src": "/floema/images/1c34a3e27fd9aa50.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/fed61b1059a102f2.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "variable",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "Info",
+                    "text": "LOREM IPSUM"
+                },
+                {
+                    "label": "You should know",
+                    "text": "LOREM IPSUM"
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://awwwards.com/academy"
+            }
+        },
+        {
+            "id": "gold-ring-0",
+            "title": "Gold Ring",
+            "collection": "Vita",
+            "collectionIndex": 0,
+            "image": {
+                "src": "/floema/images/272cd89d49a562a6.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/2779d32471aa050b.jpg",
+                "alt": "",
+                "width": 1333,
+                "height": 2000
+            },
+            "highlights": [
+                {
+                    "text": "variable",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "Info",
+                    "text": "LOREM IPSUM"
+                },
+                {
+                    "label": "You should know",
+                    "text": "LOREM IPSUM"
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://awwwards.com/academy"
+            }
+        },
+        {
+            "id": "vita-silver-necklace-big-0",
+            "title": "Necklace Big",
+            "collection": "Vita",
+            "collectionIndex": 0,
+            "image": {
+                "src": "/floema/images/0c9ac734ff5d3328.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/2779d32471aa050b.jpg",
+                "alt": "",
+                "width": 1333,
+                "height": 2000
+            },
+            "highlights": [
+                {
+                    "text": "variable",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "Info",
+                    "text": "LOREM IPSUM"
+                },
+                {
+                    "label": "You should know",
+                    "text": "LOREM IPSUM"
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://awwwards.com/academy"
+            }
+        },
+        {
+            "id": "silver-ring-0",
+            "title": "Silver Ring",
+            "collection": "Vita",
+            "collectionIndex": 0,
+            "image": {
+                "src": "/floema/images/969b7d8d289dbe48.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/041a44fb48a929bf.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "variable",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "Info",
+                    "text": "LOREM IPSUM"
+                },
+                {
+                    "label": "You should know",
+                    "text": "LOREM IPSUM"
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://awwwards.com/academy"
+            }
+        },
+        {
+            "id": "gold-necklace-with-small-sapphire-1",
+            "title": "Necklace Sapphire",
+            "collection": "Treccia",
+            "collectionIndex": 1,
+            "image": {
+                "src": "/floema/images/4a5b1477bbe6cbfa.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/f22a61c1cdf4fe6a.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "gold-circle-earrings-with-sapphires-1",
+            "title": "Circle Earrings",
+            "collection": "Treccia",
+            "collectionIndex": 1,
+            "image": {
+                "src": "/floema/images/4c58f52cb3f35ca7.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/65a51a8392bb12d6.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "gold-ring-with-sapphire-1",
+            "title": "Ring Sapphire",
+            "collection": "Treccia",
+            "collectionIndex": 1,
+            "image": {
+                "src": "/floema/images/4c58f52cb3f35ca7.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/65a51a8392bb12d6.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "gold-necklace-with-emerald-1",
+            "title": "Necklace Emerald",
+            "collection": "Treccia",
+            "collectionIndex": 1,
+            "image": {
+                "src": "/floema/images/0dd9b3cc6522a879.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/be62e972303cdf46.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "gold-earrings-with-emeralds-1",
+            "title": "Earrings Emerald",
+            "collection": "Treccia",
+            "collectionIndex": 1,
+            "image": {
+                "src": "/floema/images/c035e1f8e06207a7.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/be62e972303cdf46.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "gold-ring-with-emerald-1",
+            "title": "Ring Emerald",
+            "collection": "Treccia",
+            "collectionIndex": 1,
+            "image": {
+                "src": "/floema/images/22701a288b8f5fbc.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/65a51a8392bb12d6.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "silver-earrings-with-ruby-1",
+            "title": "Earrings Ruby",
+            "collection": "Treccia",
+            "collectionIndex": 1,
+            "image": {
+                "src": "/floema/images/39975729e8d7eead.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/20b8d6011cce05f1.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "silver-necklace-with-ruby-1",
+            "title": "Necklace Ruby",
+            "collection": "Treccia",
+            "collectionIndex": 1,
+            "image": {
+                "src": "/floema/images/f4b3b63389bdf449.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/020e5a81564dc49a.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "aria-gold-2",
+            "title": "Earrings Gold",
+            "collection": "Aria",
+            "collectionIndex": 2,
+            "image": {
+                "src": "/floema/images/9e0d9b406e24f5c8.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/d676502b25bc8c2a.jpg",
+                "alt": "",
+                "width": 831,
+                "height": 1174
+            },
+            "highlights": [
+                {
+                    "text": "3,5 x 2,5 x 0,1 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "Info",
+                    "text": "Lorem Ipsum"
+                },
+                {
+                    "label": "You should know",
+                    "text": "Lorem Ipsum"
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://awwwards.com"
+            }
+        },
+        {
+            "id": "silver-necklace-3",
+            "title": "Silver Necklace",
+            "collection": "Vita",
+            "collectionIndex": 3,
+            "image": {
+                "src": "/floema/images/586bd4abaf94c8a4.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/8007e207b3833887.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "double-silver-earrings-3",
+            "title": "Double Earrings",
+            "collection": "Onde",
+            "collectionIndex": 3,
+            "image": {
+                "src": "/floema/images/08a087fe07978e1d.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/b763e8a3ce2de672.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "single-sliver-earrings-3",
+            "title": "Silver Earrings",
+            "collection": "Onde",
+            "collectionIndex": 3,
+            "image": {
+                "src": "/floema/images/21bd395d2785437f.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/f63929ee7f276ae8.jpg",
+                "alt": "",
+                "width": 831,
+                "height": 1174
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        },
+        {
+            "id": "triple-silver-earrings-3",
+            "title": "Triple Earrings",
+            "collection": "Onde",
+            "collectionIndex": 3,
+            "image": {
+                "src": "/floema/images/1a1f4e3d5d8daf79.jpg",
+                "alt": "",
+                "width": 555,
+                "height": 783
+            },
+            "model": {
+                "src": "/floema/images/f75b6181764270ff.jpg",
+                "alt": "",
+                "width": 831,
+                "height": 1174
+            },
+            "highlights": [
+                {
+                    "text": "20 x 2,5 x 0,3 cm",
+                    "icon": "arrow"
+                },
+                {
+                    "text": "Silver",
+                    "icon": "star"
+                }
+            ],
+            "information": [
+                {
+                    "label": "INFO",
+                    "text": "The organic composition of this piece reveals in each cell a different shape of handwoven threads, embellished with small spheres of pure silver. The lightness and transparency are part of its nature."
+                },
+                {
+                    "label": "YOU SHOULD KNOW",
+                    "text": "Each FLOEMA jewel is entirely handmade: any difference from the original picture evidences the unique and artisanal manufacture of the piece."
+                }
+            ],
+            "shop": {
+                "label": "Shop It",
+                "href": "https://el-hempe.com"
+            }
+        }
+    ],
+    "home": [
+        {
+            "src": "/floema/images/a4e3c13c885e5665.jpg",
+            "alt": "",
+            "width": 831,
+            "height": 1174
+        },
+        {
+            "src": "/floema/images/54ddb9d3a7c79c00.jpg",
+            "alt": "",
+            "width": 831,
+            "height": 1174
+        },
+        {
+            "src": "/floema/images/04cdfb639a806636.jpg",
+            "alt": "",
+            "width": 279,
+            "height": 419
+        },
+        {
+            "src": "/floema/images/3f7e5bc3cf13a4ee.jpg",
+            "alt": "",
+            "width": 831,
+            "height": 1174
+        },
+        {
+            "src": "/floema/images/13b520282d6c738a.jpg",
+            "alt": "",
+            "width": 279,
+            "height": 419
+        },
+        {
+            "src": "/floema/images/9abae54d55458aab.jpg",
+            "alt": "",
+            "width": 376,
+            "height": 524
+        },
+        {
+            "src": "/floema/images/4b9db119abbce4fa.jpg",
+            "alt": "",
+            "width": 310,
+            "height": 438
+        },
+        {
+            "src": "/floema/images/8007e207b3833887.jpg",
+            "alt": "",
+            "width": 555,
+            "height": 783
+        },
+        {
+            "src": "/floema/images/2c76e30f532f7d96.jpg",
+            "alt": "",
+            "width": 831,
+            "height": 1174
+        },
+        {
+            "src": "/floema/images/df8bc686e6a29bac.jpg",
+            "alt": "",
+            "width": 831,
+            "height": 1174
+        },
+        {
+            "src": "/floema/images/48a2512e24078d6e.jpg",
+            "alt": "",
+            "width": 279,
+            "height": 419
+        },
+        {
+            "src": "/floema/images/13b520282d6c738a.jpg",
+            "alt": "",
+            "width": 279,
+            "height": 419
+        },
+        {
+            "src": "/floema/images/011685b6b422a72c.jpg",
+            "alt": "",
+            "width": 831,
+            "height": 1174
+        },
+        {
+            "src": "/floema/images/e058726180cc2225.jpg",
+            "alt": "",
+            "width": 831,
+            "height": 1174
+        },
+        {
+            "src": "/floema/images/48a2512e24078d6e.jpg",
+            "alt": "",
+            "width": 279,
+            "height": 419
+        }
+    ],
+    "about": [
+        {
+            "type": "gallery",
+            "images": [
+                {
+                    "src": "/floema/images/011685b6b422a72c.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/2c76e30f532f7d96.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/9f7576f713c6148b.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/4b9db119abbce4fa.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/3f7e5bc3cf13a4ee.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/d676502b25bc8c2a.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/a4e3c13c885e5665.jpg",
+                    "alt": ""
+                }
+            ]
+        },
+        {
+            "type": "title",
+            "text": "Creating new dialogues\nbetween threads and metal"
+        },
+        {
+            "type": "content",
+            "side": "left",
+            "label": "About Me",
+            "description": [
+                {
+                    "type": "paragraph",
+                    "text": "Valentina’s work plays around the surprise of what is possible to make with a simple and thin line: a thread.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Coming from a family with a strong feminine tailoring tradition, she wanted to bring this passionate root into her jewellery world, finding new ways of working with textiles.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "She weaves freely thousands of meters of threads on a hydrosoluble fabric, cutting or interlacing them one with the other, to let unexpected connections appear.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Her approach is both experimental and traditional: she likes to combine contemporary methods with ancient techniques, like Filigree.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "The latest work was chosen by the “Triennale Design Museum” in Milan to be part of the exhibition “W. Women in Italian design” (April 2016- February 2017).",
+                    "spans": []
+                }
+            ],
+            "image": {
+                "src": "/floema/images/f6de647dc49e7d97.jpg",
+                "alt": ""
+            }
+        },
+        {
+            "type": "highlight",
+            "label": "",
+            "title": "floema",
+            "href": "",
+            "images": [
+                {
+                    "src": "/floema/images/9a06b24525c5217e.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/85938e787054068c.jpg",
+                    "alt": ""
+                }
+            ]
+        },
+        {
+            "type": "content",
+            "side": "left",
+            "label": "The Brand",
+            "description": [
+                {
+                    "type": "paragraph",
+                    "text": "FLOEMA is a new jewelry brand all design and handmade by me, Valentina Caprini, goldsmith, and artist based in Florence.",
+                    "spans": [
+                        {
+                            "start": 61,
+                            "end": 78,
+                            "type": "hyperlink",
+                            "data": {
+                                "link_type": "Web",
+                                "url": "https://www.valentinacaprini.com/"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "paragraph",
+                    "text": "The name FLOEMA is inspired by the vascular tissue of the plants, which brings the lifeblood from the roots to the branches and makes flowers and fruits bloom.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Each FLOEMA piece is elegant and unique, created with a refined goldsmith’s technique in a small laboratory equipped with machines dated to the beginning of the ‘900.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Like the lifeblood makes the plant evolve, so FLOEMA gives part of its income to PLAN INTERNATIONAL, a charity that works hard to eliminate the child brides phenomenon.",
+                    "spans": [
+                        {
+                            "start": 81,
+                            "end": 99,
+                            "type": "hyperlink",
+                            "data": {
+                                "link_type": "Web",
+                                "url": "https://plan-international.org/srhr/child-marriage-early-forced/"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "image": {
+                "src": "/floema/images/c93608b3975c7b8e.jpg",
+                "alt": ""
+            }
+        },
+        {
+            "type": "gallery",
+            "images": [
+                {
+                    "src": "/floema/images/c2960593f1d8d17e.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/6d37d3e2ed0e734f.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/28d24e41c6639286.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/329070dc02f78b4d.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/ca7a0f09f9d662a9.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/b428a0beb791aea9.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/1dc9ce55428a41e9.jpg",
+                    "alt": ""
+                }
+            ]
+        },
+        {
+            "type": "title",
+            "text": "The surprise of what is possible\nto make with a simple\nand thin thread."
+        },
+        {
+            "type": "content",
+            "side": "right",
+            "label": "JEWELRY CARE",
+            "description": [
+                {
+                    "type": "paragraph",
+                    "text": "All FLOEMA jewels are exclusively realized using precious metals: 925 silver (pure for the Filigree) and 18kt gold. All metals are subjected to a natural oxidation process, that depends either on natural factors like oxygen in the air, the salt in the sea, sunlight, skin ph, or on chemical factors, like creams and perfumes.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": " ",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Please find two ways to clean gold and silver with natural ingredients,",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "To make your piece return to its original condition:",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Gold is slightly subjected to the oxidation process. To make your jewel shine again put your jewels in a solution of half cup of white vinegar and salt for at least 30 minutes.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "With a white cotton soft cloth dipped in the solution first brush your piece and then rinse it with plenty of water and voila!",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": " ",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "To take the oxidation off silver you have to use one ingredient only: bicarbonate.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Pour 250ml of lukewarm water and 5 spoons of bicarbonate in a container. Mixed until it is melted. Leave your silver jewels in the solution over the night, then brush them with a toothbrush until they shine again. Finally, rinse and dry with soft cloth.",
+                    "spans": []
+                }
+            ],
+            "image": {
+                "src": "/floema/images/e96bb5b547280cc1.jpg",
+                "alt": ""
+            }
+        },
+        {
+            "type": "content",
+            "side": "left",
+            "label": "SUSTAINA­BILITY",
+            "description": [
+                {
+                    "type": "paragraph",
+                    "text": "FLOEMA engages in its own small way to choose green solutions as much as possible.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "You will receive each piece in a handmade box realized by Florentine typography using eco-friendly paper (made by 90% of pure cellulose and 10% by cotton fibers),",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "in a recycled and 100% recyclable parcel.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "The business cards are realized with recycled cotton fiber cardboard.",
+                    "spans": []
+                },
+                {
+                    "type": "paragraph",
+                    "text": "All the pieces are created in a small laboratory in the Florentine countryside, preferring using green materials and recycling precious materials.",
+                    "spans": []
+                }
+            ],
+            "image": {
+                "src": "/floema/images/420b7a1700426a22.jpg",
+                "alt": ""
+            }
+        },
+        {
+            "type": "highlight",
+            "label": "FOLLOW ME ON INSTAGRAM",
+            "title": "Instagram",
+            "href": "https://whizzbbig.vercel.app",
+            "images": [
+                {
+                    "src": "/floema/images/78c631f79b0479ab.jpg",
+                    "alt": ""
+                },
+                {
+                    "src": "/floema/images/a2975932a089c2c1.jpg",
+                    "alt": ""
+                }
+            ]
+        }
+    ],
+    "footer": {
+        "copyright": "© This website is built on Vite frontend tooling for Floema course by Bizarro on Awwwards",
+        "credits": [
+            {
+                "type": "paragraph",
+                "text": "COURSE WHIZZBBIG CADUPUY ",
+                "spans": [
+                    {
+                        "start": 0,
+                        "end": 6,
+                        "type": "hyperlink",
+                        "data": {
+                            "link_type": "Web",
+                            "url": "https://www.awwwards.com/academy/course/building-an-immersive-creative-website-from-scratch-without-frameworks"
+                        }
+                    },
+                    {
+                        "start": 7,
+                        "end": 16,
+                        "type": "hyperlink",
+                        "data": {
+                            "link_type": "Web",
+                            "url": "https://twitter.com/whizzbbig"
+                        }
+                    },
+                    {
+                        "start": 17,
+                        "end": 24,
+                        "type": "hyperlink",
+                        "data": {
+                            "link_type": "Web",
+                            "url": "https://github.com/cadupuy"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
