@@ -91,6 +91,7 @@ export const PROJECTS: Project[] = [
         tags: ['3D', 'Scroll', 'Transition'],
         added: '2026-03-25',
         pages: [
+            { label: 'Guide', route: '/floema/learn', guide: true },
             { label: 'About', route: '/floema/about' },
             { label: 'Collections', route: '/floema/collections' },
         ],
