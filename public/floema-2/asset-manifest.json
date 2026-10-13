@@ -1,0 +1,652 @@
+[
+    {
+        "file": "urban.webp",
+        "content": "Restauradores Square",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/477a3c25c1ea90ea1552d90a928550a434c2d7c7-3400x2120.jpg?w=1920&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "catalogue-urban.webp",
+        "content": "Urban catalogue cover (source alt text mislabeled as Golf)",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/3e60677687e86c07ac3f10fdfa3fc452ebfd1c04-1860x2790.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "nature.webp",
+        "content": "Large ICNF Information Panel in Recycled Plastic",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/c1c668b1eb6e6648bcd52b9202a3ea0f91f7bc64-3400x2120.jpg?w=1920&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "replastic.webp",
+        "content": "Paiva Walkways",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/25df657b91976f95bd5e0c6e2f0f3445175e09fc-3400x2120.png?w=1920&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "golf.webp",
+        "content": "\u00d3bidos Golf Course",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/70e411b4618e84a57d0f87b713eb64bc25988f84-7084x4417.png?w=1920&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "catalogue-golf.webp",
+        "content": "Catalogue Golf Collection",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/c03aa78cbf1cac7e730fd1a5c6854466cf0bfe17-462x681.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "details.webp",
+        "content": "Floema Details outdoor signage totem for Palmares",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/5d7a10dea3ce01853711d82742b7921140d35884-14167x8833.jpg?w=1920&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "catalogue-details.webp",
+        "content": "Catalogue Cover of the Details Collection",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/651231bae0010fe7d76ea6083009139cddfa1069-312x464.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "workshop.webp",
+        "content": "CNC milling machine carving a rectangular groove into dark wooden planks",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/b0b035e38fdba791021c56bb46ef95bd1b9468ae-364x504.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "coast.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/2633650c014c3153de936bdeb0b13cc4e13ac02c-1552x1200.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "forest.webp",
+        "content": "Mata Nacional do Bussaco Floema",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/6bf054454e973a0af6f6fa9ce8f00a095a90ff9a-2000x1333.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "bench.webp",
+        "content": "Byside bench Plaza",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/2a0a9bc12bb5a939015e0bff85b86ddaaa34c223-775x698.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "tee-sign.webp",
+        "content": "Palmer tee sign ",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/e1030ddaed7a5673f0b7d0dd8ba097b30f6b8e56-775x698.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "portrait.webp",
+        "content": "Fernando Pinto \u2014 Managing Partner",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/7fe78002ddd32916abd015d3001832a88f749462-364x364.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "island.webp",
+        "content": "Berlengas Island, Portugal",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/f4f6a9547e8e40bd32975ab1052e2c7428226353-1328x1386.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "design.webp",
+        "content": "We design",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/4c1a919b5e7601c1bf188b28c2cdf4aef3d228f2-1054x600.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "build.webp",
+        "content": "We build",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/fb095c31eb4ea6ce292e009ff8fd64ca958c8856-1054x600.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "implement.webp",
+        "content": "We implement",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/6c9ebc51108f425c4888cf320e2698cf7a713f38-1054x600.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-0.webp",
+        "content": "Bike rack Frame",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/def7bf5c4f063d1eccb3409ae9d931a49f97c448-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-1.webp",
+        "content": "Community Table Plaza",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/b2b1ef98e6bc9b855b7cd51b136482babca08afa-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-2.webp",
+        "content": "Water fountain Frame",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/f53ee6c134b43dd7d1c3c16ab66d5e3a3f7561bf-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-3.webp",
+        "content": "Directional sign frame",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/73712da4104affdfb864a174575fe0d1213c8083-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-4.webp",
+        "content": "E-bike charger Frame",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/7984dfa4aa28e513dd4dfae0248cabd2ac32402f-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-5.webp",
+        "content": "Ecoponto Frame",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/a9967dfbac88e53f7454ca4660bf7eb56ad9c909-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-6.webp",
+        "content": "Trail recycled plastic trail marker",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/46ea035d2eebcd2c895d168904c91c2830073812-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-7.webp",
+        "content": "Information panel",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/53ba1e98b043604ceb2a252fcaa3b9dbfff0297a-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-8.webp",
+        "content": "Arrow directional sign",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/c163a093ea732ddc666c358b70c3173aa83c0c88-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-9.webp",
+        "content": "Entrance totem",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/6ad0a530a6258dd734ae38ecdf7abf9725210041-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-10.webp",
+        "content": "Cycling Route Directional Sign",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/73a792ef53d6bea526cb3657232d70a1e862aee9-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-11.webp",
+        "content": "Interpretive lectern panel",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/4ae48e3619c8f664d42ac0c3649a1eb4939ee551-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-12.webp",
+        "content": "Liatris planter",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/c90c5d7042a0261fb4ae679cc6227772e30bac3a-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-13.webp",
+        "content": "Belleville bench",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/f07de4d84a78ffa99d920739be13876b691e76b7-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-14.webp",
+        "content": "Plaza Paper",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/6e3c440daf2ff4cd60ea6b7a89914a7ca66cd032-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-15.webp",
+        "content": "Elevated walkway",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/5bfd6508dc65f64e1d14c90290b4c48bd4ecdced-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-16.webp",
+        "content": "Concealment fence",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/2a7348fba882c9c4e924ecb332295a560fa502b2-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-17.webp",
+        "content": "Oxalis Planter",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/a8580eebfea971aa1e4ef400bb5c02c0b8a5053e-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-18.webp",
+        "content": "clock-on-spot palmer",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/fed1070c0877e26c7d95dac8a6dbc4c64a35fc36-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-19.webp",
+        "content": "Royal ball pyramid",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/0d42aa6cb1f3a3898dee71529f14f3b02c885bbc-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-20.webp",
+        "content": "Tee number cube",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/54f93370ace69268b44cfbccdf28ae590db7dc7a-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-21.webp",
+        "content": "bag stand palmer",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/f8dbdee6f09063cb6a454021c76d5e2822c860f2-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-22.webp",
+        "content": "Par 3",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/47366e1a65835b9a2c9bb62c2dacefeff5200228-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-23.webp",
+        "content": "water cooler palmer",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/ad6c6c70257889ecb7696911d86f0fdac55b58fb-500x288.png?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-24.webp",
+        "content": "Signage",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/ed435e18d662e1b74c8a75bec50013194309fa49-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-25.webp",
+        "content": "Signage 02",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/f9ba3440e3625bcaba30f2149d44d261d9c919b3-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-26.webp",
+        "content": "Signage 03",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/fa2e623e6f315329b7e560c667bfd8eb5392c364-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-27.webp",
+        "content": "Signage 04",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/9174537af72978a3a824071feb71728bead46823-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-28.webp",
+        "content": "Signage 05",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/d383ecd49618ea4cd227885670077143b9d23f92-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "product-29.webp",
+        "content": "Signage 06",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/80478e0d6f3548a5147176c3e21554a91e30dc79-500x288.jpg?w=900&q=85&auto=format",
+        "page": "live",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "outline-table.svg",
+        "content": "outline-table",
+        "source": "https://floema.com/imgs/i1.svg",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "outline-chair.svg",
+        "content": "outline-chair",
+        "source": "https://floema.com/imgs/i2.svg",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "outline-bin.svg",
+        "content": "outline-bin",
+        "source": "https://floema.com/imgs/i3.svg",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "principle-design.svg",
+        "content": "principle-design",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/dc79e4b2f20c43e939d5d70d931b85eb6b671656-80x80.svg",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "principle-weather.svg",
+        "content": "principle-weather",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/32fc9a13a2de78b37111c9ab8700cf3d2b69e36d-80x80.svg",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "principle-maintenance.svg",
+        "content": "principle-maintenance",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/a30d4c034081cfadf1583cd1d37dee7d8c38f213-80x80.svg",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "jane-jacobs.webp",
+        "content": "Jane Jacobs",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/df11799a4ae6097c4a19795d8a4958c31a495a51-1154x1151.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Not shipped: supporting content is rewritten for this private study."
+    },
+    {
+        "file": "charger-background.webp",
+        "content": "charger-background",
+        "source": "https://floema.com/imgs/temp/bg-cropped.png?w=1920&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "charger-cutout.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/6fb86e8c33c1b7dc106d40f96a6560adbf8f6ab9-1551x3300.png?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "portrait-materials.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/0c5699baff7d44faee73462374d309a08f19bf11-358x416.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "bench-materials.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/0353b65f8f0b6d573193d17d5c42ff1b1141c8ad-444x326.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "swatch-plastic.webp",
+        "content": "Recycled plastic material sample",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/e9b3c00cdad9fd4df25854aa597eeeed0050a465-137x137.png?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Material selector swatch"
+    },
+    {
+        "file": "swatch-hpl.webp",
+        "content": "Brown HPL material sample",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/f953f3e1f4d5d0da7d564d2aff4445ff8d8117a1-136x136.png?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Material selector swatch and cube diffuse texture"
+    },
+    {
+        "file": "swatch-steel.webp",
+        "content": "Brushed steel material sample",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/3b71f8134c425b1c5eb7a45822e8094e85b46ed9-136x136.png?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Material selector swatch"
+    },
+    {
+        "file": "viewpoint-summer.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/0178286a32361854fd9b32381e36d6afc1e6d0e0-3400x1960.jpg?w=1920&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "viewpoint-winter.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/4bc0768770f350085928ff08b1ca18b83ccc42c2-3400x1960.jpg?w=1920&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "inline-sign.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/50c2ebf979a45fdb0f2401204a7bec7b9f10b313-100x100.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "inline-bench.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/9bb1e2ba1cc27238069dc01eb01402cd78bf5a0f-100x100.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "integration-1.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/8cefd7aa804a575790bd7cd540b353ed8107535f-1000x1500.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Not shipped: supporting content is rewritten for this private study."
+    },
+    {
+        "file": "integration-2.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/947fd9253b0b9ae5cfbea599dbe09349ce4203ed-364x500.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Not shipped: supporting content is rewritten for this private study."
+    },
+    {
+        "file": "integration-3.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/5474c1b2ea6bb5c7695339167df007c809888f26-2000x1334.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Not shipped: supporting content is rewritten for this private study."
+    },
+    {
+        "file": "integration-4.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/c0221ecc365172610e57196c726733f16b028120-1466x1720.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Not shipped: supporting content is rewritten for this private study."
+    },
+    {
+        "file": "inline-play.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/4406d1046e0b918958cc4b860caa4691cae4bde8-102x102.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "pillar-materials.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/f7ac71606af65795c83f925e95e850e78dc44d60-1048x1240.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "pillar-integration.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/e4d95de66169cf83b372867c5854b94f7ef3bdb5-1050x1240.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "pillar-replace.webp",
+        "content": "Image",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/509208ebf5da2e15563deffa65791d7e3dfeae6b-1048x1240.jpg?w=900&q=85&auto=format",
+        "page": "sustainability",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "cube.glb",
+        "content": "cube.glb",
+        "source": "https://floema.com/3d/cube/cube-3.glb",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "charging-station.glb",
+        "content": "charging-station.glb",
+        "source": "https://floema.com/3d/charging-station.glb",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "Zimula.ttf",
+        "content": "Zimula.ttf",
+        "source": "https://floema.com/_nuxt/Zimula-Variable.Cb2n2uX-.ttf",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "footer-table.svg",
+        "content": "footer-table.svg",
+        "source": "https://floema.com/imgs/wireframes/table.svg",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "footer-chair.svg",
+        "content": "footer-chair.svg",
+        "source": "https://floema.com/imgs/wireframes/chair.svg",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "footer-bike.svg",
+        "content": "footer-bike.svg",
+        "source": "https://floema.com/imgs/wireframes/bike-station.svg",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "footer-fountain.svg",
+        "content": "footer-fountain.svg",
+        "source": "https://floema.com/imgs/wireframes/waterfountain.svg",
+        "usage": "Used in the page study. See data.ts and README.md."
+    },
+    {
+        "file": "hero-0.webp",
+        "content": "Directional sign on green",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/4e6b050d13c4f3aa58b45d1055706542db4d0534-364x444.png",
+        "usage": "Home floating image field; depth/pointer parallax."
+    },
+    {
+        "file": "hero-1.webp",
+        "content": "Bike station on coral",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/30af041450ec0014696f7b0f9d35f28612a49c69-340x444.png",
+        "usage": "Home floating image field; depth/pointer parallax."
+    },
+    {
+        "file": "hero-2.webp",
+        "content": "Bike station cutout",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/31dd09c93412ed93e612eab231037e2ededa7f88-364x552.png",
+        "usage": "Home floating image field; depth/pointer parallax."
+    },
+    {
+        "file": "hero-3.webp",
+        "content": "Litter bin cutout",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/9797eda47f1ffb65b834fe72aa77c23380851b6c-334x622.png",
+        "usage": "Home floating image field; depth/pointer parallax."
+    },
+    {
+        "file": "hero-4.webp",
+        "content": "Workshop hand",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/4be5757b0cb0048928bb2369d322f36a645005be-326x444.png",
+        "usage": "Home floating image field; depth/pointer parallax."
+    },
+    {
+        "file": "hero-5.webp",
+        "content": "Bench in studio",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/cdeb94e3b2e6cdbeb4001791c56fc22ad9d1260c-326x444.png",
+        "usage": "Home floating image field; depth/pointer parallax."
+    },
+    {
+        "file": "hero-6.webp",
+        "content": "Studio model",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/f9f51941d61cb3e4464fd6858c583f759cd57d50-326x444.png",
+        "usage": "Home floating image field; depth/pointer parallax."
+    },
+    {
+        "file": "hero-7.webp",
+        "content": "Bench and tools",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/e9a64c4d0159b622ed3fd2b0661f7b861c302f44-326x444.png",
+        "usage": "Home floating image field; depth/pointer parallax."
+    },
+    {
+        "file": "hero-8.webp",
+        "content": "Chair in studio",
+        "source": "https://cdn.sanity.io/images/535lnz3g/production/1e5a614a16e749e214356ffc1a1e59053f2191a7-326x444.png",
+        "usage": "Home floating image field; depth/pointer parallax."
+    },
+    {
+        "file": "charger-front.webp",
+        "content": "Front-facing e-bike charging station",
+        "source": "https://floema.com/imgs/temp/product-cropped.png",
+        "usage": "Sustainability photograph handoff."
+    },
+    {
+        "file": "plastic-diffuse.jpg",
+        "content": "Recycled plastic albedo",
+        "source": "refs/floema-2/",
+        "usage": "R3F cube plastic diffuse map"
+    },
+    {
+        "file": "plastic-normal-2.png",
+        "content": "Plastic surface normal map",
+        "source": "refs/floema-2/",
+        "usage": "R3F cube plastic relief"
+    },
+    {
+        "file": "steel-normal-3.png",
+        "content": "Steel normal map",
+        "source": "refs/floema-2/",
+        "usage": "R3F cube steel and logo relief"
+    },
+    {
+        "file": "outline-charger.svg",
+        "content": "Charging station outline",
+        "source": "https://floema.com/en/sustainability",
+        "usage": "Fallback for reduced motion, unavailable WebGL, or context loss"
+    },
+    {
+        "file": "brand-symbol.svg",
+        "content": "Floema arrow symbol",
+        "source": "https://floema.com/en",
+        "usage": "Footer mark extracted from inline SVG"
+    }
+]
